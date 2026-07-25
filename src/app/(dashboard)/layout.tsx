@@ -1,7 +1,6 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { RunProvider, useRunContext } from '@/components/dashboard/run-context';
 
@@ -30,6 +29,11 @@ function CurrentRunBadge() {
 
 function SidebarContent() {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleNavigate = (href: string) => {
+    router.push(href);
+  };
 
   return (
     <aside className="w-60 bg-slate-900 text-white flex flex-col shrink-0">
@@ -45,21 +49,25 @@ function SidebarContent() {
       <CurrentRunBadge />
       <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-y-auto">
         {NAV_ITEMS.map((item) => {
-          const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href));
+          const isActive = pathname === item.href || 
+            (item.href !== '/dashboard' && pathname.startsWith(item.href + '/')) ||
+            pathname.startsWith(item.href);
           return (
-            <Link
+            <button
               key={item.href}
-              href={item.href}
+              type="button"
+              onClick={() => handleNavigate(item.href)}
               className={cn(
-                'flex items-center gap-2.5 px-3 py-2 rounded text-sm transition-colors',
+                'flex items-center gap-2.5 px-3 py-2 rounded text-sm transition-colors w-full text-left cursor-pointer',
                 isActive
                   ? 'bg-slate-700 text-white font-medium'
                   : 'text-slate-300 hover:bg-slate-800 hover:text-white'
               )}
+              data-testid={`nav-${item.href.slice(1)}`}
             >
               <span className="text-base w-5 text-center">{item.icon}</span>
               {item.label}
-            </Link>
+            </button>
           );
         })}
       </nav>
@@ -75,7 +83,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     <RunProvider>
       <div className="flex h-screen overflow-hidden">
         <SidebarContent />
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto" data-testid="main-content">
           {children}
         </main>
       </div>

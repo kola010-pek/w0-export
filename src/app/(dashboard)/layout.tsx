@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { RunProvider, useRunContext } from '@/components/dashboard/run-context';
 
 const NAV_ITEMS = [
   { href: '/dashboard', label: '总览', icon: '⌂' },
@@ -14,51 +15,70 @@ const NAV_ITEMS = [
   { href: '/audit', label: '审计日志', icon: '☰' },
 ];
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+function CurrentRunBadge() {
+  const { currentRunId } = useRunContext();
+  if (!currentRunId) return null;
+  return (
+    <div className="px-3 py-2">
+      <div className="bg-blue-900/30 border border-blue-700/50 rounded px-2 py-1.5 text-xs text-blue-300">
+        <span className="text-blue-400">当前运行:</span>{' '}
+        <span className="font-mono">{currentRunId.slice(0, 16)}</span>
+      </div>
+    </div>
+  );
+}
+
+function SidebarContent() {
   const pathname = usePathname();
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      {/* Sidebar */}
-      <aside className="w-60 bg-slate-900 text-white flex flex-col shrink-0">
-        <div className="p-4 border-b border-slate-700">
-          <h1 className="text-sm font-bold tracking-wide">金融投资智能体</h1>
-          <p className="text-xs text-slate-400 mt-1">运营工作台</p>
+    <aside className="w-60 bg-slate-900 text-white flex flex-col shrink-0">
+      <div className="p-4 border-b border-slate-700">
+        <h1 className="text-sm font-bold tracking-wide">金融投资智能体</h1>
+        <p className="text-xs text-slate-400 mt-1">运营工作台</p>
+      </div>
+      <div className="px-3 py-2">
+        <div className="bg-amber-900/30 border border-amber-700/50 rounded px-2 py-1.5 text-xs text-amber-300">
+          模拟环境 · 生产功能未启用
         </div>
-        <div className="px-3 py-2">
-          <div className="bg-amber-900/30 border border-amber-700/50 rounded px-2 py-1.5 text-xs text-amber-300">
-            模拟环境 · 生产功能未启用
-          </div>
-        </div>
-        <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-y-auto">
-          {NAV_ITEMS.map((item) => {
-            const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href));
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  'flex items-center gap-2.5 px-3 py-2 rounded text-sm transition-colors',
-                  isActive
-                    ? 'bg-slate-700 text-white font-medium'
-                    : 'text-slate-300 hover:bg-slate-800 hover:text-white'
-                )}
-              >
-                <span className="text-base w-5 text-center">{item.icon}</span>
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
-        <div className="p-3 border-t border-slate-700 text-xs text-slate-500">
-          v0.1.0 · Phase 1 (Mock)
-        </div>
-      </aside>
+      </div>
+      <CurrentRunBadge />
+      <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-y-auto">
+        {NAV_ITEMS.map((item) => {
+          const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href));
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                'flex items-center gap-2.5 px-3 py-2 rounded text-sm transition-colors',
+                isActive
+                  ? 'bg-slate-700 text-white font-medium'
+                  : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+              )}
+            >
+              <span className="text-base w-5 text-center">{item.icon}</span>
+              {item.label}
+            </Link>
+          );
+        })}
+      </nav>
+      <div className="p-3 border-t border-slate-700 text-xs text-slate-500">
+        v0.1.0 · Phase 1 (Mock)
+      </div>
+    </aside>
+  );
+}
 
-      {/* Main Content */}
-      <main className="flex-1 overflow-y-auto">
-        {children}
-      </main>
-    </div>
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <RunProvider>
+      <div className="flex h-screen overflow-hidden">
+        <SidebarContent />
+        <main className="flex-1 overflow-y-auto">
+          {children}
+        </main>
+      </div>
+    </RunProvider>
   );
 }

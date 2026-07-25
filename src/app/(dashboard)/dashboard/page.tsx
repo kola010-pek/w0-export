@@ -1,12 +1,15 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
+import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { ErrorState } from '@/components/dashboard/error-state';
+import { useRunContext } from '@/components/dashboard/run-context';
 
 interface RunSummary {
   run_id: string;
@@ -66,9 +69,12 @@ export default function DashboardPage() {
   const [health, setHealth] = useState<HealthData | null>(null);
   const [approvals, setApprovals] = useState<ApprovalItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [runningScenario, setRunningScenario] = useState<string | null>(null);
+  const { setCurrentRunId } = useRunContext();
 
   const fetchData = useCallback(async () => {
+    setError(null);
     try {
       const [runsRes, healthRes, approvalsRes] = await Promise.all([
         fetch('/api/runs'),
@@ -80,10 +86,11 @@ export default function DashboardPage() {
       const approvalsData = await approvalsRes.json();
 
       if (runsData.success) setRuns(runsData.data);
+      else setError('加载运行记录失败');
       if (healthData.success) setHealth(healthData.data);
       if (approvalsData.success) setApprovals(approvalsData.data);
     } catch (err) {
-      console.error('Failed to fetch dashboard data:', err);
+      setError(`数据加载失败: ${err instanceof Error ? err.message : '未知错误'}`);
     } finally {
       setLoading(false);
     }
@@ -104,12 +111,19 @@ export default function DashboardPage() {
       const data = await res.json();
       if (data.success) {
         await fetchData();
+        if (data.data?.run_id) {
+          setCurrentRunId(data.data.run_id);
+        }
       }
     } catch (err) {
       console.error('Failed to run scenario:', err);
     } finally {
       setRunningScenario(null);
     }
+  };
+
+  const selectRun = (runId: string) => {
+    setCurrentRunId(runId);
   };
 
   const latestRun = runs[0];
@@ -124,6 +138,14 @@ export default function DashboardPage() {
             {[1, 2, 3].map(i => <div key={i} className="h-32 bg-gray-200 rounded" />)}
           </div>
         </div>
+      </div>
+    );
+  }
+
+  if (error && runs.length === 0) {
+    return (
+      <div className="p-6">
+        <ErrorState title="数据加载失败" message={error} onRetry={fetchData} />
       </div>
     );
   }
@@ -249,6 +271,7 @@ export default function DashboardPage() {
                       <TableHead className="w-[120px]">任务进度</TableHead>
                       <TableHead className="min-w-[150px] max-w-[250px]">阻断原因</TableHead>
                       <TableHead className="w-[160px]">创建时间</TableHead>
+                      <TableHead className="w-[80px]">操作</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -268,6 +291,13 @@ export default function DashboardPage() {
                         </TableCell>
                         <TableCell className="text-red-600 text-xs max-w-[250px] truncate" title={run.block_reason || ''}>{run.block_reason || '-'}</TableCell>
                         <TableCell className="text-xs whitespace-nowrap">{new Date(run.created_at).toLocaleString('zh-CN')}</TableCell>
+                        <TableCell>
+                          <Button size="sm" variant="ghost" onClick={() => selectRun(run.run_id)}>
+                            <Link href={`/runs/${run.run_id}`} className="text-blue-600 hover:underline text-xs">
+                              详情
+                            </Link>
+                          </Button>
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -349,7 +379,7 @@ export default function DashboardPage() {
                 <ScenarioCard
                   id="scenario_a"
                   name="场景 A: 全部通过"
-                  description="数据更新成功 → 质量门禁 PASS → 候选信号 → 风控批准 → 人工批准 → 发布"
+                  description="数据更新成功 → 质量门禁 PASS → 候选信号 → 风控批准 → 人工批准(自动) → 发布 → 观察 → COMPLETED"
                   onRun={() => runScenario('scenario_a')}
                   disabled={runningScenario !== null}
                   running={runningScenario === 'scenario_a'}
@@ -357,7 +387,7 @@ export default function DashboardPage() {
                 <ScenarioCard
                   id="scenario_b"
                   name="场景 B: 核心数据阻断"
-                  description="复权因子缺口超阈值 → 质量 BLOCK → 下游全部 SKIPPED_BY_GATE"
+                  description="复权因子缺口超阈值 → 质量 BLOCK → 下游全部 SKIPPED_BY_GATE (含审计事件)"
                   onRun={() => runScenario('scenario_b')}
                   disabled={runningScenario !== null}
                   running={runningScenario === 'scenario_b'}
@@ -365,7 +395,7 @@ export default function DashboardPage() {
                 <ScenarioCard
                   id="scenario_c"
                   name="场景 C: 模型警告"
-                  description="数据门禁 PASS → 模型门禁 WARN → 停在人工审批"
+                  description="数据门禁 PASS → 模型门禁 WARN → 停在人工审批 (未审批发布返回403)"
                   onRun={() => runScenario('scenario_c')}
                   disabled={runningScenario !== null}
                   running={runningScenario === 'scenario_c'}

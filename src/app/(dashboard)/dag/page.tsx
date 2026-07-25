@@ -6,6 +6,9 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { ErrorState } from '@/components/dashboard/error-state';
+import { useRunContext } from '@/components/dashboard/run-context';
+import Link from 'next/link';
 
 interface RunData {
   run_id: string;
@@ -70,22 +73,46 @@ export default function DagPage() {
   const [selectedRun, setSelectedRun] = useState<string>('');
   const [runData, setRunData] = useState<RunData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const { currentRunId } = useRunContext();
 
   const fetchRuns = useCallback(async () => {
-    const res = await fetch('/api/runs');
-    const data = await res.json();
-    if (data.success) {
-      setRuns(data.data);
-      if (data.data.length > 0 && !selectedRun) {
-        setSelectedRun(data.data[0].run_id);
+    setError(null);
+    try {
+      const res = await fetch('/api/runs');
+      const data = await res.json();
+      if (data.success) {
+        setRuns(data.data);
+        // Use global run_id if available and valid, otherwise first run
+        const targetRun = currentRunId && data.data.some((r: { run_id: string }) => r.run_id === currentRunId)
+          ? currentRunId
+          : data.data[0]?.run_id || '';
+        if (targetRun && !selectedRun) {
+          setSelectedRun(targetRun);
+        }
+      } else {
+        setError('加载运行列表失败');
       }
+    } catch (err) {
+      setError(`请求失败: ${err instanceof Error ? err.message : '网络错误'}`);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
-  }, [selectedRun]);
+  }, [selectedRun, currentRunId]);
 
   useEffect(() => {
     fetchRuns();
   }, [fetchRuns]);
+
+  // Sync with global run context
+  useEffect(() => {
+    if (currentRunId && currentRunId !== selectedRun) {
+      const exists = runs.some(r => r.run_id === currentRunId);
+      if (exists) {
+        setSelectedRun(currentRunId);
+      }
+    }
+  }, [currentRunId, runs, selectedRun]);
 
   useEffect(() => {
     if (!selectedRun) return;
@@ -101,7 +128,6 @@ export default function DagPage() {
     if (!selectedRun) return;
     const res = await fetch(`/api/runs/${selectedRun}/execute-next`, { method: 'POST' });
     const data = await res.json();
-    // Refresh
     const runRes = await fetch(`/api/runs/${selectedRun}`);
     const runJson = await runRes.json();
     if (runJson.success) setRunData(runJson.data);
@@ -117,6 +143,14 @@ export default function DagPage() {
 
   if (loading) {
     return <div className="p-6"><div className="animate-pulse h-64 bg-gray-200 rounded" /></div>;
+  }
+
+  if (error && runs.length === 0) {
+    return (
+      <div className="p-6">
+        <ErrorState title="DAG 数据加载失败" message={error} onRetry={fetchRuns} />
+      </div>
+    );
   }
 
   return (
@@ -154,6 +188,8 @@ export default function DagPage() {
               <CardDescription>
                 运行: {runData.run_id} | 状态: <Badge className={STATUS_COLORS[runData.status]}>{runData.status}</Badge>
                 {runData.block_reason && <span className="text-red-600 ml-2">阻断: {runData.block_reason}</span>}
+                {' | '}
+                <Link href={`/runs/${runData.run_id}`} className="text-blue-600 hover:underline">查看完整详情</Link>
               </CardDescription>
             </CardHeader>
             <CardContent>

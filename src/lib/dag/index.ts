@@ -147,6 +147,20 @@ export function executeNext(runId: string): {
 
       if (anyDepBlocked) {
         task.status = 'SKIPPED_BY_GATE';
+        addAuditEvent({
+          event_id: `evt_${uuidv4().replace(/-/g, '').slice(0, 12)}`,
+          timestamp: new Date().toISOString(),
+          actor: 'system',
+          action: 'skip_by_gate',
+          run_id: runId,
+          task_id: task.task_id,
+          input_summary: { dag_node: nextNodeId || nodeId, reason: 'upstream_dependency_blocked_or_skipped' },
+          output_summary: { task_status: 'SKIPPED_BY_GATE' },
+          status_before: 'PENDING',
+          status_after: 'SKIPPED_BY_GATE',
+          gate_changes: [],
+          details: `Task ${task.task_id} (node ${nodeId}) skipped: upstream dependency is BLOCKED or SKIPPED_BY_GATE`,
+        });
         saveRun(run);
         continue;
       }
@@ -167,6 +181,20 @@ export function executeNext(runId: string): {
 
       if (anyGateBlocked) {
         task.status = 'SKIPPED_BY_GATE';
+        addAuditEvent({
+          event_id: `evt_${uuidv4().replace(/-/g, '').slice(0, 12)}`,
+          timestamp: new Date().toISOString(),
+          actor: 'system',
+          action: 'skip_by_gate',
+          run_id: runId,
+          task_id: task.task_id,
+          input_summary: { dag_node: nodeId, reason: 'required_gate_blocked' },
+          output_summary: { task_status: 'SKIPPED_BY_GATE' },
+          status_before: 'PENDING',
+          status_after: 'SKIPPED_BY_GATE',
+          gate_changes: [],
+          details: `Task ${task.task_id} (node ${nodeId}) skipped: required gate is BLOCK`,
+        });
         saveRun(run);
         continue;
       }
@@ -266,6 +294,32 @@ export function executeNext(runId: string): {
     if (gateResult.status === 'BLOCK') {
       run.status = 'BLOCKED';
       run.block_reason = gateResult.block_reasons.join('; ');
+
+      // Mark all downstream tasks as SKIPPED_BY_GATE
+      const nodeOrder = getDagNodeOrder();
+      const currentNodeIdx = nodeOrder.indexOf(nextNodeId);
+      for (let i = currentNodeIdx + 1; i < nodeOrder.length; i++) {
+        const downstreamNodeId = nodeOrder[i];
+        const downstreamTask = Object.values(run.tasks).find(t => t.dag_node === downstreamNodeId);
+        if (downstreamTask && downstreamTask.status === 'PENDING') {
+          const prevStatus = downstreamTask.status;
+          downstreamTask.status = 'SKIPPED_BY_GATE';
+          addAuditEvent({
+            event_id: `evt_${uuidv4().replace(/-/g, '').slice(0, 12)}`,
+            timestamp: new Date().toISOString(),
+            actor: 'system',
+            action: 'skip_by_gate',
+            run_id: runId,
+            task_id: downstreamTask.task_id,
+            input_summary: { dag_node: downstreamNodeId, reason: 'upstream_gate_blocked' },
+            output_summary: { task_status: 'SKIPPED_BY_GATE' },
+            status_before: prevStatus,
+            status_after: 'SKIPPED_BY_GATE',
+            gate_changes: [{ gate_id: gateResult.gate_id, status_before: 'PASS' as const, status_after: 'BLOCK' as const, reason: 'upstream gate blocked' }],
+            details: `Node ${downstreamNodeId} skipped because upstream gate ${gateResult.gate_id} blocked`,
+          });
+        }
+      }
     }
   }
 
@@ -437,6 +491,31 @@ export function submitApproval(
     } else {
       task.status = 'FAILED';
     }
+  }
+
+  // Create approval gate if decision is APPROVED
+  if (decision === 'APPROVED') {
+    run.gates['gate_approval'] = {
+      gate_id: 'gate_approval',
+      run_id: runId,
+      scope: 'approval',
+      status: 'PASS',
+      checked_at: new Date().toISOString(),
+      data_cutoff: run.data_cutoff,
+      rules: [{
+        rule_id: 'approval_check',
+        display_name: '人工审批检查',
+        status: 'PASS' as const,
+        actual: 'approved',
+        threshold: 'approved',
+        operator: 'eq',
+        severity: 'BLOCK' as const,
+        evidence_ref: approval.approval_id,
+        description: `Approved by ${approver}: ${opinion}`,
+      }],
+      block_reasons: [],
+      warnings: [],
+    };
   }
 
   // Update run status

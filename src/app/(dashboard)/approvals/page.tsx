@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,6 +9,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { ErrorState } from '@/components/dashboard/error-state';
+import { useRunContext } from '@/components/dashboard/run-context';
 
 interface ApprovalItem {
   approval_id: string;
@@ -37,16 +39,28 @@ const STATUS_COLORS: Record<string, string> = {
 export default function ApprovalsPage() {
   const [approvals, setApprovals] = useState<ApprovalItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedApproval, setSelectedApproval] = useState<ApprovalItem | null>(null);
   const [approver, setApprover] = useState('');
   const [opinion, setOpinion] = useState('');
+  const { currentRunId } = useRunContext();
 
   const fetchApprovals = useCallback(async () => {
-    const res = await fetch('/api/approvals');
-    const data = await res.json();
-    if (data.success) setApprovals(data.data);
-    setLoading(false);
+    setError(null);
+    try {
+      const res = await fetch('/api/approvals');
+      const data = await res.json();
+      if (data.success) {
+        setApprovals(data.data);
+      } else {
+        setError(data.error || '加载审批数据失败');
+      }
+    } catch (err) {
+      setError(`请求失败: ${err instanceof Error ? err.message : '网络错误'}`);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => { fetchApprovals(); }, [fetchApprovals]);
@@ -74,17 +88,33 @@ export default function ApprovalsPage() {
     }
   };
 
-  const pendingCount = approvals.filter(a => a.status === 'PENDING').length;
+  // Filter by global run_id if set
+  const filteredApprovals = currentRunId
+    ? approvals.filter(a => a.run_id === currentRunId)
+    : approvals;
+
+  const pendingCount = filteredApprovals.filter(a => a.status === 'PENDING').length;
 
   if (loading) {
     return <div className="p-6"><div className="animate-pulse h-64 bg-gray-200 rounded" /></div>;
+  }
+
+  if (error && approvals.length === 0) {
+    return (
+      <div className="p-6">
+        <ErrorState title="审批数据加载失败" message={error} onRetry={fetchApprovals} />
+      </div>
+    );
   }
 
   return (
     <div className="p-6 space-y-6">
       <div>
         <h1 className="text-2xl font-bold">审批中心</h1>
-        <p className="text-sm text-gray-500 mt-1">审批记录绑定 run_id、task_id、模型版本、输入快照、数据截止日和候选信号版本</p>
+        <p className="text-sm text-gray-500 mt-1">
+          审批记录绑定 run_id、task_id、模型版本、输入快照、数据截止日和候选信号版本
+          {currentRunId && <span className="ml-2 text-blue-600">(当前运行: {currentRunId.slice(0, 16)})</span>}
+        </p>
       </div>
 
       <div className="grid grid-cols-3 gap-4">
@@ -96,13 +126,13 @@ export default function ApprovalsPage() {
         </Card>
         <Card>
           <CardContent className="pt-4">
-            <div className="text-2xl font-bold text-green-600">{approvals.filter(a => a.status === 'APPROVED').length}</div>
+            <div className="text-2xl font-bold text-green-600">{filteredApprovals.filter(a => a.status === 'APPROVED').length}</div>
             <p className="text-sm text-gray-500">已批准</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4">
-            <div className="text-2xl font-bold text-red-600">{approvals.filter(a => a.status === 'REJECTED').length}</div>
+            <div className="text-2xl font-bold text-red-600">{filteredApprovals.filter(a => a.status === 'REJECTED').length}</div>
             <p className="text-sm text-gray-500">已拒绝</p>
           </CardContent>
         </Card>
@@ -113,8 +143,10 @@ export default function ApprovalsPage() {
           <CardTitle>审批记录</CardTitle>
         </CardHeader>
         <CardContent>
-          {approvals.length === 0 ? (
-            <p className="text-sm text-gray-500">暂无审批记录。请先运行场景。</p>
+          {filteredApprovals.length === 0 ? (
+            <p className="text-sm text-gray-500">
+              {currentRunId ? '当前运行暂无审批记录。' : '暂无审批记录。请先运行场景。'}
+            </p>
           ) : (
             <Table>
               <TableHeader>
@@ -131,7 +163,7 @@ export default function ApprovalsPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {approvals.map(a => (
+                {filteredApprovals.map(a => (
                   <TableRow key={a.approval_id}>
                     <TableCell className="font-mono text-xs">{a.approval_id}</TableCell>
                     <TableCell className="font-mono text-xs">{a.run_id.slice(0, 16)}</TableCell>

@@ -1,8 +1,9 @@
 // Scenario Runner - Pre-configured demo scenarios
 import { createRun, executeNext } from '../dag';
 import { setActiveScenario } from '../mock/tools';
-import { getRun } from '../store';
+import { getRun, saveRun, addAuditEvent } from '../store';
 import type { ScenarioId, Run } from '../types';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface ScenarioDef {
   id: ScenarioId;
@@ -64,7 +65,7 @@ export function runScenario(scenarioId: ScenarioId): {
   let maxIterations = 20;
   while (maxIterations > 0) {
     maxIterations--;
-    const result = executeNext(run.run_id);
+    let result = executeNext(run.run_id);
 
     if (result.node) {
       steps.push({
@@ -78,19 +79,92 @@ export function runScenario(scenarioId: ScenarioId): {
     if (!currentRun) break;
 
     if (currentRun.status === 'BLOCKED') {
-      // Mark remaining tasks as SKIPPED_BY_GATE
+      // Mark remaining tasks as SKIPPED_BY_GATE and record audit events
       for (const task of Object.values(currentRun.tasks)) {
         if (task.status === 'PENDING') {
           task.status = 'SKIPPED_BY_GATE';
+          addAuditEvent({
+            event_id: `evt_${uuidv4().replace(/-/g, '').slice(0, 12)}`,
+            timestamp: new Date().toISOString(),
+            actor: 'system',
+            action: 'skip_by_gate',
+            run_id: currentRun.run_id,
+            task_id: task.task_id,
+            input_summary: { dag_node: task.dag_node, reason: 'pipeline_blocked' },
+            output_summary: { task_status: 'SKIPPED_BY_GATE' },
+            status_before: 'PENDING',
+            status_after: 'SKIPPED_BY_GATE',
+            gate_changes: [],
+            details: `Task ${task.task_id} (node ${task.dag_node}) skipped due to pipeline BLOCK: ${currentRun.block_reason}`,
+          });
         }
       }
-      const { saveRun } = require('../store');
       saveRun(currentRun);
       steps.push({ node: 'pipeline', status: 'BLOCKED' });
       break;
     }
 
     if (currentRun.status === 'WAITING_APPROVAL') {
+      // For scenario_a, auto-approve to demonstrate full COMPLETED flow
+      if (scenarioId === 'scenario_a') {
+        const pendingApprovals = Object.values(currentRun.approvals).filter(a => a.status === 'PENDING');
+        for (const appr of pendingApprovals) {
+          appr.status = 'APPROVED';
+          appr.approver = 'auto-risk-reviewer';
+          appr.decided_at = new Date().toISOString();
+          appr.opinion = 'Scenario A auto-approval: all metrics within acceptable range';
+
+          // Update corresponding task
+          const task = currentRun.tasks[appr.task_id];
+          if (task) {
+            task.status = 'SUCCEEDED';
+          }
+
+          // Create approval gate
+          currentRun.gates['gate_approval'] = {
+            gate_id: 'gate_approval',
+            run_id: currentRun.run_id,
+            scope: 'approval',
+            status: 'PASS',
+            checked_at: new Date().toISOString(),
+            data_cutoff: currentRun.data_cutoff,
+            rules: [{
+              rule_id: 'approval_check',
+              display_name: '人工审批检查',
+              status: 'PASS' as const,
+              actual: 'approved',
+              threshold: 'approved',
+              operator: 'eq',
+              severity: 'BLOCK' as const,
+              evidence_ref: appr.approval_id,
+              description: 'Auto-approved by auto-risk-reviewer for scenario_a',
+            }],
+            block_reasons: [],
+            warnings: [],
+          };
+
+          addAuditEvent({
+            event_id: `evt_${uuidv4().replace(/-/g, '').slice(0, 12)}`,
+            timestamp: new Date().toISOString(),
+            actor: 'auto-risk-reviewer',
+            action: 'submit_approval',
+            run_id: currentRun.run_id,
+            task_id: appr.task_id,
+            input_summary: { approval_id: appr.approval_id, decision: 'APPROVED', auto: true },
+            output_summary: { opinion: appr.opinion },
+            status_before: 'PENDING',
+            status_after: 'APPROVED',
+            gate_changes: [],
+            details: `Auto-approval for scenario_a: ${appr.approval_id}`,
+          });
+        }
+        currentRun.status = 'CREATED';
+        saveRun(currentRun);
+        steps.push({ node: 'pipeline', status: 'AUTO_APPROVED' });
+        // Reset result to allow loop to continue executing remaining nodes
+        result = { success: true, node: null, result: null, gate: null, message: 'Continuing after auto-approval' };
+        continue;
+      }
       steps.push({ node: 'pipeline', status: 'WAITING_APPROVAL' });
       break;
     }
@@ -138,9 +212,22 @@ export function executeRunStepByStep(runId: string): {
     for (const task of Object.values(run.tasks)) {
       if (task.status === 'PENDING') {
         task.status = 'SKIPPED_BY_GATE';
+        addAuditEvent({
+          event_id: `evt_${uuidv4().replace(/-/g, '').slice(0, 12)}`,
+          timestamp: new Date().toISOString(),
+          actor: 'system',
+          action: 'skip_by_gate',
+          run_id: run.run_id,
+          task_id: task.task_id,
+          input_summary: { dag_node: task.dag_node, reason: 'pipeline_blocked' },
+          output_summary: { task_status: 'SKIPPED_BY_GATE' },
+          status_before: 'PENDING',
+          status_after: 'SKIPPED_BY_GATE',
+          gate_changes: [],
+          details: `Task ${task.task_id} (node ${task.dag_node}) skipped due to pipeline BLOCK`,
+        });
       }
     }
-    const { saveRun } = require('../store');
     saveRun(run);
   }
 

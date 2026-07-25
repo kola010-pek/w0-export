@@ -144,44 +144,44 @@ function executeQualityCheckMock(agentId: AgentId, input: MockToolInput, scenari
   const coverageStatus = coverageActual >= 0.999 ? 'PASS' as const : 'BLOCK' as const;
   rules.push({
     rule_id: 'coverage_check',
-    display_name: '\u8986\u76D6\u7387\u68C0\u67E5',
+    display_name: '覆盖率检查',
     status: coverageStatus,
     actual: coverageActual,
     threshold: 0.999,
     operator: '>=',
     severity: 'BLOCK',
     evidence_ref: makeEvidence('coverage_check', { ratio: coverageActual }).evidence_id,
-    description: '\u6570\u636E\u8986\u76D6\u7387\u5FC5\u987B >= 99.9%',
+    description: '数据覆盖率必须 >= 99.9%',
   });
   if (coverageStatus === 'BLOCK') {
     overallStatus = 'BLOCK';
-    blockReasons.push(`\u8986\u76D6\u7387 ${coverageActual} \u4F4E\u4E8E\u9608\u503C 0.999`);
+    blockReasons.push(`覆盖率 ${coverageActual} 低于阈值 0.999`);
   }
 
   // Freshness check
   rules.push({
     rule_id: 'freshness_check',
-    display_name: '\u65B0\u9C9C\u5EA6\u68C0\u67E5',
+    display_name: '新鲜度检查',
     status: 'PASS',
     actual: 2,
     threshold: 24,
     operator: '<=',
     severity: 'BLOCK',
     evidence_ref: makeEvidence('freshness_check', { hours: 2 }).evidence_id,
-    description: '\u6570\u636E\u65B0\u9C9C\u5EA6\u5FC5\u987B\u5728 24 \u5C0F\u65F6\u5185',
+    description: '数据新鲜度必须在 24 小时内',
   });
 
   // Uniqueness check
   rules.push({
     rule_id: 'uniqueness_check',
-    display_name: '\u552F\u4E00\u6027\u68C0\u67E5',
+    display_name: '唯一性检查',
     status: 'PASS',
     actual: 1.0,
     threshold: 1.0,
     operator: '>=',
     severity: 'BLOCK',
     evidence_ref: makeEvidence('uniqueness_check', { ratio: 1.0 }).evidence_id,
-    description: '\u4E3B\u952E\u5FC5\u987B\u5B8C\u5168\u552F\u4E00',
+    description: '主键必须完全唯一',
   });
 
   // Null check
@@ -192,44 +192,44 @@ function executeQualityCheckMock(agentId: AgentId, input: MockToolInput, scenari
   const nullStatus = nullRatio <= 0.001 ? 'PASS' as const : 'WARN' as const;
   rules.push({
     rule_id: 'null_check',
-    display_name: '\u7A7A\u503C\u68C0\u67E5',
+    display_name: '空值检查',
     status: nullStatus,
     actual: nullRatio,
     threshold: 0.001,
     operator: '<=',
     severity: 'WARN',
     evidence_ref: makeEvidence('null_check', { ratio: nullRatio }).evidence_id,
-    description: '\u5173\u952E\u5B57\u6BB5\u7A7A\u503C\u7387\u5FC5\u987B <= 0.1%',
+    description: '关键字段空值率必须 <= 0.1%',
   });
   if (nullStatus === 'WARN') {
     if (overallStatus !== 'BLOCK') overallStatus = 'WARN';
-    warnings.push(`\u7A7A\u503C\u7387 ${nullRatio} \u8D85\u8FC7\u9608\u503C 0.001`);
+    warnings.push(`空值率 ${nullRatio} 超过阈值 0.001`);
   }
 
   // Dependency order check
   rules.push({
     rule_id: 'dependency_order_check',
-    display_name: '\u4F9D\u8D56\u987A\u5E8F\u68C0\u67E5',
+    display_name: '依赖顺序检查',
     status: 'PASS',
     actual: 0,
     threshold: 0,
     operator: '==',
     severity: 'BLOCK',
     evidence_ref: makeEvidence('dep_order_check', { violations: 0 }).evidence_id,
-    description: '\u6570\u636E\u4F9D\u8D56\u987A\u5E8F\u4E0D\u5141\u8BB8\u8FDD\u89C4',
+    description: '数据依赖顺序不允许违规',
   });
 
   // Cutoff check
   rules.push({
     rule_id: 'cutoff_check',
-    display_name: '\u6570\u636E\u622A\u6B62\u65E5\u68C0\u67E5',
+    display_name: '数据截止日检查',
     status: 'PASS',
     actual: input.data_cutoff,
     threshold: true,
     operator: '==',
     severity: 'BLOCK',
     evidence_ref: makeEvidence('cutoff_check', { cutoff: input.data_cutoff, match: true }).evidence_id,
-    description: '\u6570\u636E\u622A\u6B62\u65E5\u5FC5\u987B\u4E0E\u4EFB\u52A1\u53C2\u6570\u4E00\u81F4',
+    description: '数据截止日必须与任务参数一致',
   });
 
   const gateResult: GateResult = {
@@ -269,14 +269,14 @@ function executeModelRunMock(agentId: AgentId, input: MockToolInput, scenario: s
   // Model version check
   rules.push({
     rule_id: 'model_version_check',
-    display_name: '\u6A21\u578B\u7248\u672C\u68C0\u67E5',
+    display_name: '模型版本检查',
     status: 'PASS',
     actual: true,
     threshold: true,
     operator: '==',
     severity: 'BLOCK',
     evidence_ref: makeEvidence('model_version', { version: modelVersion, registered: true }).evidence_id,
-    description: '\u6A21\u578B\u7248\u672C\u5FC5\u987B\u5DF2\u767B\u8BB0',
+    description: '模型版本必须已登记',
   });
 
   // Sharpe ratio check
@@ -287,57 +287,57 @@ function executeModelRunMock(agentId: AgentId, input: MockToolInput, scenario: s
   const sharpeStatus = sharpe >= 1.0 ? 'PASS' as const : 'WARN' as const;
   rules.push({
     rule_id: 'backtest_sharpe_check',
-    display_name: '\u56DE\u6D4B\u590F\u666E\u6BD4\u68C0\u67E5',
+    display_name: '回测夏普比检查',
     status: sharpeStatus,
     actual: sharpe,
     threshold: 1.0,
     operator: '>=',
     severity: 'WARN',
     evidence_ref: makeEvidence('sharpe_check', { sharpe }).evidence_id,
-    description: '\u56DE\u6D4B\u590F\u666E\u6BD4\u5EFA\u8BAE >= 1.0',
+    description: '回测夏普比建议 >= 1.0',
   });
   if (sharpeStatus === 'WARN') {
     if (modelGateStatus !== 'BLOCK') modelGateStatus = 'WARN';
-    warnings.push(`\u590F\u666E\u6BD4 ${sharpe} \u4F4E\u4E8E\u5EFA\u8BAE\u9608\u503C 1.0`);
+    warnings.push(`夏普比 ${sharpe} 低于建议阈值 1.0`);
   }
 
   // Max drawdown check
   rules.push({
     rule_id: 'backtest_max_drawdown_check',
-    display_name: '\u56DE\u6D4B\u6700\u5927\u56DE\u64A4\u68C0\u67E5',
+    display_name: '回测最大回撤检查',
     status: 'PASS',
     actual: 0.12,
     threshold: 0.2,
     operator: '<=',
     severity: 'WARN',
     evidence_ref: makeEvidence('drawdown_check', { max_drawdown: 0.12 }).evidence_id,
-    description: '\u56DE\u6D4B\u6700\u5927\u56DE\u64A4\u5EFA\u8BAE <= 20%',
+    description: '回测最大回撤建议 <= 20%',
   });
 
   // Anomaly check
   rules.push({
     rule_id: 'anomaly_check',
-    display_name: '\u5F02\u5E38\u503C\u68C0\u67E5',
+    display_name: '异常值检查',
     status: 'PASS',
     actual: 2,
     threshold: 5,
     operator: '<=',
     severity: 'WARN',
     evidence_ref: makeEvidence('anomaly_check', { count: 2 }).evidence_id,
-    description: '\u5F02\u5E38\u503C\u6570\u91CF\u5EFA\u8BAE <= 5',
+    description: '异常值数量建议 <= 5',
   });
 
   // Evidence completeness
   rules.push({
     rule_id: 'evidence_completeness_check',
-    display_name: '\u8BC1\u636E\u5B8C\u6574\u6027\u68C0\u67E5',
+    display_name: '证据完整性检查',
     status: 'PASS',
     actual: true,
     threshold: true,
     operator: '==',
     severity: 'BLOCK',
     evidence_ref: makeEvidence('evidence_completeness', { complete: true }).evidence_id,
-    description: '\u6240\u6709\u8BC1\u636E\u5FC5\u987B\u5B8C\u6574',
+    description: '所有证据必须完整',
   });
 
   const modelGate: GateResult = {
@@ -388,7 +388,7 @@ function executeRiskReviewMock(agentId: AgentId, input: MockToolInput, scenario:
       makeEvidence('risk_review', {
         review_status: 'APPROVE',
         risk_level: 'medium',
-        reasons: ['\u6A21\u578B\u7248\u672C\u5DF2\u767B\u8BB0', '\u8BC1\u636E\u5B8C\u6574', '\u6570\u636E\u622A\u6B62\u65E5\u4E00\u81F4'],
+        reasons: ['模型版本已登记', '证据完整', '数据截止日一致'],
       }),
     ],
     warnings: [],

@@ -61,38 +61,39 @@ export default function AuditPage() {
   return (
     <div className="p-6 space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">\u5BA1\u8BA1\u65E5\u5FD7</h1>
-        <p className="text-sm text-gray-500 mt-1">\u5B8C\u6574\u8BB0\u5F55\u6240\u6709\u8FD0\u884C\u3001\u5BA1\u6279\u3001\u5931\u8D25\u3001\u91CD\u8BD5\u548C\u53D1\u5E03\u52A8\u4F5C\u3002\u5BA1\u8BA1\u65E5\u5FD7\u4E0D\u53EF\u88AB Agent \u4FEE\u6539\u6216\u5220\u9664\u3002</p>
+        <h1 className="text-2xl font-bold">审计日志</h1>
+        <p className="text-sm text-gray-500 mt-1">完整记录所有运行、审批、失败、重试和发布动作。审计日志不可被 Agent 修改或删除。</p>
       </div>
 
       <div className="flex gap-2 items-center">
         <Input
-          placeholder="\u641C\u7D22 actor\u3001action\u3001run_id..."
+          placeholder="搜索 actor、action、run_id..."
           value={filter}
           onChange={e => setFilter(e.target.value)}
           className="max-w-sm"
         />
-        <Button variant="outline" size="sm" onClick={() => setFilter('')}>\u6E05\u9664</Button>
-        <span className="text-sm text-gray-500 ml-auto">\u5171 {filteredEvents.length} \u6761\u8BB0\u5F55</span>
+        <Button variant="outline" size="sm" onClick={() => setFilter('')}>清除</Button>
+        <span className="text-sm text-gray-500 ml-auto">共 {filteredEvents.length} 条记录</span>
       </div>
 
       <Card>
         <CardContent className="pt-4">
           {filteredEvents.length === 0 ? (
-            <p className="text-sm text-gray-500 text-center py-8">\u6682\u65E0\u5BA1\u8BA1\u8BB0\u5F55</p>
+            <p className="text-sm text-gray-500 text-center py-8">暂无审计记录</p>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>\u65F6\u95F4</TableHead>
-                  <TableHead>\u64CD\u4F5C\u8005</TableHead>
-                  <TableHead>\u52A8\u4F5C</TableHead>
-                  <TableHead>\u8FD0\u884C</TableHead>
-                  <TableHead>\u4EFB\u52A1</TableHead>
-                  <TableHead>\u72B6\u6001\u53D8\u5316</TableHead>
-                  <TableHead>\u8BE6\u60C5</TableHead>
-                </TableRow>
-              </TableHeader>
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[160px] whitespace-nowrap">时间</TableHead>
+                    <TableHead className="w-[140px]">操作者</TableHead>
+                    <TableHead className="w-[120px]">动作</TableHead>
+                    <TableHead className="w-[130px]">运行</TableHead>
+                    <TableHead className="w-[160px]">任务</TableHead>
+                    <TableHead className="w-[140px]">状态变化</TableHead>
+                    <TableHead className="min-w-[200px]">详情</TableHead>
+                  </TableRow>
+                </TableHeader>
               <TableBody>
                 {filteredEvents.map(event => (
                   <TableRow key={event.event_id}>
@@ -115,7 +116,7 @@ export default function AuditPage() {
                       {event.status_before && event.status_after ? (
                         <span>
                           <Badge variant="outline" className="text-xs">{event.status_before}</Badge>
-                          {' \u2192 '}
+                          {' → '}
                           <Badge variant="outline" className="text-xs">{event.status_after}</Badge>
                         </span>
                       ) : '-'}
@@ -127,6 +128,7 @@ export default function AuditPage() {
                 ))}
               </TableBody>
             </Table>
+            </div>
           )}
         </CardContent>
       </Card>

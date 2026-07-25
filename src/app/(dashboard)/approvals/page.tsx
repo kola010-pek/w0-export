@@ -83,51 +83,51 @@ export default function ApprovalsPage() {
   return (
     <div className="p-6 space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">\u5BA1\u6279\u4E2D\u5FC3</h1>
-        <p className="text-sm text-gray-500 mt-1">\u5BA1\u6279\u8BB0\u5F55\u7ED1\u5B9A run_id\u3001task_id\u3001\u6A21\u578B\u7248\u672C\u3001\u8F93\u5165\u5FEB\u7167\u3001\u6570\u636E\u622A\u6B62\u65E5\u548C\u5019\u9009\u4FE1\u53F7\u7248\u672C</p>
+        <h1 className="text-2xl font-bold">审批中心</h1>
+        <p className="text-sm text-gray-500 mt-1">审批记录绑定 run_id、task_id、模型版本、输入快照、数据截止日和候选信号版本</p>
       </div>
 
       <div className="grid grid-cols-3 gap-4">
         <Card>
           <CardContent className="pt-4">
             <div className="text-2xl font-bold text-orange-600">{pendingCount}</div>
-            <p className="text-sm text-gray-500">\u5F85\u5BA1\u6279</p>
+            <p className="text-sm text-gray-500">待审批</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4">
             <div className="text-2xl font-bold text-green-600">{approvals.filter(a => a.status === 'APPROVED').length}</div>
-            <p className="text-sm text-gray-500">\u5DF2\u6279\u51C6</p>
+            <p className="text-sm text-gray-500">已批准</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4">
             <div className="text-2xl font-bold text-red-600">{approvals.filter(a => a.status === 'REJECTED').length}</div>
-            <p className="text-sm text-gray-500">\u5DF2\u62D2\u7EDD</p>
+            <p className="text-sm text-gray-500">已拒绝</p>
           </CardContent>
         </Card>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>\u5BA1\u6279\u8BB0\u5F55</CardTitle>
+          <CardTitle>审批记录</CardTitle>
         </CardHeader>
         <CardContent>
           {approvals.length === 0 ? (
-            <p className="text-sm text-gray-500">\u6682\u65E0\u5BA1\u6279\u8BB0\u5F55\u3002\u8BF7\u5148\u8FD0\u884C\u573A\u666F\u3002</p>
+            <p className="text-sm text-gray-500">暂无审批记录。请先运行场景。</p>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>\u5BA1\u6279 ID</TableHead>
-                  <TableHead>\u8FD0\u884C</TableHead>
-                  <TableHead>\u7C7B\u578B</TableHead>
-                  <TableHead>\u72B6\u6001</TableHead>
-                  <TableHead>\u98CE\u9669</TableHead>
-                  <TableHead>\u6A21\u578B\u7248\u672C</TableHead>
-                  <TableHead>\u6570\u636E\u622A\u6B62</TableHead>
-                  <TableHead>\u5BA1\u6279\u4EBA</TableHead>
-                  <TableHead>\u64CD\u4F5C</TableHead>
+                  <TableHead>审批 ID</TableHead>
+                  <TableHead>运行</TableHead>
+                  <TableHead>类型</TableHead>
+                  <TableHead>状态</TableHead>
+                  <TableHead>风险</TableHead>
+                  <TableHead>模型版本</TableHead>
+                  <TableHead>数据截止</TableHead>
+                  <TableHead>审批人</TableHead>
+                  <TableHead>操作</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -155,39 +155,39 @@ export default function ApprovalsPage() {
                         }}>
                           <DialogTrigger asChild>
                             <Button size="sm" variant="outline" onClick={() => setSelectedApproval(a)}>
-                              \u5BA1\u6279
+                              审批
                             </Button>
                           </DialogTrigger>
                           <DialogContent>
                             <DialogHeader>
-                              <DialogTitle>\u5BA1\u6279\u786E\u8BA4</DialogTitle>
+                              <DialogTitle>审批确认</DialogTitle>
                               <DialogDescription>
-                                \u5BA1\u6279 ID: {a.approval_id} | \u8FD0\u884C: {a.run_id}
+                                审批 ID: {a.approval_id} | 运行: {a.run_id}
                               </DialogDescription>
                             </DialogHeader>
                             <div className="space-y-4 mt-4">
                               <div className="grid grid-cols-2 gap-3 text-sm">
-                                <div><span className="text-gray-500">\u7C7B\u578B:</span> {a.approval_type}</div>
-                                <div><span className="text-gray-500">\u98CE\u9669:</span> {a.risk_level}</div>
-                                <div><span className="text-gray-500">\u6A21\u578B:</span> {a.model_version || '-'}</div>
-                                <div><span className="text-gray-500">\u622A\u6B62\u65E5:</span> {a.data_cutoff}</div>
-                                <div><span className="text-gray-500">\u4FE1\u53F7\u7248\u672C:</span> {a.candidate_signal_version || '-'}</div>
-                                <div><span className="text-gray-500">\u5FEB\u7167:</span> {a.input_snapshot_id || '-'}</div>
+                                <div><span className="text-gray-500">类型:</span> {a.approval_type}</div>
+                                <div><span className="text-gray-500">风险:</span> {a.risk_level}</div>
+                                <div><span className="text-gray-500">模型:</span> {a.model_version || '-'}</div>
+                                <div><span className="text-gray-500">截止日:</span> {a.data_cutoff}</div>
+                                <div><span className="text-gray-500">信号版本:</span> {a.candidate_signal_version || '-'}</div>
+                                <div><span className="text-gray-500">快照:</span> {a.input_snapshot_id || '-'}</div>
                               </div>
                               <div>
-                                <Label>\u5BA1\u6279\u4EBA</Label>
-                                <Input value={approver} onChange={e => setApprover(e.target.value)} placeholder="\u8F93\u5165\u5BA1\u6279\u4EBA\u59D3\u540D" />
+                                <Label>审批人</Label>
+                                <Input value={approver} onChange={e => setApprover(e.target.value)} placeholder="输入审批人姓名" />
                               </div>
                               <div>
-                                <Label>\u5BA1\u6279\u610F\u89C1</Label>
-                                <Textarea value={opinion} onChange={e => setOpinion(e.target.value)} placeholder="\u8F93\u5165\u5BA1\u6279\u610F\u89C1" />
+                                <Label>审批意见</Label>
+                                <Textarea value={opinion} onChange={e => setOpinion(e.target.value)} placeholder="输入审批意见" />
                               </div>
                               <div className="flex gap-2">
                                 <Button onClick={() => handleDecision('APPROVED')} disabled={!approver} className="bg-green-600 hover:bg-green-700">
-                                  \u6279\u51C6
+                                  批准
                                 </Button>
                                 <Button onClick={() => handleDecision('REJECTED')} disabled={!approver} variant="destructive">
-                                  \u62D2\u7EDD
+                                  拒绝
                                 </Button>
                               </div>
                             </div>

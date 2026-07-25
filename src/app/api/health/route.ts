@@ -11,7 +11,7 @@ export async function GET() {
       production_model_enabled: false,
       production_release_enabled: false,
       timestamp: new Date().toISOString(),
-      message: '\u5F53\u524D\u4E3A\u6A21\u62DF\u73AF\u5883\u3002\u771F\u5B9E\u751F\u4EA7\u5199\u5165\u3001\u6B63\u5F0F\u6A21\u578B\u8FD0\u884C\u548C\u6B63\u5F0F\u4FE1\u53F7\u53D1\u5E03\u5747\u672A\u542F\u7528\u3002',
+      message: '当前为模拟环境。真实生产写入、正式模型运行和正式信号发布均未启用。',
     },
   });
 }

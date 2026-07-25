@@ -14,8 +14,8 @@ export interface ScenarioDef {
 export const SCENARIOS: ScenarioDef[] = [
   {
     id: 'scenario_a',
-    name: '\u573A\u666F A: \u5168\u90E8\u901A\u8FC7',
-    description: '\u6570\u636E\u66F4\u65B0\u6210\u529F \u2192 \u8D28\u91CF\u95E8\u7981 PASS \u2192 \u5019\u9009\u4FE1\u53F7\u751F\u6210 \u2192 \u98CE\u63A7\u6279\u51C6 \u2192 \u4EBA\u5DE5\u6279\u51C6 \u2192 \u53D1\u5E03\u6210\u529F',
+    name: '场景 A: 全部通过',
+    description: '数据更新成功 → 质量门禁 PASS → 候选信号生成 → 风控批准 → 人工批准 → 发布成功',
     expected_flow: [
       'daily_kline', 'adjustment_factors', 'factor_data', 'market_factors',
       'product_quality_gate', 'candidate_signal', 'risk_approval',
@@ -24,8 +24,8 @@ export const SCENARIOS: ScenarioDef[] = [
   },
   {
     id: 'scenario_b',
-    name: '\u573A\u666F B: \u6838\u5FC3\u6570\u636E\u963B\u65AD',
-    description: '\u590D\u6743\u56E0\u5B50\u7F3A\u53E3\u8D85\u8FC7\u9608\u503C \u2192 \u6570\u636E\u8D28\u91CF BLOCK \u2192 \u6A21\u578B\u751F\u4EA7\u53CA\u4E0B\u6E38\u5168\u90E8 SKIPPED_BY_GATE',
+    name: '场景 B: 核心数据阻断',
+    description: '复权因子缺口超过阈值 → 数据质量 BLOCK → 模型生产及下游全部 SKIPPED_BY_GATE',
     expected_flow: [
       'daily_kline', 'adjustment_factors', 'factor_data', 'market_factors',
       'product_quality_gate(BLOCK)'
@@ -33,8 +33,8 @@ export const SCENARIOS: ScenarioDef[] = [
   },
   {
     id: 'scenario_c',
-    name: '\u573A\u666F C: \u6A21\u578B\u8B66\u544A',
-    description: '\u6570\u636E\u6838\u5FC3\u95E8\u7981 PASS \u2192 \u6A21\u578B\u95E8\u7981 WARN \u2192 \u6D41\u7A0B\u505C\u5728\u4EBA\u5DE5\u5BA1\u6279',
+    name: '场景 C: 模型警告',
+    description: '数据核心门禁 PASS → 模型门禁 WARN → 流程停在人工审批',
     expected_flow: [
       'daily_kline', 'adjustment_factors', 'factor_data', 'market_factors',
       'product_quality_gate(PASS)', 'candidate_signal(WARN)', 'WAITING_APPROVAL'

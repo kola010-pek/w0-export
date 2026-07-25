@@ -10,7 +10,7 @@ environments:
     production_release_enabled: false
     database_core_gate_default: BLOCK
     model_gate_default: WARN
-    description: "\u6A21\u62DF\u73AF\u5883 - \u6240\u6709\u751F\u4EA7\u5199\u5165\u3001\u6A21\u578B\u8FD0\u884C\u548C\u4FE1\u53F7\u53D1\u5E03\u5747\u672A\u542F\u7528"
+    description: "模拟环境 - 所有生产写入、模型运行和信号发布均未启用"
 
   staging:
     environment: staging
@@ -20,7 +20,7 @@ environments:
     production_release_enabled: false
     database_core_gate_default: BLOCK
     model_gate_default: WARN
-    description: "\u9884\u53D1\u73AF\u5883 - \u6A21\u578B\u53EF\u8FD0\u884C\u4F46\u4E0D\u53D1\u5E03"
+    description: "预发环境 - 模型可运行但不发布"
 
   production:
     environment: production
@@ -30,7 +30,7 @@ environments:
     production_release_enabled: true
     database_core_gate_default: BLOCK
     model_gate_default: WARN
-    description: "\u751F\u4EA7\u73AF\u5883 - \u6240\u6709\u80FD\u529B\u542F\u7528\uFF08\u9700\u663E\u5F0F\u542F\u7528\uFF09"
+    description: "生产环境 - 所有能力启用（需显式启用）"
 
 # Current active environment
 active_environment: simulation

@@ -133,8 +133,8 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">\u8FD0\u8425\u603B\u89C8</h1>
-          <p className="text-sm text-gray-500 mt-1">\u91D1\u878D\u6570\u636E\u4E0E\u91CF\u5316\u6A21\u578B\u8FD0\u8425\u5DE5\u4F5C\u53F0</p>
+          <h1 className="text-2xl font-bold">运营总览</h1>
+          <p className="text-sm text-gray-500 mt-1">金融数据与量化模型运营工作台</p>
         </div>
         <div className="flex gap-2">
           {['scenario_a', 'scenario_b', 'scenario_c'].map(id => (
@@ -145,7 +145,7 @@ export default function DashboardPage() {
               disabled={runningScenario !== null}
               onClick={() => runScenario(id)}
             >
-              {runningScenario === id ? '\u8FD0\u884C\u4E2D...' : id === 'scenario_a' ? '\u573A\u666F A' : id === 'scenario_b' ? '\u573A\u666F B' : '\u573A\u666F C'}
+              {runningScenario === id ? '运行中...' : id === 'scenario_a' ? '场景 A' : id === 'scenario_b' ? '场景 B' : '场景 C'}
             </Button>
           ))}
         </div>
@@ -154,7 +154,7 @@ export default function DashboardPage() {
       {/* Simulation Warning */}
       <Alert className="border-amber-300 bg-amber-50">
         <AlertDescription className="text-amber-800 text-sm">
-          {health?.message || '\u5F53\u524D\u4E3A\u6A21\u62DF\u73AF\u5883\u3002\u771F\u5B9E\u751F\u4EA7\u5199\u5165\u3001\u6B63\u5F0F\u6A21\u578B\u8FD0\u884C\u548C\u6B63\u5F0F\u4FE1\u53F7\u53D1\u5E03\u5747\u672A\u542F\u7528\u3002'}
+          {health?.message || '当前为模拟环境。真实生产写入、正式模型运行和正式信号发布均未启用。'}
         </AlertDescription>
       </Alert>
 
@@ -162,57 +162,57 @@ export default function DashboardPage() {
       <div className="grid grid-cols-4 gap-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>\u73AF\u5883\u72B6\u6001</CardDescription>
+            <CardDescription>环境状态</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{health?.environment === 'simulation' ? '\u6A21\u62DF' : health?.environment}</div>
-            <p className="text-xs text-gray-500 mt-1">Mock: {health?.mock_tools ? '\u5F00\u542F' : '\u5173\u95ED'}</p>
+            <div className="text-2xl font-bold">{health?.environment === 'simulation' ? '模拟' : health?.environment}</div>
+            <p className="text-xs text-gray-500 mt-1">Mock: {health?.mock_tools ? '开启' : '关闭'}</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>\u6700\u65B0\u8FD0\u884C</CardDescription>
+            <CardDescription>最新运行</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="text-lg font-mono font-bold truncate">
-              {latestRun ? latestRun.run_id.slice(0, 16) : '\u65E0'}
+              {latestRun ? latestRun.run_id.slice(0, 16) : '无'}
             </div>
             <Badge className={STATUS_COLORS[latestRun?.status || ''] || 'bg-gray-100'}>
-              {latestRun?.status || '\u65E0\u8FD0\u884C'}
+              {latestRun?.status || '无运行'}
             </Badge>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>\u5F85\u5BA1\u6279</CardDescription>
+            <CardDescription>待审批</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-orange-600">{pendingApprovals.length}</div>
-            <p className="text-xs text-gray-500 mt-1">\u9700\u8981\u4EBA\u5DE5\u5904\u7406</p>
+            <p className="text-xs text-gray-500 mt-1">需要人工处理</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>\u751F\u4EA7\u80FD\u529B</CardDescription>
+            <CardDescription>生产能力</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-1 text-xs">
               <div className="flex justify-between">
-                <span>\u5199\u5165:</span>
+                <span>写入:</span>
                 <Badge variant={health?.production_write_enabled ? 'default' : 'secondary'} className="text-xs">
-                  {health?.production_write_enabled ? '\u542F\u7528' : '\u7981\u7528'}
+                  {health?.production_write_enabled ? '启用' : '禁用'}
                 </Badge>
               </div>
               <div className="flex justify-between">
-                <span>\u6A21\u578B:</span>
+                <span>模型:</span>
                 <Badge variant={health?.production_model_enabled ? 'default' : 'secondary'} className="text-xs">
-                  {health?.production_model_enabled ? '\u542F\u7528' : '\u7981\u7528'}
+                  {health?.production_model_enabled ? '启用' : '禁用'}
                 </Badge>
               </div>
               <div className="flex justify-between">
-                <span>\u53D1\u5E03:</span>
+                <span>发布:</span>
                 <Badge variant={health?.production_release_enabled ? 'default' : 'secondary'} className="text-xs">
-                  {health?.production_release_enabled ? '\u542F\u7528' : '\u7981\u7528'}
+                  {health?.production_release_enabled ? '启用' : '禁用'}
                 </Badge>
               </div>
             </div>
@@ -223,31 +223,32 @@ export default function DashboardPage() {
       {/* Tabs for details */}
       <Tabs defaultValue="runs">
         <TabsList>
-          <TabsTrigger value="runs">\u8FD0\u884C\u8BB0\u5F55</TabsTrigger>
-          <TabsTrigger value="gates">\u95E8\u7981\u72B6\u6001</TabsTrigger>
-          <TabsTrigger value="approvals">\u5BA1\u6279\u4E8B\u9879</TabsTrigger>
-          <TabsTrigger value="scenarios">\u6F14\u793A\u573A\u666F</TabsTrigger>
+          <TabsTrigger value="runs">运行记录</TabsTrigger>
+          <TabsTrigger value="gates">门禁状态</TabsTrigger>
+          <TabsTrigger value="approvals">审批事项</TabsTrigger>
+          <TabsTrigger value="scenarios">演示场景</TabsTrigger>
         </TabsList>
 
         <TabsContent value="runs">
           <Card>
             <CardHeader>
-              <CardTitle>\u8FD0\u884C\u5386\u53F2</CardTitle>
+              <CardTitle>运行历史</CardTitle>
             </CardHeader>
             <CardContent>
               {runs.length === 0 ? (
-                <p className="text-sm text-gray-500">\u6682\u65E0\u8FD0\u884C\u8BB0\u5F55\u3002\u8BF7\u8FD0\u884C\u6F14\u793A\u573A\u666F\u3002</p>
+                <p className="text-sm text-gray-500">暂无运行记录。请运行演示场景。</p>
               ) : (
+              <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>\u8FD0\u884C\u7F16\u53F7</TableHead>
-                      <TableHead>\u72B6\u6001</TableHead>
-                      <TableHead>\u573A\u666F</TableHead>
-                      <TableHead>\u622A\u6B62\u65E5</TableHead>
-                      <TableHead>\u4EFB\u52A1\u8FDB\u5EA6</TableHead>
-                      <TableHead>\u963B\u65AD\u539F\u56E0</TableHead>
-                      <TableHead>\u521B\u5EFA\u65F6\u95F4</TableHead>
+                      <TableHead className="min-w-[140px]">运行编号</TableHead>
+                      <TableHead className="w-[100px]">状态</TableHead>
+                      <TableHead className="w-[80px]">场景</TableHead>
+                      <TableHead className="w-[100px]">截止日</TableHead>
+                      <TableHead className="w-[120px]">任务进度</TableHead>
+                      <TableHead className="min-w-[150px] max-w-[250px]">阻断原因</TableHead>
+                      <TableHead className="w-[160px]">创建时间</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -259,18 +260,19 @@ export default function DashboardPage() {
                         </TableCell>
                         <TableCell>{run.scenario || '-'}</TableCell>
                         <TableCell>{run.data_cutoff}</TableCell>
-                        <TableCell>
+                        <TableCell className="whitespace-nowrap">
                           <span className="text-green-600">{run.completed_count}</span>
                           /{run.task_count}
-                          {run.failed_count > 0 && <span className="text-red-600 ml-1">({run.failed_count} \u5931\u8D25)</span>}
-                          {run.skipped_count > 0 && <span className="text-gray-500 ml-1">({run.skipped_count} \u8DF3\u8FC7)</span>}
+                          {run.failed_count > 0 && <span className="text-red-600 ml-1">({run.failed_count} 失败)</span>}
+                          {run.skipped_count > 0 && <span className="text-gray-500 ml-1">({run.skipped_count} 跳过)</span>}
                         </TableCell>
-                        <TableCell className="text-red-600 text-xs max-w-48 truncate">{run.block_reason || '-'}</TableCell>
-                        <TableCell className="text-xs">{new Date(run.created_at).toLocaleString('zh-CN')}</TableCell>
+                        <TableCell className="text-red-600 text-xs max-w-[250px] truncate" title={run.block_reason || ''}>{run.block_reason || '-'}</TableCell>
+                        <TableCell className="text-xs whitespace-nowrap">{new Date(run.created_at).toLocaleString('zh-CN')}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                 </Table>
+              </div>
               )}
             </CardContent>
           </Card>
@@ -279,14 +281,14 @@ export default function DashboardPage() {
         <TabsContent value="gates">
           <Card>
             <CardHeader>
-              <CardTitle>\u95E8\u7981\u72B6\u6001</CardTitle>
-              <CardDescription>\u6700\u65B0\u8FD0\u884C\u7684\u95E8\u7981\u68C0\u67E5\u7ED3\u679C</CardDescription>
+              <CardTitle>门禁状态</CardTitle>
+              <CardDescription>最新运行的门禁检查结果</CardDescription>
             </CardHeader>
             <CardContent>
               {latestRun ? (
                 <GateStatusView runId={latestRun.run_id} />
               ) : (
-                <p className="text-sm text-gray-500">\u6682\u65E0\u95E8\u7981\u6570\u636E</p>
+                <p className="text-sm text-gray-500">暂无门禁数据</p>
               )}
             </CardContent>
           </Card>
@@ -295,22 +297,22 @@ export default function DashboardPage() {
         <TabsContent value="approvals">
           <Card>
             <CardHeader>
-              <CardTitle>\u5BA1\u6279\u4E8B\u9879</CardTitle>
+              <CardTitle>审批事项</CardTitle>
             </CardHeader>
             <CardContent>
               {approvals.length === 0 ? (
-                <p className="text-sm text-gray-500">\u6682\u65E0\u5BA1\u6279\u8BB0\u5F55</p>
+                <p className="text-sm text-gray-500">暂无审批记录</p>
               ) : (
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>\u5BA1\u6279 ID</TableHead>
-                      <TableHead>\u8FD0\u884C</TableHead>
-                      <TableHead>\u7C7B\u578B</TableHead>
-                      <TableHead>\u72B6\u6001</TableHead>
-                      <TableHead>\u98CE\u9669\u7B49\u7EA7</TableHead>
-                      <TableHead>\u5BA1\u6279\u4EBA</TableHead>
-                      <TableHead>\u610F\u89C1</TableHead>
+                      <TableHead>审批 ID</TableHead>
+                      <TableHead>运行</TableHead>
+                      <TableHead>类型</TableHead>
+                      <TableHead>状态</TableHead>
+                      <TableHead>风险等级</TableHead>
+                      <TableHead>审批人</TableHead>
+                      <TableHead>意见</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -339,31 +341,31 @@ export default function DashboardPage() {
         <TabsContent value="scenarios">
           <Card>
             <CardHeader>
-              <CardTitle>\u6F14\u793A\u573A\u666F</CardTitle>
-              <CardDescription>\u70B9\u51FB\u8FD0\u884C\u573A\u666F\u67E5\u770B\u7ED3\u679C\u3002\u6BCF\u6B21\u8FD0\u884C\u4EA7\u751F\u65B0\u7684 run_id\u3002</CardDescription>
+              <CardTitle>演示场景</CardTitle>
+              <CardDescription>点击运行场景查看结果。每次运行产生新的 run_id。</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
                 <ScenarioCard
                   id="scenario_a"
-                  name="\u573A\u666F A: \u5168\u90E8\u901A\u8FC7"
-                  description="\u6570\u636E\u66F4\u65B0\u6210\u529F \u2192 \u8D28\u91CF\u95E8\u7981 PASS \u2192 \u5019\u9009\u4FE1\u53F7 \u2192 \u98CE\u63A7\u6279\u51C6 \u2192 \u4EBA\u5DE5\u6279\u51C6 \u2192 \u53D1\u5E03"
+                  name="场景 A: 全部通过"
+                  description="数据更新成功 → 质量门禁 PASS → 候选信号 → 风控批准 → 人工批准 → 发布"
                   onRun={() => runScenario('scenario_a')}
                   disabled={runningScenario !== null}
                   running={runningScenario === 'scenario_a'}
                 />
                 <ScenarioCard
                   id="scenario_b"
-                  name="\u573A\u666F B: \u6838\u5FC3\u6570\u636E\u963B\u65AD"
-                  description="\u590D\u6743\u56E0\u5B50\u7F3A\u53E3\u8D85\u9608\u503C \u2192 \u8D28\u91CF BLOCK \u2192 \u4E0B\u6E38\u5168\u90E8 SKIPPED_BY_GATE"
+                  name="场景 B: 核心数据阻断"
+                  description="复权因子缺口超阈值 → 质量 BLOCK → 下游全部 SKIPPED_BY_GATE"
                   onRun={() => runScenario('scenario_b')}
                   disabled={runningScenario !== null}
                   running={runningScenario === 'scenario_b'}
                 />
                 <ScenarioCard
                   id="scenario_c"
-                  name="\u573A\u666F C: \u6A21\u578B\u8B66\u544A"
-                  description="\u6570\u636E\u95E8\u7981 PASS \u2192 \u6A21\u578B\u95E8\u7981 WARN \u2192 \u505C\u5728\u4EBA\u5DE5\u5BA1\u6279"
+                  name="场景 C: 模型警告"
+                  description="数据门禁 PASS → 模型门禁 WARN → 停在人工审批"
                   onRun={() => runScenario('scenario_c')}
                   disabled={runningScenario !== null}
                   running={runningScenario === 'scenario_c'}
@@ -399,7 +401,7 @@ function GateStatusView({ runId }: { runId: string }) {
   }>;
 
   if (gateList.length === 0) {
-    return <p className="text-sm text-gray-500">\u6682\u65E0\u95E8\u7981\u6570\u636E</p>;
+    return <p className="text-sm text-gray-500">暂无门禁数据</p>;
   }
 
   return (
@@ -416,7 +418,7 @@ function GateStatusView({ runId }: { runId: string }) {
                 <span>{rule.display_name}</span>
                 <div className="flex items-center gap-3">
                   <span className="text-xs text-gray-500">
-                    \u5B9E\u9645: {String(rule.actual)} / \u9608\u503C: {String(rule.threshold)}
+                    实际: {String(rule.actual)} / 阈值: {String(rule.threshold)}
                   </span>
                   <Badge className={STATUS_COLORS[rule.status] || 'bg-gray-100'}>{rule.status}</Badge>
                 </div>
@@ -425,12 +427,12 @@ function GateStatusView({ runId }: { runId: string }) {
           </div>
           {gate.block_reasons.length > 0 && (
             <div className="mt-2 text-sm text-red-600">
-              \u963B\u65AD\u539F\u56E0: {gate.block_reasons.join('; ')}
+              阻断原因: {gate.block_reasons.join('; ')}
             </div>
           )}
           {gate.warnings.length > 0 && (
             <div className="mt-2 text-sm text-yellow-600">
-              \u8B66\u544A: {gate.warnings.join('; ')}
+              警告: {gate.warnings.join('; ')}
             </div>
           )}
         </div>
@@ -465,7 +467,7 @@ function ScenarioCard({
         onClick={onRun}
         disabled={disabled}
       >
-        {running ? '\u8FD0\u884C\u4E2D...' : '\u8FD0\u884C'}
+        {running ? '运行中...' : '运行'}
       </Button>
     </div>
   );

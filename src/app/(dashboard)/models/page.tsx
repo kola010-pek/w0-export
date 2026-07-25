@@ -21,11 +21,11 @@ interface RunData {
 }
 
 const SIGNAL_STAGES = [
-  { key: 'research_candidate', label: '\u7814\u7A76\u5019\u9009', color: 'bg-purple-100 text-purple-800' },
-  { key: 'registered_candidate', label: '\u5DF2\u767B\u8BB0\u5019\u9009', color: 'bg-blue-100 text-blue-800' },
-  { key: 'production_candidate', label: '\u751F\u4EA7\u5019\u9009', color: 'bg-yellow-100 text-yellow-800' },
-  { key: 'approved', label: '\u5DF2\u5BA1\u6279', color: 'bg-green-100 text-green-800' },
-  { key: 'released', label: '\u5DF2\u53D1\u5E03', color: 'bg-emerald-100 text-emerald-800' },
+  { key: 'research_candidate', label: '研究候选', color: 'bg-purple-100 text-purple-800' },
+  { key: 'registered_candidate', label: '已登记候选', color: 'bg-blue-100 text-blue-800' },
+  { key: 'production_candidate', label: '生产候选', color: 'bg-yellow-100 text-yellow-800' },
+  { key: 'approved', label: '已审批', color: 'bg-green-100 text-green-800' },
+  { key: 'released', label: '已发布', color: 'bg-emerald-100 text-emerald-800' },
 ];
 
 export default function ModelsPage() {
@@ -80,12 +80,12 @@ export default function ModelsPage() {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">\u6A21\u578B\u4E0E\u4FE1\u53F7</h1>
-          <p className="text-sm text-gray-500 mt-1">\u4E25\u683C\u533A\u5206\u7814\u7A76\u5019\u9009\u3001\u751F\u4EA7\u5019\u9009\u3001\u5DF2\u5BA1\u6279\u548C\u5DF2\u53D1\u5E03\u4FE1\u53F7</p>
+          <h1 className="text-2xl font-bold">模型与信号</h1>
+          <p className="text-sm text-gray-500 mt-1">严格区分研究候选、生产候选、已审批和已发布信号</p>
         </div>
         <Select value={selectedRun} onValueChange={setSelectedRun}>
           <SelectTrigger className="w-64">
-            <SelectValue placeholder="\u9009\u62E9\u8FD0\u884C" />
+            <SelectValue placeholder="选择运行" />
           </SelectTrigger>
           <SelectContent>
             {runs.map(r => (
@@ -98,8 +98,8 @@ export default function ModelsPage() {
       {/* Signal Pipeline */}
       <Card>
         <CardHeader>
-          <CardTitle>\u4FE1\u53F7\u751F\u547D\u5468\u671F</CardTitle>
-          <CardDescription>\u4ECE\u7814\u7A76\u5019\u9009\u5230\u6B63\u5F0F\u53D1\u5E03\u7684\u4E25\u683C\u6D41\u7A0B</CardDescription>
+          <CardTitle>信号生命周期</CardTitle>
+          <CardDescription>从研究候选到正式发布的严格流程</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-2">
@@ -113,14 +113,14 @@ export default function ModelsPage() {
                   {stage.label}
                 </div>
                 {idx < SIGNAL_STAGES.length - 1 && (
-                  <div className="text-gray-300 mx-1">\u2192</div>
+                  <div className="text-gray-300 mx-1">→</div>
                 )}
               </div>
             ))}
           </div>
           {currentStage && (
             <p className="text-sm text-gray-500 mt-3">
-              \u5F53\u524D\u4FE1\u53F7\u72B6\u6001: <Badge className={SIGNAL_STAGES.find(s => s.key === currentStage)?.color}>{currentStage}</Badge>
+              当前信号状态: <Badge className={SIGNAL_STAGES.find(s => s.key === currentStage)?.color}>{currentStage}</Badge>
             </p>
           )}
         </CardContent>
@@ -129,21 +129,21 @@ export default function ModelsPage() {
       {/* Model Results */}
       <Card>
         <CardHeader>
-          <CardTitle>\u6A21\u578B\u8FD0\u884C\u7ED3\u679C</CardTitle>
+          <CardTitle>模型运行结果</CardTitle>
         </CardHeader>
         <CardContent>
           {modelResults.length === 0 ? (
-            <p className="text-sm text-gray-500">\u6682\u65E0\u6A21\u578B\u8FD0\u884C\u7ED3\u679C\u3002\u8BF7\u5148\u8FD0\u884C\u573A\u666F\u3002</p>
+            <p className="text-sm text-gray-500">暂无模型运行结果。请先运行场景。</p>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>\u4EFB\u52A1</TableHead>
-                  <TableHead>\u72B6\u6001</TableHead>
-                  <TableHead>\u6A21\u578B\u7248\u672C</TableHead>
-                  <TableHead>\u8F93\u5165\u5FEB\u7167</TableHead>
-                  <TableHead>\u8F93\u51FA\u7248\u672C</TableHead>
-                  <TableHead>\u8BC1\u636E</TableHead>
+                  <TableHead>任务</TableHead>
+                  <TableHead>状态</TableHead>
+                  <TableHead>模型版本</TableHead>
+                  <TableHead>输入快照</TableHead>
+                  <TableHead>输出版本</TableHead>
+                  <TableHead>证据</TableHead>
                   <TableHead>Mock</TableHead>
                 </TableRow>
               </TableHeader>
@@ -157,8 +157,8 @@ export default function ModelsPage() {
                       <TableCell className="font-mono text-xs">{result.input_versions?.model || '-'}</TableCell>
                       <TableCell className="font-mono text-xs">{result.input_versions?.data_snapshot || '-'}</TableCell>
                       <TableCell className="font-mono text-xs">{result.output_versions?.candidate_signal || result.output_versions?.release || '-'}</TableCell>
-                      <TableCell>{result.evidence?.length || 0} \u6761</TableCell>
-                      <TableCell>{result.mock ? '\u2713' : '-'}</TableCell>
+                      <TableCell>{result.evidence?.length || 0} 条</TableCell>
+                      <TableCell>{result.mock ? '✓' : '-'}</TableCell>
                     </TableRow>
                   );
                 })}
@@ -172,7 +172,7 @@ export default function ModelsPage() {
       {modelResults.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>\u8BC1\u636E\u8BE6\u60C5</CardTitle>
+            <CardTitle>证据详情</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">

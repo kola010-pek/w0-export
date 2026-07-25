@@ -5,13 +5,13 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
 const NAV_ITEMS = [
-  { href: '/dashboard', label: '\u603B\u89C8', icon: '\u2302' },
-  { href: '/agents', label: 'Agent \u5C97\u4F4D', icon: '\u2699' },
-  { href: '/dag', label: 'DAG \u8FD0\u884C', icon: '\u21C6' },
-  { href: '/quality', label: '\u6570\u636E\u8D28\u91CF', icon: '\u2713' },
-  { href: '/models', label: '\u6A21\u578B\u4E0E\u4FE1\u53F7', icon: '\u269B' },
-  { href: '/approvals', label: '\u5BA1\u6279\u4E2D\u5FC3', icon: '\u2709' },
-  { href: '/audit', label: '\u5BA1\u8BA1\u65E5\u5FD7', icon: '\u2630' },
+  { href: '/dashboard', label: '总览', icon: '⌂' },
+  { href: '/agents', label: 'Agent 岗位', icon: '⚙' },
+  { href: '/dag', label: 'DAG 运行', icon: '⇆' },
+  { href: '/quality', label: '数据质量', icon: '✓' },
+  { href: '/models', label: '模型与信号', icon: '⚛' },
+  { href: '/approvals', label: '审批中心', icon: '✉' },
+  { href: '/audit', label: '审计日志', icon: '☰' },
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -22,12 +22,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* Sidebar */}
       <aside className="w-60 bg-slate-900 text-white flex flex-col shrink-0">
         <div className="p-4 border-b border-slate-700">
-          <h1 className="text-sm font-bold tracking-wide">\u91D1\u878D\u6295\u8D44\u667A\u80FD\u4F53</h1>
-          <p className="text-xs text-slate-400 mt-1">\u8FD0\u8425\u5DE5\u4F5C\u53F0</p>
+          <h1 className="text-sm font-bold tracking-wide">金融投资智能体</h1>
+          <p className="text-xs text-slate-400 mt-1">运营工作台</p>
         </div>
         <div className="px-3 py-2">
           <div className="bg-amber-900/30 border border-amber-700/50 rounded px-2 py-1.5 text-xs text-amber-300">
-            \u6A21\u62DF\u73AF\u5883 \u00B7 \u751F\u4EA7\u529F\u80FD\u672A\u542F\u7528
+            模拟环境 · 生产功能未启用
           </div>
         </div>
         <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-y-auto">
@@ -51,7 +51,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           })}
         </nav>
         <div className="p-3 border-t border-slate-700 text-xs text-slate-500">
-          v0.1.0 \u00B7 Phase 1 (Mock)
+          v0.1.0 · Phase 1 (Mock)
         </div>
       </aside>
 

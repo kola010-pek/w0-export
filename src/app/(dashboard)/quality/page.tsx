@@ -76,13 +76,13 @@ export default function QualityPage() {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">\u6570\u636E\u8D28\u91CF</h1>
-          <p className="text-sm text-gray-500 mt-1">\u8986\u76D6\u7387\u3001\u65B0\u9C9C\u5EA6\u3001\u552F\u4E00\u6027\u3001\u7A7A\u503C\u3001\u4F9D\u8D56\u987A\u5E8F\u68C0\u67E5\u7ED3\u679C</p>
+          <h1 className="text-2xl font-bold">数据质量</h1>
+          <p className="text-sm text-gray-500 mt-1">覆盖率、新鲜度、唯一性、空值、依赖顺序检查结果</p>
         </div>
         <div className="flex gap-2 items-center">
           <Select value={selectedRun} onValueChange={setSelectedRun}>
             <SelectTrigger className="w-64">
-              <SelectValue placeholder="\u9009\u62E9\u8FD0\u884C" />
+              <SelectValue placeholder="选择运行" />
             </SelectTrigger>
             <SelectContent>
               {runs.map(r => (
@@ -91,7 +91,7 @@ export default function QualityPage() {
             </SelectContent>
           </Select>
           <Button size="sm" variant="outline" onClick={downloadEvidence} disabled={Object.keys(gates).length === 0}>
-            \u4E0B\u8F7D\u8BC1\u636E
+            下载证据
           </Button>
         </div>
       </div>
@@ -99,7 +99,7 @@ export default function QualityPage() {
       {Object.keys(gates).length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center text-gray-500">
-            \u6682\u65E0\u8D28\u91CF\u68C0\u67E5\u6570\u636E\u3002\u8BF7\u5148\u8FD0\u884C\u573A\u666F\u3002
+            暂无质量检查数据。请先运行场景。
           </CardContent>
         </Card>
       ) : (
@@ -110,7 +110,7 @@ export default function QualityPage() {
                 <div>
                   <CardTitle>{gate.gate_id}</CardTitle>
                   <CardDescription>
-                    \u68C0\u67E5\u65F6\u95F4: {gate.checked_at ? new Date(gate.checked_at).toLocaleString('zh-CN') : '-'} | \u6570\u636E\u622A\u6B62: {gate.data_cutoff}
+                    检查时间: {gate.checked_at ? new Date(gate.checked_at).toLocaleString('zh-CN') : '-'} | 数据截止: {gate.data_cutoff}
                   </CardDescription>
                 </div>
                 <Badge className={`${STATUS_COLORS[gate.status]} text-sm px-3 py-1`}>{gate.status}</Badge>
@@ -121,13 +121,13 @@ export default function QualityPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>\u89C4\u5219</TableHead>
-                    <TableHead>\u63CF\u8FF0</TableHead>
-                    <TableHead>\u5B9E\u9645\u503C</TableHead>
-                    <TableHead>\u9608\u503C</TableHead>
-                    <TableHead>\u64CD\u4F5C\u7B26</TableHead>
-                    <TableHead>\u4E25\u91CD\u7EA7</TableHead>
-                    <TableHead>\u72B6\u6001</TableHead>
+                    <TableHead>规则</TableHead>
+                    <TableHead>描述</TableHead>
+                    <TableHead>实际值</TableHead>
+                    <TableHead>阈值</TableHead>
+                    <TableHead>操作符</TableHead>
+                    <TableHead>严重级</TableHead>
+                    <TableHead>状态</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -154,7 +154,7 @@ export default function QualityPage() {
               {/* Block Reasons */}
               {gate.block_reasons.length > 0 && (
                 <div className="bg-red-50 border border-red-200 rounded p-3">
-                  <p className="text-sm font-medium text-red-800">\u963B\u65AD\u539F\u56E0:</p>
+                  <p className="text-sm font-medium text-red-800">阻断原因:</p>
                   <ul className="mt-1 text-sm text-red-700 list-disc list-inside">
                     {gate.block_reasons.map((r, i) => <li key={i}>{r}</li>)}
                   </ul>
@@ -164,7 +164,7 @@ export default function QualityPage() {
               {/* Warnings */}
               {gate.warnings.length > 0 && (
                 <div className="bg-yellow-50 border border-yellow-200 rounded p-3">
-                  <p className="text-sm font-medium text-yellow-800">\u8B66\u544A:</p>
+                  <p className="text-sm font-medium text-yellow-800">警告:</p>
                   <ul className="mt-1 text-sm text-yellow-700 list-disc list-inside">
                     {gate.warnings.map((w, i) => <li key={i}>{w}</li>)}
                   </ul>
@@ -175,7 +175,7 @@ export default function QualityPage() {
               {gate.status === 'NOT_EXECUTED' && (
                 <div className="bg-gray-50 border border-gray-200 rounded p-3">
                   <p className="text-sm font-medium text-gray-700">
-                    NOT_EXECUTED: \u68C0\u67E5\u672A\u5B9E\u9645\u6267\u884C\uFF0C\u4E0D\u80FD\u89C6\u4E3A PASS
+                    NOT_EXECUTED: 检查未实际执行，不能视为 PASS
                   </p>
                 </div>
               )}

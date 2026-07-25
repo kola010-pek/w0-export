@@ -4,10 +4,10 @@
 agents:
   orchestrator-agent:
     agent_id: orchestrator-agent
-    display_name: "\u603B\u8C03\u5EA6\u5B98"
+    display_name: "总调度官"
     domain: production-dispatch
-    role: "\u63A5\u6536\u8D1F\u8D23\u4EBA\u4EFB\u52A1\uFF0C\u521B\u5EFA run_id\uFF0C\u6309 DAG \u6D3E\u53D1\u3001\u6682\u505C\u3001\u91CD\u8BD5\u548C\u7EC8\u6B62\u4EFB\u52A1\uFF0C\u6C47\u603B\u8BC1\u636E\u5411\u8D1F\u8D23\u4EBA\u62A5\u544A"
-    goal: "\u786E\u4FDD\u751F\u4EA7 DAG \u6309\u4F9D\u8D56\u987A\u5E8F\u6B63\u786E\u6267\u884C\uFF0C\u53CA\u65F6\u53D1\u73B0\u963B\u65AD\u5E76\u62A5\u544A"
+    role: "接收负责人任务，创建 run_id，按 DAG 派发、暂停、重试和终止任务，汇总证据向负责人报告"
+    goal: "确保生产 DAG 按依赖顺序正确执行，及时发现阻断并报告"
     allowed_inputs:
       - human_task_request
       - dag_status
@@ -48,10 +48,10 @@ agents:
 
   data-ops-agent:
     agent_id: data-ops-agent
-    display_name: "\u6570\u636E\u8FD0\u7EF4"
+    display_name: "数据运维"
     domain: data-operations
-    role: "\u6267\u884C\u53D7\u63A7\u6570\u636E\u66F4\u65B0\u4EFB\u52A1\uFF0C\u8FD4\u56DE\u6570\u636E\u6C34\u4F4D\u548C\u64CD\u4F5C\u8BC1\u636E"
-    goal: "\u5B8C\u6210\u884C\u60C5\u3001\u590D\u6743\u56E0\u5B50\u3001\u57FA\u7840\u56E0\u5B50\u3001\u5E02\u573A\u56E0\u5B50\u7684\u53D7\u63A7\u66F4\u65B0"
+    role: "执行受控数据更新任务，返回数据水位和操作证据"
+    goal: "完成行情、复权因子、基础因子、市场因子的受控更新"
     allowed_inputs:
       - data_update_task
       - target_date_range
@@ -87,10 +87,10 @@ agents:
 
   data-quality-agent:
     agent_id: data-quality-agent
-    display_name: "\u6570\u636E\u8D28\u91CF"
+    display_name: "数据质量"
     domain: quality-assurance
-    role: "\u6267\u884C\u53EA\u8BFB\u8D28\u91CF\u68C0\u67E5\uFF0C\u8F93\u51FA PASS/WARN/BLOCK"
-    goal: "\u786E\u4FDD\u6570\u636E\u8986\u76D6\u7387\u3001\u65B0\u9C9C\u5EA6\u3001\u552F\u4E00\u6027\u7B49\u6307\u6807\u8FBE\u6807"
+    role: "执行只读质量检查，输出 PASS/WARN/BLOCK"
+    goal: "确保数据覆盖率、新鲜度、唯一性等指标达标"
     allowed_inputs:
       - quality_check_task
       - data_watermarks
@@ -126,10 +126,10 @@ agents:
 
   model-production-agent:
     agent_id: model-production-agent
-    display_name: "\u6A21\u578B\u751F\u4EA7"
+    display_name: "模型生产"
     domain: model-production
-    role: "\u4F7F\u7528\u5DF2\u901A\u8FC7\u95E8\u7981\u7684\u6570\u636E\u751F\u6210\u5019\u9009\u4FE1\u53F7"
-    goal: "\u57FA\u4E8E\u5DF2\u9A8C\u8BC1\u6570\u636E\u8FD0\u884C\u751F\u4EA7\u6A21\u578B\uFF0C\u751F\u6210\u5019\u9009\u4FE1\u53F7\u548C\u8FD0\u884C\u8BC1\u636E"
+    role: "使用已通过门禁的数据生成候选信号"
+    goal: "基于已验证数据运行生产模型，生成候选信号和运行证据"
     allowed_inputs:
       - model_run_task
       - passed_gate_snapshot
@@ -163,10 +163,10 @@ agents:
 
   model-risk-agent:
     agent_id: model-risk-agent
-    display_name: "\u6A21\u578B\u98CE\u63A7"
+    display_name: "模型风控"
     domain: risk-control
-    role: "\u72EC\u7ACB\u5BA1\u67E5\u6A21\u578B\u7ED3\u679C\uFF0C\u8F93\u51FA APPROVE/REJECT/NEEDS_REVIEW"
-    goal: "\u786E\u4FDD\u6A21\u578B\u7ED3\u679C\u7B26\u5408\u98CE\u63A7\u6807\u51C6\uFF0C\u9AD8\u98CE\u9669\u4E8B\u9879\u63D0\u4EA4\u4EBA\u5DE5\u5BA1\u6279"
+    role: "独立审查模型结果，输出 APPROVE/REJECT/NEEDS_REVIEW"
+    goal: "确保模型结果符合风控标准，高风险事项提交人工审批"
     allowed_inputs:
       - risk_review_task
       - candidate_signal
@@ -203,10 +203,10 @@ agents:
 
   release-observer-agent:
     agent_id: release-observer-agent
-    display_name: "\u53D1\u5E03\u89C2\u5BDF"
+    display_name: "发布观察"
     domain: release-management
-    role: "\u53D1\u5E03\u5DF2\u5BA1\u6279\u7684\u6B63\u5F0F\u7248\u672C\uFF0C\u76D1\u63A7\u53D1\u5E03\u540E\u72B6\u6001"
-    goal: "\u5B89\u5168\u53D1\u5E03\u5E76\u89C2\u5BDF\u7ED3\u679C\uFF0C\u53CA\u65F6\u89E6\u53D1\u544A\u8B66\u6216\u56DE\u6EDA\u7533\u8BF7"
+    role: "发布已审批的正式版本，监控发布后状态"
+    goal: "安全发布并观察结果，及时触发告警或回滚申请"
     allowed_inputs:
       - release_task
       - approved_signal
@@ -239,10 +239,10 @@ agents:
 
   research-agent:
     agent_id: research-agent
-    display_name: "\u91CF\u5316\u7814\u7A76\u5458"
+    display_name: "量化研究员"
     domain: research
-    role: "\u5728\u7814\u7A76\u57DF\u5206\u6790\u6570\u636E\uFF0C\u5F62\u6210\u5047\u8BBE\u548C\u5019\u9009\u6A21\u578B"
-    goal: "\u63A2\u7D22\u65B0\u7684\u56E0\u5B50\u3001\u6A21\u578B\u548C\u7B56\u7565\uFF0C\u63D0\u4EA4\u5019\u9009\u8FDB\u5165\u72EC\u7ACB\u8BC4\u5BA1"
+    role: "在研究域分析数据，形成假设和候选模型"
+    goal: "探索新的因子、模型和策略，提交候选进入独立评审"
     allowed_inputs:
       - research_request
       - historical_data

@@ -43,15 +43,15 @@ interface GateData {
 }
 
 const NODE_LABELS: Record<string, string> = {
-  daily_kline: '\u65E5\u7EBF\u66F4\u65B0',
-  adjustment_factors: '\u590D\u6743\u56E0\u5B50',
-  factor_data: '\u57FA\u7840\u56E0\u5B50',
-  market_factors: '\u5E02\u573A\u56E0\u5B50',
-  product_quality_gate: '\u8D28\u91CF\u95E8\u7981',
-  candidate_signal: '\u5019\u9009\u4FE1\u53F7',
-  risk_approval: '\u98CE\u63A7\u5BA1\u6279',
-  release: '\u53D1\u5E03',
-  post_release_observation: '\u53D1\u5E03\u89C2\u5BDF',
+  daily_kline: '日线更新',
+  adjustment_factors: '复权因子',
+  factor_data: '基础因子',
+  market_factors: '市场因子',
+  product_quality_gate: '质量门禁',
+  candidate_signal: '候选信号',
+  risk_approval: '风控审批',
+  release: '发布',
+  post_release_observation: '发布观察',
 };
 
 const STATUS_COLORS: Record<string, string> = {
@@ -123,13 +123,13 @@ export default function DagPage() {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">DAG \u8FD0\u884C</h1>
-          <p className="text-sm text-gray-500 mt-1">\u786E\u5B9A\u6027\u4EFB\u52A1\u4F9D\u8D56\u94FE\u4E0E\u6267\u884C\u72B6\u6001</p>
+          <h1 className="text-2xl font-bold">DAG 运行</h1>
+          <p className="text-sm text-gray-500 mt-1">确定性任务依赖链与执行状态</p>
         </div>
         <div className="flex gap-2 items-center">
           <Select value={selectedRun} onValueChange={setSelectedRun}>
             <SelectTrigger className="w-64">
-              <SelectValue placeholder="\u9009\u62E9\u8FD0\u884C" />
+              <SelectValue placeholder="选择运行" />
             </SelectTrigger>
             <SelectContent>
               {runs.map(r => (
@@ -140,7 +140,7 @@ export default function DagPage() {
             </SelectContent>
           </Select>
           <Button size="sm" onClick={executeNext} disabled={!selectedRun}>
-            \u6267\u884C\u4E0B\u4E00\u6B65
+            执行下一步
           </Button>
         </div>
       </div>
@@ -150,10 +150,10 @@ export default function DagPage() {
           {/* DAG Visualization */}
           <Card>
             <CardHeader>
-              <CardTitle>\u4EFB\u52A1\u4F9D\u8D56\u94FE</CardTitle>
+              <CardTitle>任务依赖链</CardTitle>
               <CardDescription>
-                \u8FD0\u884C: {runData.run_id} | \u72B6\u6001: <Badge className={STATUS_COLORS[runData.status]}>{runData.status}</Badge>
-                {runData.block_reason && <span className="text-red-600 ml-2">\u963B\u65AD: {runData.block_reason}</span>}
+                运行: {runData.run_id} | 状态: <Badge className={STATUS_COLORS[runData.status]}>{runData.status}</Badge>
+                {runData.block_reason && <span className="text-red-600 ml-2">阻断: {runData.block_reason}</span>}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -171,12 +171,12 @@ export default function DagPage() {
                         <div className="text-xs text-gray-400 mt-0.5">{task.assigned_agent.replace('-agent', '')}</div>
                         {task.status === 'FAILED' && (
                           <Button size="sm" variant="outline" className="mt-1 text-xs h-5" onClick={() => retryTask(taskId)}>
-                            \u91CD\u8BD5
+                            重试
                           </Button>
                         )}
                       </div>
                       {idx < Object.keys(runData.tasks).length - 1 && (
-                        <div className="text-gray-300 mx-1 text-lg">\u2192</div>
+                        <div className="text-gray-300 mx-1 text-lg">→</div>
                       )}
                     </div>
                   ))}
@@ -187,19 +187,19 @@ export default function DagPage() {
           {/* Task Details Table */}
           <Card>
             <CardHeader>
-              <CardTitle>\u4EFB\u52A1\u8BE6\u60C5</CardTitle>
+              <CardTitle>任务详情</CardTitle>
             </CardHeader>
             <CardContent>
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>\u8282\u70B9</TableHead>
+                    <TableHead>节点</TableHead>
                     <TableHead>Agent</TableHead>
-                    <TableHead>\u72B6\u6001</TableHead>
-                    <TableHead>\u95E8\u7981</TableHead>
-                    <TableHead>\u5C1D\u8BD5</TableHead>
-                    <TableHead>\u8BC1\u636E</TableHead>
-                    <TableHead>\u8B66\u544A/\u9519\u8BEF</TableHead>
+                    <TableHead>状态</TableHead>
+                    <TableHead>门禁</TableHead>
+                    <TableHead>尝试</TableHead>
+                    <TableHead>证据</TableHead>
+                    <TableHead>警告/错误</TableHead>
                     <TableHead>Mock</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -222,13 +222,13 @@ export default function DagPage() {
                             {result ? <Badge className={STATUS_COLORS[result.gate_status]}>{result.gate_status}</Badge> : '-'}
                           </TableCell>
                           <TableCell>{task.attempt}</TableCell>
-                          <TableCell>{result?.evidence?.length || 0} \u6761</TableCell>
+                          <TableCell>{result?.evidence?.length || 0} 条</TableCell>
                           <TableCell>
-                            {result?.warnings?.length ? <span className="text-yellow-600 text-xs">{result.warnings.length}\u8B66\u544A</span> : ''}
-                            {result?.errors?.length ? <span className="text-red-600 text-xs ml-1">{result.errors.length}\u9519\u8BEF</span> : ''}
+                            {result?.warnings?.length ? <span className="text-yellow-600 text-xs">{result.warnings.length}警告</span> : ''}
+                            {result?.errors?.length ? <span className="text-red-600 text-xs ml-1">{result.errors.length}错误</span> : ''}
                             {(!result?.warnings?.length && !result?.errors?.length) ? '-' : ''}
                           </TableCell>
-                          <TableCell>{result?.mock ? '\u2713' : '-'}</TableCell>
+                          <TableCell>{result?.mock ? '✓' : '-'}</TableCell>
                         </TableRow>
                       );
                     })}
@@ -240,7 +240,7 @@ export default function DagPage() {
       ) : (
         <Card>
           <CardContent className="py-12 text-center text-gray-500">
-            \u6682\u65E0\u8FD0\u884C\u8BB0\u5F55\u3002\u8BF7\u5148\u5728\u603B\u89C8\u9875\u8FD0\u884C\u6F14\u793A\u573A\u666F\u3002
+            暂无运行记录。请先在总览页运行演示场景。
           </CardContent>
         </Card>
       )}

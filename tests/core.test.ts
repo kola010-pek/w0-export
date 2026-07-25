@@ -16,28 +16,28 @@ const failures: string[] = [];
 function assert(condition: boolean, message: string): void {
   if (condition) {
     passed++;
-    console.log(`  \u2713 ${message}`);
+    console.log(`  ✓ ${message}`);
   } else {
     failed++;
     failures.push(message);
-    console.log(`  \u2717 ${message}`);
+    console.log(`  ✗ ${message}`);
   }
 }
 
 function assertEqual<T>(actual: T, expected: T, message: string): void {
   if (actual === expected) {
     passed++;
-    console.log(`  \u2713 ${message}`);
+    console.log(`  ✓ ${message}`);
   } else {
     failed++;
     failures.push(`${message} (expected: ${expected}, got: ${actual})`);
-    console.log(`  \u2717 ${message} (expected: ${expected}, got: ${actual})`);
+    console.log(`  ✗ ${message} (expected: ${expected}, got: ${actual})`);
   }
 }
 
 // ============ Test Suite ============
 
-console.log('\n=== Test 1: BLOCK \u963B\u65AD\u4E0B\u6E38 ===');
+console.log('\n=== Test 1: BLOCK 阻断下游 ===');
 {
   resetStore();
   setActiveScenario('scenario_b');
@@ -83,7 +83,7 @@ console.log('\n=== Test 1: BLOCK \u963B\u65AD\u4E0B\u6E38 ===');
   assertEqual(gate.status, 'BLOCK', 'database_core gate should be BLOCK');
 }
 
-console.log('\n=== Test 2: \u672A\u5BA1\u6279\u4E0D\u80FD\u53D1\u5E03 ===');
+console.log('\n=== Test 2: 未审批不能发布 ===');
 {
   resetStore();
   setActiveScenario('scenario_c');
@@ -112,14 +112,14 @@ console.log('\n=== Test 2: \u672A\u5BA1\u6279\u4E0D\u80FD\u53D1\u5E03 ===');
   assert(pendingApprovals.length > 0, 'There should be pending approvals');
 }
 
-console.log('\n=== Test 3: \u7814\u7A76\u5458\u4E0D\u80FD\u8C03\u7528\u53D1\u5E03\u5DE5\u5177 ===');
+console.log('\n=== Test 3: 研究员不能调用发布工具 ===');
 {
   const result = checkToolPermission('research-agent' as AgentId, 'publish_approved_signal');
   assertEqual(result.allowed, false, 'research-agent should NOT be allowed to publish_approved_signal');
   assert(result.reason.includes('not authorized'), 'Reason should mention not authorized');
 }
 
-console.log('\n=== Test 4: \u6570\u636E\u8D28\u91CF Agent \u4E0D\u80FD\u8C03\u7528\u5199\u5DE5\u5177 ===');
+console.log('\n=== Test 4: 数据质量 Agent 不能调用写工具 ===');
 {
   const result = checkToolPermission('data-quality-agent' as AgentId, 'update_daily_kline');
   assertEqual(result.allowed, false, 'data-quality-agent should NOT be allowed to update_daily_kline');
@@ -128,7 +128,7 @@ console.log('\n=== Test 4: \u6570\u636E\u8D28\u91CF Agent \u4E0D\u80FD\u8C03\u75
   assertEqual(result2.allowed, true, 'data-quality-agent should be allowed to check_coverage');
 }
 
-console.log('\n=== Test 5: \u5E42\u7B49\u952E\u4FDD\u62A4\u91CD\u590D\u5199\u8BF7\u6C42 ===');
+console.log('\n=== Test 5: 幂等键保护重复写请求 ===');
 {
   resetStore();
   setActiveScenario('scenario_a');
@@ -150,7 +150,7 @@ console.log('\n=== Test 5: \u5E42\u7B49\u952E\u4FDD\u62A4\u91CD\u590D\u5199\u8BF
   assertEqual(executedTask!.status, 'SUCCEEDED', 'daily_kline should be SUCCEEDED');
 }
 
-console.log('\n=== Test 6: NOT_EXECUTED \u4E0D\u4F1A\u88AB\u8BC6\u522B\u4E3A PASS ===');
+console.log('\n=== Test 6: NOT_EXECUTED 不会被识别为 PASS ===');
 {
   resetStore();
   // Create a run but don't execute any nodes
@@ -185,7 +185,7 @@ console.log('\n=== Test 6: NOT_EXECUTED \u4E0D\u4F1A\u88AB\u8BC6\u522B\u4E3A PAS
   }
 }
 
-console.log('\n=== Test 7: \u6A21\u62DF\u73AF\u5883\u4E0D\u80FD\u8C03\u7528\u751F\u4EA7\u5DE5\u5177 ===');
+console.log('\n=== Test 7: 模拟环境不能调用生产工具 ===');
 {
   const env = getEnvironmentConfig();
   assertEqual(env.environment, 'simulation', 'Environment should be simulation');
@@ -202,7 +202,7 @@ console.log('\n=== Test 7: \u6A21\u62DF\u73AF\u5883\u4E0D\u80FD\u8C03\u7528\u751
   assertEqual(releaseAccess.allowed, false, 'Production release should not be allowed in simulation');
 }
 
-console.log('\n=== Test 8: \u573A\u666F A \u5168\u90E8\u901A\u8FC7 ===');
+console.log('\n=== Test 8: 场景 A 全部通过 ===');
 {
   resetStore();
   setActiveScenario('scenario_a');
@@ -236,7 +236,7 @@ console.log('\n=== Test 8: \u573A\u666F A \u5168\u90E8\u901A\u8FC7 ===');
   assertEqual(qualityGate.status, 'PASS', 'Quality gate should be PASS');
 }
 
-console.log('\n=== Test 9: Agent \u6743\u9650\u914D\u7F6E\u9A8C\u8BC1 ===');
+console.log('\n=== Test 9: Agent 权限配置验证 ===');
 {
   const agents: AgentId[] = [
     'orchestrator-agent',
@@ -257,7 +257,7 @@ console.log('\n=== Test 9: Agent \u6743\u9650\u914D\u7F6E\u9A8C\u8BC1 ===');
   }
 }
 
-console.log('\n=== Test 10: DAG \u914D\u7F6E\u9A8C\u8BC1 ===');
+console.log('\n=== Test 10: DAG 配置验证 ===');
 {
   const dag = getDagConfig();
   assert(dag !== null, 'DAG config should exist');
@@ -277,7 +277,7 @@ console.log('\n=== Test 10: DAG \u914D\u7F6E\u9A8C\u8BC1 ===');
   assert(candidateNode.required_gates.includes('database_core'), 'candidate_signal should require database_core gate');
 }
 
-console.log('\n=== Test 11: \u5BA1\u8BA1\u65E5\u5FD7\u5B8C\u6574\u6027 ===');
+console.log('\n=== Test 11: 审计日志完整性 ===');
 {
   const events = getAuditEvents();
   assert(events.length > 0, 'Audit events should exist after running scenarios');
@@ -290,7 +290,7 @@ console.log('\n=== Test 11: \u5BA1\u8BA1\u65E5\u5FD7\u5B8C\u6574\u6027 ===');
   assert(firstEvent.action.length > 0, 'Event should have action');
 }
 
-console.log('\n=== Test 12: \u5DE5\u5177\u767D\u540D\u5355\u9A8C\u8BC1 ===');
+console.log('\n=== Test 12: 工具白名单验证 ===');
 {
   // data-ops-agent should only have data update tools
   const dataOpsConfig = getAgentConfig('data-ops-agent');
@@ -306,9 +306,9 @@ console.log('\n=== Test 12: \u5DE5\u5177\u767D\u540D\u5355\u9A8C\u8BC1 ===');
 
 // ============ Summary ============
 console.log(`\n${'='.repeat(50)}`);
-console.log(`\u6D4B\u8BD5\u7ED3\u679C: ${passed} \u901A\u8FC7, ${failed} \u5931\u8D25`);
+console.log(`测试结果: ${passed} 通过, ${failed} 失败`);
 if (failures.length > 0) {
-  console.log('\n\u5931\u8D25\u8BE6\u60C5:');
+  console.log('\n失败详情:');
   failures.forEach(f => console.log(`  - ${f}`));
 }
 console.log(`${'='.repeat(50)}\n`);

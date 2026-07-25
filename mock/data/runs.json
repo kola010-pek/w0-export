@@ -1,16 +1,16 @@
 {
-  "run_462b19a8ef86": {
-    "run_id": "run_462b19a8ef86",
+  "run_e01e8f53f121": {
+    "run_id": "run_e01e8f53f121",
     "status": "WAITING_APPROVAL",
     "scenario": "scenario_a",
-    "created_at": "2026-07-25T14:35:22.846Z",
+    "created_at": "2026-07-25T14:52:44.097Z",
     "created_by": "test",
-    "updated_at": "2026-07-25T14:35:22.851Z",
+    "updated_at": "2026-07-25T14:52:44.103Z",
     "data_cutoff": "2026-07-25",
     "tasks": {
-      "task_daily_kline_a8ef86": {
-        "task_id": "task_daily_kline_a8ef86",
-        "run_id": "run_462b19a8ef86",
+      "task_daily_kline_53f121": {
+        "task_id": "task_daily_kline_53f121",
+        "run_id": "run_e01e8f53f121",
         "task_type": "data_update",
         "assigned_agent": "data-ops-agent",
         "status": "SUCCEEDED",
@@ -20,15 +20,15 @@
         },
         "input_refs": [],
         "required_gates": [],
-        "created_at": "2026-07-25T14:35:22.846Z",
+        "created_at": "2026-07-25T14:52:44.097Z",
         "created_by": "test",
-        "idempotency_key": "run_462b19a8ef86_daily_kline_v1",
+        "idempotency_key": "run_e01e8f53f121_daily_kline_v1",
         "dag_node": "daily_kline",
         "attempt": 1
       },
-      "task_adjustment_factors_a8ef86": {
-        "task_id": "task_adjustment_factors_a8ef86",
-        "run_id": "run_462b19a8ef86",
+      "task_adjustment_factors_53f121": {
+        "task_id": "task_adjustment_factors_53f121",
+        "run_id": "run_e01e8f53f121",
         "task_type": "data_update",
         "assigned_agent": "data-ops-agent",
         "status": "SUCCEEDED",
@@ -38,15 +38,15 @@
         },
         "input_refs": [],
         "required_gates": [],
-        "created_at": "2026-07-25T14:35:22.846Z",
+        "created_at": "2026-07-25T14:52:44.097Z",
         "created_by": "test",
-        "idempotency_key": "run_462b19a8ef86_adjustment_factors_v1",
+        "idempotency_key": "run_e01e8f53f121_adjustment_factors_v1",
         "dag_node": "adjustment_factors",
         "attempt": 1
       },
-      "task_factor_data_a8ef86": {
-        "task_id": "task_factor_data_a8ef86",
-        "run_id": "run_462b19a8ef86",
+      "task_factor_data_53f121": {
+        "task_id": "task_factor_data_53f121",
+        "run_id": "run_e01e8f53f121",
         "task_type": "data_update",
         "assigned_agent": "data-ops-agent",
         "status": "SUCCEEDED",
@@ -56,15 +56,15 @@
         },
         "input_refs": [],
         "required_gates": [],
-        "created_at": "2026-07-25T14:35:22.846Z",
+        "created_at": "2026-07-25T14:52:44.097Z",
         "created_by": "test",
-        "idempotency_key": "run_462b19a8ef86_factor_data_v1",
+        "idempotency_key": "run_e01e8f53f121_factor_data_v1",
         "dag_node": "factor_data",
         "attempt": 1
       },
-      "task_market_factors_a8ef86": {
-        "task_id": "task_market_factors_a8ef86",
-        "run_id": "run_462b19a8ef86",
+      "task_market_factors_53f121": {
+        "task_id": "task_market_factors_53f121",
+        "run_id": "run_e01e8f53f121",
         "task_type": "data_update",
         "assigned_agent": "data-ops-agent",
         "status": "SUCCEEDED",
@@ -74,15 +74,15 @@
         },
         "input_refs": [],
         "required_gates": [],
-        "created_at": "2026-07-25T14:35:22.846Z",
+        "created_at": "2026-07-25T14:52:44.097Z",
         "created_by": "test",
-        "idempotency_key": "run_462b19a8ef86_market_factors_v1",
+        "idempotency_key": "run_e01e8f53f121_market_factors_v1",
         "dag_node": "market_factors",
         "attempt": 1
       },
-      "task_product_quality_gate_a8ef86": {
-        "task_id": "task_product_quality_gate_a8ef86",
-        "run_id": "run_462b19a8ef86",
+      "task_product_quality_gate_53f121": {
+        "task_id": "task_product_quality_gate_53f121",
+        "run_id": "run_e01e8f53f121",
         "task_type": "quality_check",
         "assigned_agent": "data-quality-agent",
         "status": "SUCCEEDED",
@@ -92,15 +92,15 @@
         },
         "input_refs": [],
         "required_gates": [],
-        "created_at": "2026-07-25T14:35:22.846Z",
+        "created_at": "2026-07-25T14:52:44.097Z",
         "created_by": "test",
-        "idempotency_key": "run_462b19a8ef86_product_quality_gate_v1",
+        "idempotency_key": "run_e01e8f53f121_product_quality_gate_v1",
         "dag_node": "product_quality_gate",
         "attempt": 1
       },
-      "task_candidate_signal_a8ef86": {
-        "task_id": "task_candidate_signal_a8ef86",
-        "run_id": "run_462b19a8ef86",
+      "task_candidate_signal_53f121": {
+        "task_id": "task_candidate_signal_53f121",
+        "run_id": "run_e01e8f53f121",
         "task_type": "model_run",
         "assigned_agent": "model-production-agent",
         "status": "SUCCEEDED",
@@ -112,15 +112,15 @@
         "required_gates": [
           "database_core"
         ],
-        "created_at": "2026-07-25T14:35:22.846Z",
+        "created_at": "2026-07-25T14:52:44.097Z",
         "created_by": "test",
-        "idempotency_key": "run_462b19a8ef86_candidate_signal_v1",
+        "idempotency_key": "run_e01e8f53f121_candidate_signal_v1",
         "dag_node": "candidate_signal",
         "attempt": 1
       },
-      "task_risk_approval_a8ef86": {
-        "task_id": "task_risk_approval_a8ef86",
-        "run_id": "run_462b19a8ef86",
+      "task_risk_approval_53f121": {
+        "task_id": "task_risk_approval_53f121",
+        "run_id": "run_e01e8f53f121",
         "task_type": "risk_review",
         "assigned_agent": "model-risk-agent",
         "status": "WAITING_APPROVAL",
@@ -132,15 +132,15 @@
         "required_gates": [
           "model"
         ],
-        "created_at": "2026-07-25T14:35:22.846Z",
+        "created_at": "2026-07-25T14:52:44.097Z",
         "created_by": "test",
-        "idempotency_key": "run_462b19a8ef86_risk_approval_v1",
+        "idempotency_key": "run_e01e8f53f121_risk_approval_v1",
         "dag_node": "risk_approval",
         "attempt": 1
       },
-      "task_release_a8ef86": {
-        "task_id": "task_release_a8ef86",
-        "run_id": "run_462b19a8ef86",
+      "task_release_53f121": {
+        "task_id": "task_release_53f121",
+        "run_id": "run_e01e8f53f121",
         "task_type": "release",
         "assigned_agent": "release-observer-agent",
         "status": "PENDING",
@@ -153,15 +153,15 @@
           "model",
           "approval"
         ],
-        "created_at": "2026-07-25T14:35:22.846Z",
+        "created_at": "2026-07-25T14:52:44.097Z",
         "created_by": "test",
-        "idempotency_key": "run_462b19a8ef86_release_v1",
+        "idempotency_key": "run_e01e8f53f121_release_v1",
         "dag_node": "release",
         "attempt": 1
       },
-      "task_post_release_observation_a8ef86": {
-        "task_id": "task_post_release_observation_a8ef86",
-        "run_id": "run_462b19a8ef86",
+      "task_post_release_observation_53f121": {
+        "task_id": "task_post_release_observation_53f121",
+        "run_id": "run_e01e8f53f121",
         "task_type": "observation",
         "assigned_agent": "release-observer-agent",
         "status": "PENDING",
@@ -171,22 +171,22 @@
         },
         "input_refs": [],
         "required_gates": [],
-        "created_at": "2026-07-25T14:35:22.846Z",
+        "created_at": "2026-07-25T14:52:44.097Z",
         "created_by": "test",
-        "idempotency_key": "run_462b19a8ef86_post_release_observation_v1",
+        "idempotency_key": "run_e01e8f53f121_post_release_observation_v1",
         "dag_node": "post_release_observation",
         "attempt": 1
       }
     },
     "results": {
-      "task_daily_kline_a8ef86": {
-        "task_id": "task_daily_kline_a8ef86",
-        "run_id": "run_462b19a8ef86",
+      "task_daily_kline_53f121": {
+        "task_id": "task_daily_kline_53f121",
+        "run_id": "run_e01e8f53f121",
         "agent_id": "data-ops-agent",
         "status": "SUCCEEDED",
         "gate_status": "NOT_EXECUTED",
-        "started_at": "2026-07-25T14:35:22.847Z",
-        "finished_at": "2026-07-25T14:35:22.847Z",
+        "started_at": "2026-07-25T14:52:44.098Z",
+        "finished_at": "2026-07-25T14:52:44.098Z",
         "data_cutoff": "2026-07-25",
         "input_versions": {
           "daily_kline": "v_2026-07-25"
@@ -205,7 +205,7 @@
         },
         "evidence": [
           {
-            "evidence_id": "ev_1ddc6446fa06",
+            "evidence_id": "ev_61db4cede5fa",
             "type": "data_update_result",
             "source": "mock_tool",
             "data": {
@@ -216,8 +216,8 @@
               "failed": 0,
               "data_cutoff": "2026-07-25"
             },
-            "created_at": "2026-07-25T14:35:22.847Z",
-            "hash": "hash_6a03ff83"
+            "created_at": "2026-07-25T14:52:44.098Z",
+            "hash": "hash_00b155ed"
           }
         ],
         "warnings": [],
@@ -225,14 +225,14 @@
         "next_action": "quality_check",
         "mock": true
       },
-      "task_adjustment_factors_a8ef86": {
-        "task_id": "task_adjustment_factors_a8ef86",
-        "run_id": "run_462b19a8ef86",
+      "task_adjustment_factors_53f121": {
+        "task_id": "task_adjustment_factors_53f121",
+        "run_id": "run_e01e8f53f121",
         "agent_id": "data-ops-agent",
         "status": "SUCCEEDED",
         "gate_status": "NOT_EXECUTED",
-        "started_at": "2026-07-25T14:35:22.847Z",
-        "finished_at": "2026-07-25T14:35:22.847Z",
+        "started_at": "2026-07-25T14:52:44.099Z",
+        "finished_at": "2026-07-25T14:52:44.099Z",
         "data_cutoff": "2026-07-25",
         "input_versions": {
           "adjustment_factors": "v_2026-07-25"
@@ -251,7 +251,7 @@
         },
         "evidence": [
           {
-            "evidence_id": "ev_3e0ce277fff7",
+            "evidence_id": "ev_b978366dcc7c",
             "type": "data_update_result",
             "source": "mock_tool",
             "data": {
@@ -262,8 +262,8 @@
               "failed": 0,
               "data_cutoff": "2026-07-25"
             },
-            "created_at": "2026-07-25T14:35:22.847Z",
-            "hash": "hash_3571ccd0"
+            "created_at": "2026-07-25T14:52:44.099Z",
+            "hash": "hash_fd0faab1"
           }
         ],
         "warnings": [],
@@ -271,14 +271,14 @@
         "next_action": "quality_check",
         "mock": true
       },
-      "task_factor_data_a8ef86": {
-        "task_id": "task_factor_data_a8ef86",
-        "run_id": "run_462b19a8ef86",
+      "task_factor_data_53f121": {
+        "task_id": "task_factor_data_53f121",
+        "run_id": "run_e01e8f53f121",
         "agent_id": "data-ops-agent",
         "status": "SUCCEEDED",
         "gate_status": "NOT_EXECUTED",
-        "started_at": "2026-07-25T14:35:22.848Z",
-        "finished_at": "2026-07-25T14:35:22.848Z",
+        "started_at": "2026-07-25T14:52:44.099Z",
+        "finished_at": "2026-07-25T14:52:44.099Z",
         "data_cutoff": "2026-07-25",
         "input_versions": {
           "factor_data": "v_2026-07-25"
@@ -297,7 +297,7 @@
         },
         "evidence": [
           {
-            "evidence_id": "ev_30b42fa91ace",
+            "evidence_id": "ev_c00d7b2f3afd",
             "type": "data_update_result",
             "source": "mock_tool",
             "data": {
@@ -308,8 +308,8 @@
               "failed": 0,
               "data_cutoff": "2026-07-25"
             },
-            "created_at": "2026-07-25T14:35:22.848Z",
-            "hash": "hash_87084271"
+            "created_at": "2026-07-25T14:52:44.099Z",
+            "hash": "hash_6bcdc151"
           }
         ],
         "warnings": [],
@@ -317,14 +317,14 @@
         "next_action": "quality_check",
         "mock": true
       },
-      "task_market_factors_a8ef86": {
-        "task_id": "task_market_factors_a8ef86",
-        "run_id": "run_462b19a8ef86",
+      "task_market_factors_53f121": {
+        "task_id": "task_market_factors_53f121",
+        "run_id": "run_e01e8f53f121",
         "agent_id": "data-ops-agent",
         "status": "SUCCEEDED",
         "gate_status": "NOT_EXECUTED",
-        "started_at": "2026-07-25T14:35:22.848Z",
-        "finished_at": "2026-07-25T14:35:22.848Z",
+        "started_at": "2026-07-25T14:52:44.100Z",
+        "finished_at": "2026-07-25T14:52:44.100Z",
         "data_cutoff": "2026-07-25",
         "input_versions": {
           "market_factors": "v_2026-07-25"
@@ -343,7 +343,7 @@
         },
         "evidence": [
           {
-            "evidence_id": "ev_f1e81ecd971f",
+            "evidence_id": "ev_ea82578df440",
             "type": "data_update_result",
             "source": "mock_tool",
             "data": {
@@ -354,8 +354,8 @@
               "failed": 0,
               "data_cutoff": "2026-07-25"
             },
-            "created_at": "2026-07-25T14:35:22.848Z",
-            "hash": "hash_1454c86f"
+            "created_at": "2026-07-25T14:52:44.100Z",
+            "hash": "hash_95b227cd"
           }
         ],
         "warnings": [],
@@ -363,14 +363,14 @@
         "next_action": "quality_check",
         "mock": true
       },
-      "task_product_quality_gate_a8ef86": {
-        "task_id": "task_product_quality_gate_a8ef86",
-        "run_id": "run_462b19a8ef86",
+      "task_product_quality_gate_53f121": {
+        "task_id": "task_product_quality_gate_53f121",
+        "run_id": "run_e01e8f53f121",
         "agent_id": "data-quality-agent",
         "status": "SUCCEEDED",
         "gate_status": "PASS",
-        "started_at": "2026-07-25T14:35:22.849Z",
-        "finished_at": "2026-07-25T14:35:22.849Z",
+        "started_at": "2026-07-25T14:52:44.101Z",
+        "finished_at": "2026-07-25T14:52:44.101Z",
         "data_cutoff": "2026-07-25",
         "input_versions": {},
         "output_versions": {},
@@ -383,70 +383,70 @@
         "watermarks": {},
         "evidence": [
           {
-            "evidence_id": "ev_4178d80b2634",
+            "evidence_id": "ev_4b79889fe06f",
             "type": "gate_rule",
             "source": "mock_tool",
             "data": {
               "rule_id": "coverage_check",
               "status": "PASS"
             },
-            "created_at": "2026-07-25T14:35:22.849Z",
-            "hash": "hash_1f4956b9"
+            "created_at": "2026-07-25T14:52:44.101Z",
+            "hash": "hash_2a3527ff"
           },
           {
-            "evidence_id": "ev_20049be352c9",
+            "evidence_id": "ev_510be967e770",
             "type": "gate_rule",
             "source": "mock_tool",
             "data": {
               "rule_id": "freshness_check",
               "status": "PASS"
             },
-            "created_at": "2026-07-25T14:35:22.849Z",
-            "hash": "hash_1dfa315f"
+            "created_at": "2026-07-25T14:52:44.101Z",
+            "hash": "hash_d45a8009"
           },
           {
-            "evidence_id": "ev_83c7bb8dfed5",
+            "evidence_id": "ev_e32a2c326654",
             "type": "gate_rule",
             "source": "mock_tool",
             "data": {
               "rule_id": "uniqueness_check",
               "status": "PASS"
             },
-            "created_at": "2026-07-25T14:35:22.849Z",
-            "hash": "hash_8cd3f31e"
+            "created_at": "2026-07-25T14:52:44.101Z",
+            "hash": "hash_b1c0101d"
           },
           {
-            "evidence_id": "ev_dbdef0497692",
+            "evidence_id": "ev_27c1d4b67646",
             "type": "gate_rule",
             "source": "mock_tool",
             "data": {
               "rule_id": "null_check",
               "status": "PASS"
             },
-            "created_at": "2026-07-25T14:35:22.849Z",
-            "hash": "hash_378a8101"
+            "created_at": "2026-07-25T14:52:44.101Z",
+            "hash": "hash_91f265d9"
           },
           {
-            "evidence_id": "ev_d27d376d2d1e",
+            "evidence_id": "ev_2a34b996addd",
             "type": "gate_rule",
             "source": "mock_tool",
             "data": {
               "rule_id": "dependency_order_check",
               "status": "PASS"
             },
-            "created_at": "2026-07-25T14:35:22.849Z",
-            "hash": "hash_9b0a2c40"
+            "created_at": "2026-07-25T14:52:44.101Z",
+            "hash": "hash_a505f6ce"
           },
           {
-            "evidence_id": "ev_0c64b6d41936",
+            "evidence_id": "ev_b3af558d4e72",
             "type": "gate_rule",
             "source": "mock_tool",
             "data": {
               "rule_id": "cutoff_check",
               "status": "PASS"
             },
-            "created_at": "2026-07-25T14:35:22.849Z",
-            "hash": "hash_595ae5a6"
+            "created_at": "2026-07-25T14:52:44.101Z",
+            "hash": "hash_46ef986a"
           }
         ],
         "warnings": [],
@@ -454,21 +454,21 @@
         "next_action": "model_run",
         "mock": true
       },
-      "task_candidate_signal_a8ef86": {
-        "task_id": "task_candidate_signal_a8ef86",
-        "run_id": "run_462b19a8ef86",
+      "task_candidate_signal_53f121": {
+        "task_id": "task_candidate_signal_53f121",
+        "run_id": "run_e01e8f53f121",
         "agent_id": "model-production-agent",
         "status": "SUCCEEDED",
         "gate_status": "PASS",
-        "started_at": "2026-07-25T14:35:22.850Z",
-        "finished_at": "2026-07-25T14:35:22.850Z",
+        "started_at": "2026-07-25T14:52:44.102Z",
+        "finished_at": "2026-07-25T14:52:44.102Z",
         "data_cutoff": "2026-07-25",
         "input_versions": {
           "model": "model_v2.1.0",
-          "data_snapshot": "snap_505b20f0"
+          "data_snapshot": "snap_7500d03a"
         },
         "output_versions": {
-          "candidate_signal": "cs_eb143807"
+          "candidate_signal": "cs_01980e0d"
         },
         "metrics": {
           "inserted": 0,
@@ -479,17 +479,17 @@
         "watermarks": {},
         "evidence": [
           {
-            "evidence_id": "ev_9268f8fdd3fc",
+            "evidence_id": "ev_981a6b140075",
             "type": "model_run",
             "source": "mock_tool",
             "data": {
               "model_version": "model_v2.1.0",
-              "input_snapshot": "snap_505b20f0",
-              "candidate_signal": "cs_eb143807",
+              "input_snapshot": "snap_7500d03a",
+              "candidate_signal": "cs_01980e0d",
               "sharpe_ratio": 1.5
             },
-            "created_at": "2026-07-25T14:35:22.850Z",
-            "hash": "hash_4bb58b05"
+            "created_at": "2026-07-25T14:52:44.102Z",
+            "hash": "hash_324c53f5"
           }
         ],
         "warnings": [],
@@ -497,14 +497,14 @@
         "next_action": "risk_review",
         "mock": true
       },
-      "task_risk_approval_a8ef86": {
-        "task_id": "task_risk_approval_a8ef86",
-        "run_id": "run_462b19a8ef86",
+      "task_risk_approval_53f121": {
+        "task_id": "task_risk_approval_53f121",
+        "run_id": "run_e01e8f53f121",
         "agent_id": "model-risk-agent",
         "status": "SUCCEEDED",
         "gate_status": "NOT_EXECUTED",
-        "started_at": "2026-07-25T14:35:22.851Z",
-        "finished_at": "2026-07-25T14:35:22.851Z",
+        "started_at": "2026-07-25T14:52:44.103Z",
+        "finished_at": "2026-07-25T14:52:44.103Z",
         "data_cutoff": "2026-07-25",
         "input_versions": {},
         "output_versions": {},
@@ -517,7 +517,7 @@
         "watermarks": {},
         "evidence": [
           {
-            "evidence_id": "ev_727a50b79549",
+            "evidence_id": "ev_48e3035358ab",
             "type": "risk_review",
             "source": "mock_tool",
             "data": {
@@ -529,8 +529,8 @@
                 "数据截止日一致"
               ]
             },
-            "created_at": "2026-07-25T14:35:22.851Z",
-            "hash": "hash_dfe8412e"
+            "created_at": "2026-07-25T14:52:44.103Z",
+            "hash": "hash_aeb090c0"
           }
         ],
         "warnings": [],
@@ -542,10 +542,10 @@
     "gates": {
       "gate_database_core": {
         "gate_id": "gate_database_core",
-        "run_id": "run_462b19a8ef86",
+        "run_id": "run_e01e8f53f121",
         "scope": "database_core",
         "status": "PASS",
-        "checked_at": "2026-07-25T14:35:22.849Z",
+        "checked_at": "2026-07-25T14:52:44.101Z",
         "data_cutoff": "2026-07-25",
         "rules": [
           {
@@ -556,7 +556,7 @@
             "threshold": 0.999,
             "operator": ">=",
             "severity": "BLOCK",
-            "evidence_ref": "ev_6295d536d4fd",
+            "evidence_ref": "ev_a89bb47b2d28",
             "description": "数据覆盖率必须 >= 99.9%"
           },
           {
@@ -567,7 +567,7 @@
             "threshold": 24,
             "operator": "<=",
             "severity": "BLOCK",
-            "evidence_ref": "ev_05b913ff9186",
+            "evidence_ref": "ev_2b29cc505126",
             "description": "数据新鲜度必须在 24 小时内"
           },
           {
@@ -578,7 +578,7 @@
             "threshold": 1,
             "operator": ">=",
             "severity": "BLOCK",
-            "evidence_ref": "ev_207582213cd0",
+            "evidence_ref": "ev_859094cb7b91",
             "description": "主键必须完全唯一"
           },
           {
@@ -589,7 +589,7 @@
             "threshold": 0.001,
             "operator": "<=",
             "severity": "WARN",
-            "evidence_ref": "ev_eb43b4dd374a",
+            "evidence_ref": "ev_025b67eb7238",
             "description": "关键字段空值率必须 <= 0.1%"
           },
           {
@@ -600,7 +600,7 @@
             "threshold": 0,
             "operator": "==",
             "severity": "BLOCK",
-            "evidence_ref": "ev_f9f38718f250",
+            "evidence_ref": "ev_37b48dbe902c",
             "description": "数据依赖顺序不允许违规"
           },
           {
@@ -611,7 +611,7 @@
             "threshold": true,
             "operator": "==",
             "severity": "BLOCK",
-            "evidence_ref": "ev_6b9071f3da80",
+            "evidence_ref": "ev_58bc5f0c26f4",
             "description": "数据截止日必须与任务参数一致"
           }
         ],
@@ -620,10 +620,10 @@
       },
       "gate_model": {
         "gate_id": "gate_model",
-        "run_id": "run_462b19a8ef86",
+        "run_id": "run_e01e8f53f121",
         "scope": "model",
         "status": "PASS",
-        "checked_at": "2026-07-25T14:35:22.850Z",
+        "checked_at": "2026-07-25T14:52:44.102Z",
         "data_cutoff": "2026-07-25",
         "rules": [
           {
@@ -634,7 +634,7 @@
             "threshold": true,
             "operator": "==",
             "severity": "BLOCK",
-            "evidence_ref": "ev_5d0f0b40c2dd",
+            "evidence_ref": "ev_1c413e336048",
             "description": "模型版本必须已登记"
           },
           {
@@ -645,7 +645,7 @@
             "threshold": 1,
             "operator": ">=",
             "severity": "WARN",
-            "evidence_ref": "ev_1d3fa81a109c",
+            "evidence_ref": "ev_fe3127fd14d5",
             "description": "回测夏普比建议 >= 1.0"
           },
           {
@@ -656,7 +656,7 @@
             "threshold": 0.2,
             "operator": "<=",
             "severity": "WARN",
-            "evidence_ref": "ev_9e3e0abdd773",
+            "evidence_ref": "ev_b6a251b230c1",
             "description": "回测最大回撤建议 <= 20%"
           },
           {
@@ -667,7 +667,7 @@
             "threshold": 5,
             "operator": "<=",
             "severity": "WARN",
-            "evidence_ref": "ev_5cad78e048c7",
+            "evidence_ref": "ev_7e6d73912177",
             "description": "异常值数量建议 <= 5"
           },
           {
@@ -678,7 +678,7 @@
             "threshold": true,
             "operator": "==",
             "severity": "BLOCK",
-            "evidence_ref": "ev_1d4e71085429",
+            "evidence_ref": "ev_83c91581ff3f",
             "description": "所有证据必须完整"
           }
         ],
@@ -687,10 +687,10 @@
       }
     },
     "approvals": {
-      "appr_69db5375b5ab": {
-        "approval_id": "appr_69db5375b5ab",
-        "run_id": "run_462b19a8ef86",
-        "task_id": "task_risk_approval_a8ef86",
+      "appr_c770638fe738": {
+        "approval_id": "appr_c770638fe738",
+        "run_id": "run_e01e8f53f121",
+        "task_id": "task_risk_approval_53f121",
         "approval_type": "human_release",
         "status": "PENDING",
         "model_version": "",
@@ -701,1502 +701,24 @@
         "decided_at": null,
         "opinion": "",
         "risk_level": "medium",
-        "created_at": "2026-07-25T14:35:22.851Z"
+        "created_at": "2026-07-25T14:52:44.103Z"
       }
     },
     "current_node": "risk_approval",
     "block_reason": null
   },
-  "run_ce0f519c2616": {
-    "run_id": "run_ce0f519c2616",
-    "status": "WAITING_APPROVAL",
-    "scenario": "scenario_c",
-    "created_at": "2026-07-25T14:36:01.424Z",
-    "created_by": "system",
-    "updated_at": "2026-07-25T14:36:01.443Z",
-    "data_cutoff": "2026-07-25",
-    "tasks": {
-      "task_daily_kline_9c2616": {
-        "task_id": "task_daily_kline_9c2616",
-        "run_id": "run_ce0f519c2616",
-        "task_type": "data_update",
-        "assigned_agent": "data-ops-agent",
-        "status": "SUCCEEDED",
-        "parameters": {
-          "dag_node": "daily_kline",
-          "data_object": "daily_kline"
-        },
-        "input_refs": [],
-        "required_gates": [],
-        "created_at": "2026-07-25T14:36:01.424Z",
-        "created_by": "system",
-        "idempotency_key": "run_ce0f519c2616_daily_kline_v1",
-        "dag_node": "daily_kline",
-        "attempt": 1
-      },
-      "task_adjustment_factors_9c2616": {
-        "task_id": "task_adjustment_factors_9c2616",
-        "run_id": "run_ce0f519c2616",
-        "task_type": "data_update",
-        "assigned_agent": "data-ops-agent",
-        "status": "SUCCEEDED",
-        "parameters": {
-          "dag_node": "adjustment_factors",
-          "data_object": "adjustment_factors"
-        },
-        "input_refs": [],
-        "required_gates": [],
-        "created_at": "2026-07-25T14:36:01.424Z",
-        "created_by": "system",
-        "idempotency_key": "run_ce0f519c2616_adjustment_factors_v1",
-        "dag_node": "adjustment_factors",
-        "attempt": 1
-      },
-      "task_factor_data_9c2616": {
-        "task_id": "task_factor_data_9c2616",
-        "run_id": "run_ce0f519c2616",
-        "task_type": "data_update",
-        "assigned_agent": "data-ops-agent",
-        "status": "SUCCEEDED",
-        "parameters": {
-          "dag_node": "factor_data",
-          "data_object": "factor_data"
-        },
-        "input_refs": [],
-        "required_gates": [],
-        "created_at": "2026-07-25T14:36:01.424Z",
-        "created_by": "system",
-        "idempotency_key": "run_ce0f519c2616_factor_data_v1",
-        "dag_node": "factor_data",
-        "attempt": 1
-      },
-      "task_market_factors_9c2616": {
-        "task_id": "task_market_factors_9c2616",
-        "run_id": "run_ce0f519c2616",
-        "task_type": "data_update",
-        "assigned_agent": "data-ops-agent",
-        "status": "SUCCEEDED",
-        "parameters": {
-          "dag_node": "market_factors",
-          "data_object": "market_factors"
-        },
-        "input_refs": [],
-        "required_gates": [],
-        "created_at": "2026-07-25T14:36:01.424Z",
-        "created_by": "system",
-        "idempotency_key": "run_ce0f519c2616_market_factors_v1",
-        "dag_node": "market_factors",
-        "attempt": 1
-      },
-      "task_product_quality_gate_9c2616": {
-        "task_id": "task_product_quality_gate_9c2616",
-        "run_id": "run_ce0f519c2616",
-        "task_type": "quality_check",
-        "assigned_agent": "data-quality-agent",
-        "status": "SUCCEEDED",
-        "parameters": {
-          "dag_node": "product_quality_gate",
-          "data_object": null
-        },
-        "input_refs": [],
-        "required_gates": [],
-        "created_at": "2026-07-25T14:36:01.424Z",
-        "created_by": "system",
-        "idempotency_key": "run_ce0f519c2616_product_quality_gate_v1",
-        "dag_node": "product_quality_gate",
-        "attempt": 1
-      },
-      "task_candidate_signal_9c2616": {
-        "task_id": "task_candidate_signal_9c2616",
-        "run_id": "run_ce0f519c2616",
-        "task_type": "model_run",
-        "assigned_agent": "model-production-agent",
-        "status": "WAITING_APPROVAL",
-        "parameters": {
-          "dag_node": "candidate_signal",
-          "data_object": null
-        },
-        "input_refs": [],
-        "required_gates": [
-          "database_core"
-        ],
-        "created_at": "2026-07-25T14:36:01.424Z",
-        "created_by": "system",
-        "idempotency_key": "run_ce0f519c2616_candidate_signal_v1",
-        "dag_node": "candidate_signal",
-        "attempt": 1
-      },
-      "task_risk_approval_9c2616": {
-        "task_id": "task_risk_approval_9c2616",
-        "run_id": "run_ce0f519c2616",
-        "task_type": "risk_review",
-        "assigned_agent": "model-risk-agent",
-        "status": "PENDING",
-        "parameters": {
-          "dag_node": "risk_approval",
-          "data_object": null
-        },
-        "input_refs": [],
-        "required_gates": [
-          "model"
-        ],
-        "created_at": "2026-07-25T14:36:01.424Z",
-        "created_by": "system",
-        "idempotency_key": "run_ce0f519c2616_risk_approval_v1",
-        "dag_node": "risk_approval",
-        "attempt": 1
-      },
-      "task_release_9c2616": {
-        "task_id": "task_release_9c2616",
-        "run_id": "run_ce0f519c2616",
-        "task_type": "release",
-        "assigned_agent": "release-observer-agent",
-        "status": "PENDING",
-        "parameters": {
-          "dag_node": "release",
-          "data_object": null
-        },
-        "input_refs": [],
-        "required_gates": [
-          "model",
-          "approval"
-        ],
-        "created_at": "2026-07-25T14:36:01.424Z",
-        "created_by": "system",
-        "idempotency_key": "run_ce0f519c2616_release_v1",
-        "dag_node": "release",
-        "attempt": 1
-      },
-      "task_post_release_observation_9c2616": {
-        "task_id": "task_post_release_observation_9c2616",
-        "run_id": "run_ce0f519c2616",
-        "task_type": "observation",
-        "assigned_agent": "release-observer-agent",
-        "status": "PENDING",
-        "parameters": {
-          "dag_node": "post_release_observation",
-          "data_object": null
-        },
-        "input_refs": [],
-        "required_gates": [],
-        "created_at": "2026-07-25T14:36:01.424Z",
-        "created_by": "system",
-        "idempotency_key": "run_ce0f519c2616_post_release_observation_v1",
-        "dag_node": "post_release_observation",
-        "attempt": 1
-      }
-    },
-    "results": {
-      "task_daily_kline_9c2616": {
-        "task_id": "task_daily_kline_9c2616",
-        "run_id": "run_ce0f519c2616",
-        "agent_id": "data-ops-agent",
-        "status": "SUCCEEDED",
-        "gate_status": "NOT_EXECUTED",
-        "started_at": "2026-07-25T14:36:01.428Z",
-        "finished_at": "2026-07-25T14:36:01.428Z",
-        "data_cutoff": "2026-07-25",
-        "input_versions": {
-          "daily_kline": "v_2026-07-25"
-        },
-        "output_versions": {
-          "daily_kline": "v_2026-07-25_updated"
-        },
-        "metrics": {
-          "inserted": 250,
-          "updated": 50,
-          "skipped": 10,
-          "failed": 0
-        },
-        "watermarks": {
-          "daily_kline": "2026-07-25"
-        },
-        "evidence": [
-          {
-            "evidence_id": "ev_605c7037d84a",
-            "type": "data_update_result",
-            "source": "mock_tool",
-            "data": {
-              "data_object": "daily_kline",
-              "inserted": 250,
-              "updated": 50,
-              "skipped": 10,
-              "failed": 0,
-              "data_cutoff": "2026-07-25"
-            },
-            "created_at": "2026-07-25T14:36:01.428Z",
-            "hash": "hash_7eac16b2"
-          }
-        ],
-        "warnings": [],
-        "errors": [],
-        "next_action": "quality_check",
-        "mock": true
-      },
-      "task_adjustment_factors_9c2616": {
-        "task_id": "task_adjustment_factors_9c2616",
-        "run_id": "run_ce0f519c2616",
-        "agent_id": "data-ops-agent",
-        "status": "SUCCEEDED",
-        "gate_status": "NOT_EXECUTED",
-        "started_at": "2026-07-25T14:36:01.429Z",
-        "finished_at": "2026-07-25T14:36:01.429Z",
-        "data_cutoff": "2026-07-25",
-        "input_versions": {
-          "adjustment_factors": "v_2026-07-25"
-        },
-        "output_versions": {
-          "adjustment_factors": "v_2026-07-25_updated"
-        },
-        "metrics": {
-          "inserted": 250,
-          "updated": 50,
-          "skipped": 10,
-          "failed": 0
-        },
-        "watermarks": {
-          "adjustment_factors": "2026-07-25"
-        },
-        "evidence": [
-          {
-            "evidence_id": "ev_76a21c35a5d3",
-            "type": "data_update_result",
-            "source": "mock_tool",
-            "data": {
-              "data_object": "adjustment_factors",
-              "inserted": 250,
-              "updated": 50,
-              "skipped": 10,
-              "failed": 0,
-              "data_cutoff": "2026-07-25"
-            },
-            "created_at": "2026-07-25T14:36:01.429Z",
-            "hash": "hash_4adae6b7"
-          }
-        ],
-        "warnings": [],
-        "errors": [],
-        "next_action": "quality_check",
-        "mock": true
-      },
-      "task_factor_data_9c2616": {
-        "task_id": "task_factor_data_9c2616",
-        "run_id": "run_ce0f519c2616",
-        "agent_id": "data-ops-agent",
-        "status": "SUCCEEDED",
-        "gate_status": "NOT_EXECUTED",
-        "started_at": "2026-07-25T14:36:01.437Z",
-        "finished_at": "2026-07-25T14:36:01.437Z",
-        "data_cutoff": "2026-07-25",
-        "input_versions": {
-          "factor_data": "v_2026-07-25"
-        },
-        "output_versions": {
-          "factor_data": "v_2026-07-25_updated"
-        },
-        "metrics": {
-          "inserted": 250,
-          "updated": 50,
-          "skipped": 10,
-          "failed": 0
-        },
-        "watermarks": {
-          "factor_data": "2026-07-25"
-        },
-        "evidence": [
-          {
-            "evidence_id": "ev_6b3471fa5291",
-            "type": "data_update_result",
-            "source": "mock_tool",
-            "data": {
-              "data_object": "factor_data",
-              "inserted": 250,
-              "updated": 50,
-              "skipped": 10,
-              "failed": 0,
-              "data_cutoff": "2026-07-25"
-            },
-            "created_at": "2026-07-25T14:36:01.437Z",
-            "hash": "hash_332fcfb8"
-          }
-        ],
-        "warnings": [],
-        "errors": [],
-        "next_action": "quality_check",
-        "mock": true
-      },
-      "task_market_factors_9c2616": {
-        "task_id": "task_market_factors_9c2616",
-        "run_id": "run_ce0f519c2616",
-        "agent_id": "data-ops-agent",
-        "status": "SUCCEEDED",
-        "gate_status": "NOT_EXECUTED",
-        "started_at": "2026-07-25T14:36:01.438Z",
-        "finished_at": "2026-07-25T14:36:01.438Z",
-        "data_cutoff": "2026-07-25",
-        "input_versions": {
-          "market_factors": "v_2026-07-25"
-        },
-        "output_versions": {
-          "market_factors": "v_2026-07-25_updated"
-        },
-        "metrics": {
-          "inserted": 250,
-          "updated": 50,
-          "skipped": 10,
-          "failed": 0
-        },
-        "watermarks": {
-          "market_factors": "2026-07-25"
-        },
-        "evidence": [
-          {
-            "evidence_id": "ev_3ea16673c4d6",
-            "type": "data_update_result",
-            "source": "mock_tool",
-            "data": {
-              "data_object": "market_factors",
-              "inserted": 250,
-              "updated": 50,
-              "skipped": 10,
-              "failed": 0,
-              "data_cutoff": "2026-07-25"
-            },
-            "created_at": "2026-07-25T14:36:01.438Z",
-            "hash": "hash_edba7993"
-          }
-        ],
-        "warnings": [],
-        "errors": [],
-        "next_action": "quality_check",
-        "mock": true
-      },
-      "task_product_quality_gate_9c2616": {
-        "task_id": "task_product_quality_gate_9c2616",
-        "run_id": "run_ce0f519c2616",
-        "agent_id": "data-quality-agent",
-        "status": "SUCCEEDED",
-        "gate_status": "PASS",
-        "started_at": "2026-07-25T14:36:01.440Z",
-        "finished_at": "2026-07-25T14:36:01.440Z",
-        "data_cutoff": "2026-07-25",
-        "input_versions": {},
-        "output_versions": {},
-        "metrics": {
-          "inserted": 0,
-          "updated": 0,
-          "skipped": 0,
-          "failed": 0
-        },
-        "watermarks": {},
-        "evidence": [
-          {
-            "evidence_id": "ev_121015389036",
-            "type": "gate_rule",
-            "source": "mock_tool",
-            "data": {
-              "rule_id": "coverage_check",
-              "status": "PASS"
-            },
-            "created_at": "2026-07-25T14:36:01.440Z",
-            "hash": "hash_c39eeec3"
-          },
-          {
-            "evidence_id": "ev_ac3cbcd8e4cd",
-            "type": "gate_rule",
-            "source": "mock_tool",
-            "data": {
-              "rule_id": "freshness_check",
-              "status": "PASS"
-            },
-            "created_at": "2026-07-25T14:36:01.440Z",
-            "hash": "hash_be8d5d1d"
-          },
-          {
-            "evidence_id": "ev_cf6d1ee0d18c",
-            "type": "gate_rule",
-            "source": "mock_tool",
-            "data": {
-              "rule_id": "uniqueness_check",
-              "status": "PASS"
-            },
-            "created_at": "2026-07-25T14:36:01.440Z",
-            "hash": "hash_129b3829"
-          },
-          {
-            "evidence_id": "ev_16da6eaa4cee",
-            "type": "gate_rule",
-            "source": "mock_tool",
-            "data": {
-              "rule_id": "null_check",
-              "status": "PASS"
-            },
-            "created_at": "2026-07-25T14:36:01.440Z",
-            "hash": "hash_752587e1"
-          },
-          {
-            "evidence_id": "ev_f24b40d4416d",
-            "type": "gate_rule",
-            "source": "mock_tool",
-            "data": {
-              "rule_id": "dependency_order_check",
-              "status": "PASS"
-            },
-            "created_at": "2026-07-25T14:36:01.440Z",
-            "hash": "hash_0983e2a0"
-          },
-          {
-            "evidence_id": "ev_bf1f3f8e7479",
-            "type": "gate_rule",
-            "source": "mock_tool",
-            "data": {
-              "rule_id": "cutoff_check",
-              "status": "PASS"
-            },
-            "created_at": "2026-07-25T14:36:01.440Z",
-            "hash": "hash_2cabfc96"
-          }
-        ],
-        "warnings": [],
-        "errors": [],
-        "next_action": "model_run",
-        "mock": true
-      },
-      "task_candidate_signal_9c2616": {
-        "task_id": "task_candidate_signal_9c2616",
-        "run_id": "run_ce0f519c2616",
-        "agent_id": "model-production-agent",
-        "status": "SUCCEEDED",
-        "gate_status": "WARN",
-        "started_at": "2026-07-25T14:36:01.443Z",
-        "finished_at": "2026-07-25T14:36:01.443Z",
-        "data_cutoff": "2026-07-25",
-        "input_versions": {
-          "model": "model_v2.1.0",
-          "data_snapshot": "snap_061db1aa"
-        },
-        "output_versions": {
-          "candidate_signal": "cs_eb223d71"
-        },
-        "metrics": {
-          "inserted": 0,
-          "updated": 0,
-          "skipped": 0,
-          "failed": 0
-        },
-        "watermarks": {},
-        "evidence": [
-          {
-            "evidence_id": "ev_30bf9596ca4e",
-            "type": "model_run",
-            "source": "mock_tool",
-            "data": {
-              "model_version": "model_v2.1.0",
-              "input_snapshot": "snap_061db1aa",
-              "candidate_signal": "cs_eb223d71",
-              "sharpe_ratio": 0.8
-            },
-            "created_at": "2026-07-25T14:36:01.443Z",
-            "hash": "hash_fe92e105"
-          }
-        ],
-        "warnings": [
-          "夏普比 0.8 低于建议阈值 1.0"
-        ],
-        "errors": [],
-        "next_action": "human_review",
-        "mock": true
-      }
-    },
-    "gates": {
-      "gate_database_core": {
-        "gate_id": "gate_database_core",
-        "run_id": "run_ce0f519c2616",
-        "scope": "database_core",
-        "status": "PASS",
-        "checked_at": "2026-07-25T14:36:01.440Z",
-        "data_cutoff": "2026-07-25",
-        "rules": [
-          {
-            "rule_id": "coverage_check",
-            "display_name": "覆盖率检查",
-            "status": "PASS",
-            "actual": 0.9995,
-            "threshold": 0.999,
-            "operator": ">=",
-            "severity": "BLOCK",
-            "evidence_ref": "ev_c13fc1dbd3e0",
-            "description": "数据覆盖率必须 >= 99.9%"
-          },
-          {
-            "rule_id": "freshness_check",
-            "display_name": "新鲜度检查",
-            "status": "PASS",
-            "actual": 2,
-            "threshold": 24,
-            "operator": "<=",
-            "severity": "BLOCK",
-            "evidence_ref": "ev_157c002960d7",
-            "description": "数据新鲜度必须在 24 小时内"
-          },
-          {
-            "rule_id": "uniqueness_check",
-            "display_name": "唯一性检查",
-            "status": "PASS",
-            "actual": 1,
-            "threshold": 1,
-            "operator": ">=",
-            "severity": "BLOCK",
-            "evidence_ref": "ev_8b38358189f0",
-            "description": "主键必须完全唯一"
-          },
-          {
-            "rule_id": "null_check",
-            "display_name": "空值检查",
-            "status": "PASS",
-            "actual": 0.0005,
-            "threshold": 0.001,
-            "operator": "<=",
-            "severity": "WARN",
-            "evidence_ref": "ev_a25d808a2f53",
-            "description": "关键字段空值率必须 <= 0.1%"
-          },
-          {
-            "rule_id": "dependency_order_check",
-            "display_name": "依赖顺序检查",
-            "status": "PASS",
-            "actual": 0,
-            "threshold": 0,
-            "operator": "==",
-            "severity": "BLOCK",
-            "evidence_ref": "ev_e2dca522f88d",
-            "description": "数据依赖顺序不允许违规"
-          },
-          {
-            "rule_id": "cutoff_check",
-            "display_name": "数据截止日检查",
-            "status": "PASS",
-            "actual": "2026-07-25",
-            "threshold": true,
-            "operator": "==",
-            "severity": "BLOCK",
-            "evidence_ref": "ev_3375b9dbc121",
-            "description": "数据截止日必须与任务参数一致"
-          }
-        ],
-        "block_reasons": [],
-        "warnings": []
-      },
-      "gate_model": {
-        "gate_id": "gate_model",
-        "run_id": "run_ce0f519c2616",
-        "scope": "model",
-        "status": "WARN",
-        "checked_at": "2026-07-25T14:36:01.443Z",
-        "data_cutoff": "2026-07-25",
-        "rules": [
-          {
-            "rule_id": "model_version_check",
-            "display_name": "模型版本检查",
-            "status": "PASS",
-            "actual": true,
-            "threshold": true,
-            "operator": "==",
-            "severity": "BLOCK",
-            "evidence_ref": "ev_7bc4c4ec5089",
-            "description": "模型版本必须已登记"
-          },
-          {
-            "rule_id": "backtest_sharpe_check",
-            "display_name": "回测夏普比检查",
-            "status": "WARN",
-            "actual": 0.8,
-            "threshold": 1,
-            "operator": ">=",
-            "severity": "WARN",
-            "evidence_ref": "ev_cf9fcf0ff069",
-            "description": "回测夏普比建议 >= 1.0"
-          },
-          {
-            "rule_id": "backtest_max_drawdown_check",
-            "display_name": "回测最大回撤检查",
-            "status": "PASS",
-            "actual": 0.12,
-            "threshold": 0.2,
-            "operator": "<=",
-            "severity": "WARN",
-            "evidence_ref": "ev_2d4e30d7181c",
-            "description": "回测最大回撤建议 <= 20%"
-          },
-          {
-            "rule_id": "anomaly_check",
-            "display_name": "异常值检查",
-            "status": "PASS",
-            "actual": 2,
-            "threshold": 5,
-            "operator": "<=",
-            "severity": "WARN",
-            "evidence_ref": "ev_5d03e8acc431",
-            "description": "异常值数量建议 <= 5"
-          },
-          {
-            "rule_id": "evidence_completeness_check",
-            "display_name": "证据完整性检查",
-            "status": "PASS",
-            "actual": true,
-            "threshold": true,
-            "operator": "==",
-            "severity": "BLOCK",
-            "evidence_ref": "ev_bd8aa38c9cdb",
-            "description": "所有证据必须完整"
-          }
-        ],
-        "block_reasons": [],
-        "warnings": [
-          "夏普比 0.8 低于建议阈值 1.0"
-        ]
-      }
-    },
-    "approvals": {
-      "appr_47f8ddc5647b": {
-        "approval_id": "appr_47f8ddc5647b",
-        "run_id": "run_ce0f519c2616",
-        "task_id": "task_candidate_signal_9c2616",
-        "approval_type": "human_review",
-        "status": "PENDING",
-        "model_version": "model_v2.1.0",
-        "input_snapshot_id": "snap_061db1aa",
-        "data_cutoff": "2026-07-25",
-        "candidate_signal_version": "cs_eb223d71",
-        "approver": "",
-        "decided_at": null,
-        "opinion": "",
-        "risk_level": "high",
-        "created_at": "2026-07-25T14:36:01.443Z"
-      }
-    },
-    "current_node": "candidate_signal",
-    "block_reason": null
-  },
-  "run_a1c284a0b6a7": {
-    "run_id": "run_a1c284a0b6a7",
-    "status": "COMPLETED",
-    "scenario": "scenario_a",
-    "created_at": "2026-07-25T14:36:01.454Z",
-    "created_by": "system",
-    "updated_at": "2026-07-25T14:36:01.485Z",
-    "data_cutoff": "2026-07-25",
-    "tasks": {
-      "task_daily_kline_a0b6a7": {
-        "task_id": "task_daily_kline_a0b6a7",
-        "run_id": "run_a1c284a0b6a7",
-        "task_type": "data_update",
-        "assigned_agent": "data-ops-agent",
-        "status": "SUCCEEDED",
-        "parameters": {
-          "dag_node": "daily_kline",
-          "data_object": "daily_kline"
-        },
-        "input_refs": [],
-        "required_gates": [],
-        "created_at": "2026-07-25T14:36:01.454Z",
-        "created_by": "system",
-        "idempotency_key": "run_a1c284a0b6a7_daily_kline_v1",
-        "dag_node": "daily_kline",
-        "attempt": 1
-      },
-      "task_adjustment_factors_a0b6a7": {
-        "task_id": "task_adjustment_factors_a0b6a7",
-        "run_id": "run_a1c284a0b6a7",
-        "task_type": "data_update",
-        "assigned_agent": "data-ops-agent",
-        "status": "SUCCEEDED",
-        "parameters": {
-          "dag_node": "adjustment_factors",
-          "data_object": "adjustment_factors"
-        },
-        "input_refs": [],
-        "required_gates": [],
-        "created_at": "2026-07-25T14:36:01.454Z",
-        "created_by": "system",
-        "idempotency_key": "run_a1c284a0b6a7_adjustment_factors_v1",
-        "dag_node": "adjustment_factors",
-        "attempt": 1
-      },
-      "task_factor_data_a0b6a7": {
-        "task_id": "task_factor_data_a0b6a7",
-        "run_id": "run_a1c284a0b6a7",
-        "task_type": "data_update",
-        "assigned_agent": "data-ops-agent",
-        "status": "SUCCEEDED",
-        "parameters": {
-          "dag_node": "factor_data",
-          "data_object": "factor_data"
-        },
-        "input_refs": [],
-        "required_gates": [],
-        "created_at": "2026-07-25T14:36:01.454Z",
-        "created_by": "system",
-        "idempotency_key": "run_a1c284a0b6a7_factor_data_v1",
-        "dag_node": "factor_data",
-        "attempt": 1
-      },
-      "task_market_factors_a0b6a7": {
-        "task_id": "task_market_factors_a0b6a7",
-        "run_id": "run_a1c284a0b6a7",
-        "task_type": "data_update",
-        "assigned_agent": "data-ops-agent",
-        "status": "SUCCEEDED",
-        "parameters": {
-          "dag_node": "market_factors",
-          "data_object": "market_factors"
-        },
-        "input_refs": [],
-        "required_gates": [],
-        "created_at": "2026-07-25T14:36:01.454Z",
-        "created_by": "system",
-        "idempotency_key": "run_a1c284a0b6a7_market_factors_v1",
-        "dag_node": "market_factors",
-        "attempt": 1
-      },
-      "task_product_quality_gate_a0b6a7": {
-        "task_id": "task_product_quality_gate_a0b6a7",
-        "run_id": "run_a1c284a0b6a7",
-        "task_type": "quality_check",
-        "assigned_agent": "data-quality-agent",
-        "status": "SUCCEEDED",
-        "parameters": {
-          "dag_node": "product_quality_gate",
-          "data_object": null
-        },
-        "input_refs": [],
-        "required_gates": [],
-        "created_at": "2026-07-25T14:36:01.454Z",
-        "created_by": "system",
-        "idempotency_key": "run_a1c284a0b6a7_product_quality_gate_v1",
-        "dag_node": "product_quality_gate",
-        "attempt": 1
-      },
-      "task_candidate_signal_a0b6a7": {
-        "task_id": "task_candidate_signal_a0b6a7",
-        "run_id": "run_a1c284a0b6a7",
-        "task_type": "model_run",
-        "assigned_agent": "model-production-agent",
-        "status": "SUCCEEDED",
-        "parameters": {
-          "dag_node": "candidate_signal",
-          "data_object": null
-        },
-        "input_refs": [],
-        "required_gates": [
-          "database_core"
-        ],
-        "created_at": "2026-07-25T14:36:01.454Z",
-        "created_by": "system",
-        "idempotency_key": "run_a1c284a0b6a7_candidate_signal_v1",
-        "dag_node": "candidate_signal",
-        "attempt": 1
-      },
-      "task_risk_approval_a0b6a7": {
-        "task_id": "task_risk_approval_a0b6a7",
-        "run_id": "run_a1c284a0b6a7",
-        "task_type": "risk_review",
-        "assigned_agent": "model-risk-agent",
-        "status": "SUCCEEDED",
-        "parameters": {
-          "dag_node": "risk_approval",
-          "data_object": null
-        },
-        "input_refs": [],
-        "required_gates": [
-          "model"
-        ],
-        "created_at": "2026-07-25T14:36:01.454Z",
-        "created_by": "system",
-        "idempotency_key": "run_a1c284a0b6a7_risk_approval_v1",
-        "dag_node": "risk_approval",
-        "attempt": 1
-      },
-      "task_release_a0b6a7": {
-        "task_id": "task_release_a0b6a7",
-        "run_id": "run_a1c284a0b6a7",
-        "task_type": "release",
-        "assigned_agent": "release-observer-agent",
-        "status": "SUCCEEDED",
-        "parameters": {
-          "dag_node": "release",
-          "data_object": null
-        },
-        "input_refs": [],
-        "required_gates": [
-          "model",
-          "approval"
-        ],
-        "created_at": "2026-07-25T14:36:01.454Z",
-        "created_by": "system",
-        "idempotency_key": "run_a1c284a0b6a7_release_v1",
-        "dag_node": "release",
-        "attempt": 1
-      },
-      "task_post_release_observation_a0b6a7": {
-        "task_id": "task_post_release_observation_a0b6a7",
-        "run_id": "run_a1c284a0b6a7",
-        "task_type": "observation",
-        "assigned_agent": "release-observer-agent",
-        "status": "SUCCEEDED",
-        "parameters": {
-          "dag_node": "post_release_observation",
-          "data_object": null
-        },
-        "input_refs": [],
-        "required_gates": [],
-        "created_at": "2026-07-25T14:36:01.454Z",
-        "created_by": "system",
-        "idempotency_key": "run_a1c284a0b6a7_post_release_observation_v1",
-        "dag_node": "post_release_observation",
-        "attempt": 1
-      }
-    },
-    "results": {
-      "task_daily_kline_a0b6a7": {
-        "task_id": "task_daily_kline_a0b6a7",
-        "run_id": "run_a1c284a0b6a7",
-        "agent_id": "data-ops-agent",
-        "status": "SUCCEEDED",
-        "gate_status": "NOT_EXECUTED",
-        "started_at": "2026-07-25T14:36:01.457Z",
-        "finished_at": "2026-07-25T14:36:01.457Z",
-        "data_cutoff": "2026-07-25",
-        "input_versions": {
-          "daily_kline": "v_2026-07-25"
-        },
-        "output_versions": {
-          "daily_kline": "v_2026-07-25_updated"
-        },
-        "metrics": {
-          "inserted": 250,
-          "updated": 50,
-          "skipped": 10,
-          "failed": 0
-        },
-        "watermarks": {
-          "daily_kline": "2026-07-25"
-        },
-        "evidence": [
-          {
-            "evidence_id": "ev_75b6149b2e0b",
-            "type": "data_update_result",
-            "source": "mock_tool",
-            "data": {
-              "data_object": "daily_kline",
-              "inserted": 250,
-              "updated": 50,
-              "skipped": 10,
-              "failed": 0,
-              "data_cutoff": "2026-07-25"
-            },
-            "created_at": "2026-07-25T14:36:01.457Z",
-            "hash": "hash_681472dd"
-          }
-        ],
-        "warnings": [],
-        "errors": [],
-        "next_action": "quality_check",
-        "mock": true
-      },
-      "task_adjustment_factors_a0b6a7": {
-        "task_id": "task_adjustment_factors_a0b6a7",
-        "run_id": "run_a1c284a0b6a7",
-        "agent_id": "data-ops-agent",
-        "status": "SUCCEEDED",
-        "gate_status": "NOT_EXECUTED",
-        "started_at": "2026-07-25T14:36:01.460Z",
-        "finished_at": "2026-07-25T14:36:01.460Z",
-        "data_cutoff": "2026-07-25",
-        "input_versions": {
-          "adjustment_factors": "v_2026-07-25"
-        },
-        "output_versions": {
-          "adjustment_factors": "v_2026-07-25_updated"
-        },
-        "metrics": {
-          "inserted": 250,
-          "updated": 50,
-          "skipped": 10,
-          "failed": 0
-        },
-        "watermarks": {
-          "adjustment_factors": "2026-07-25"
-        },
-        "evidence": [
-          {
-            "evidence_id": "ev_fe3af7b4ca9c",
-            "type": "data_update_result",
-            "source": "mock_tool",
-            "data": {
-              "data_object": "adjustment_factors",
-              "inserted": 250,
-              "updated": 50,
-              "skipped": 10,
-              "failed": 0,
-              "data_cutoff": "2026-07-25"
-            },
-            "created_at": "2026-07-25T14:36:01.460Z",
-            "hash": "hash_4dd1987b"
-          }
-        ],
-        "warnings": [],
-        "errors": [],
-        "next_action": "quality_check",
-        "mock": true
-      },
-      "task_factor_data_a0b6a7": {
-        "task_id": "task_factor_data_a0b6a7",
-        "run_id": "run_a1c284a0b6a7",
-        "agent_id": "data-ops-agent",
-        "status": "SUCCEEDED",
-        "gate_status": "NOT_EXECUTED",
-        "started_at": "2026-07-25T14:36:01.462Z",
-        "finished_at": "2026-07-25T14:36:01.462Z",
-        "data_cutoff": "2026-07-25",
-        "input_versions": {
-          "factor_data": "v_2026-07-25"
-        },
-        "output_versions": {
-          "factor_data": "v_2026-07-25_updated"
-        },
-        "metrics": {
-          "inserted": 250,
-          "updated": 50,
-          "skipped": 10,
-          "failed": 0
-        },
-        "watermarks": {
-          "factor_data": "2026-07-25"
-        },
-        "evidence": [
-          {
-            "evidence_id": "ev_d78e5f0c7875",
-            "type": "data_update_result",
-            "source": "mock_tool",
-            "data": {
-              "data_object": "factor_data",
-              "inserted": 250,
-              "updated": 50,
-              "skipped": 10,
-              "failed": 0,
-              "data_cutoff": "2026-07-25"
-            },
-            "created_at": "2026-07-25T14:36:01.462Z",
-            "hash": "hash_631bb5f6"
-          }
-        ],
-        "warnings": [],
-        "errors": [],
-        "next_action": "quality_check",
-        "mock": true
-      },
-      "task_market_factors_a0b6a7": {
-        "task_id": "task_market_factors_a0b6a7",
-        "run_id": "run_a1c284a0b6a7",
-        "agent_id": "data-ops-agent",
-        "status": "SUCCEEDED",
-        "gate_status": "NOT_EXECUTED",
-        "started_at": "2026-07-25T14:36:01.464Z",
-        "finished_at": "2026-07-25T14:36:01.464Z",
-        "data_cutoff": "2026-07-25",
-        "input_versions": {
-          "market_factors": "v_2026-07-25"
-        },
-        "output_versions": {
-          "market_factors": "v_2026-07-25_updated"
-        },
-        "metrics": {
-          "inserted": 250,
-          "updated": 50,
-          "skipped": 10,
-          "failed": 0
-        },
-        "watermarks": {
-          "market_factors": "2026-07-25"
-        },
-        "evidence": [
-          {
-            "evidence_id": "ev_d5f0f89af6d3",
-            "type": "data_update_result",
-            "source": "mock_tool",
-            "data": {
-              "data_object": "market_factors",
-              "inserted": 250,
-              "updated": 50,
-              "skipped": 10,
-              "failed": 0,
-              "data_cutoff": "2026-07-25"
-            },
-            "created_at": "2026-07-25T14:36:01.464Z",
-            "hash": "hash_f2aa26af"
-          }
-        ],
-        "warnings": [],
-        "errors": [],
-        "next_action": "quality_check",
-        "mock": true
-      },
-      "task_product_quality_gate_a0b6a7": {
-        "task_id": "task_product_quality_gate_a0b6a7",
-        "run_id": "run_a1c284a0b6a7",
-        "agent_id": "data-quality-agent",
-        "status": "SUCCEEDED",
-        "gate_status": "PASS",
-        "started_at": "2026-07-25T14:36:01.466Z",
-        "finished_at": "2026-07-25T14:36:01.466Z",
-        "data_cutoff": "2026-07-25",
-        "input_versions": {},
-        "output_versions": {},
-        "metrics": {
-          "inserted": 0,
-          "updated": 0,
-          "skipped": 0,
-          "failed": 0
-        },
-        "watermarks": {},
-        "evidence": [
-          {
-            "evidence_id": "ev_2aad99b79067",
-            "type": "gate_rule",
-            "source": "mock_tool",
-            "data": {
-              "rule_id": "coverage_check",
-              "status": "PASS"
-            },
-            "created_at": "2026-07-25T14:36:01.466Z",
-            "hash": "hash_2481b6cf"
-          },
-          {
-            "evidence_id": "ev_8fcb8af0d79e",
-            "type": "gate_rule",
-            "source": "mock_tool",
-            "data": {
-              "rule_id": "freshness_check",
-              "status": "PASS"
-            },
-            "created_at": "2026-07-25T14:36:01.466Z",
-            "hash": "hash_26b9e0c4"
-          },
-          {
-            "evidence_id": "ev_f51da4bb7f7f",
-            "type": "gate_rule",
-            "source": "mock_tool",
-            "data": {
-              "rule_id": "uniqueness_check",
-              "status": "PASS"
-            },
-            "created_at": "2026-07-25T14:36:01.466Z",
-            "hash": "hash_bcd6d306"
-          },
-          {
-            "evidence_id": "ev_18bcc451400f",
-            "type": "gate_rule",
-            "source": "mock_tool",
-            "data": {
-              "rule_id": "null_check",
-              "status": "PASS"
-            },
-            "created_at": "2026-07-25T14:36:01.466Z",
-            "hash": "hash_ea113a5a"
-          },
-          {
-            "evidence_id": "ev_530bd0418199",
-            "type": "gate_rule",
-            "source": "mock_tool",
-            "data": {
-              "rule_id": "dependency_order_check",
-              "status": "PASS"
-            },
-            "created_at": "2026-07-25T14:36:01.466Z",
-            "hash": "hash_2e76955c"
-          },
-          {
-            "evidence_id": "ev_9c0e7cf169b5",
-            "type": "gate_rule",
-            "source": "mock_tool",
-            "data": {
-              "rule_id": "cutoff_check",
-              "status": "PASS"
-            },
-            "created_at": "2026-07-25T14:36:01.466Z",
-            "hash": "hash_eb67bc8c"
-          }
-        ],
-        "warnings": [],
-        "errors": [],
-        "next_action": "model_run",
-        "mock": true
-      },
-      "task_candidate_signal_a0b6a7": {
-        "task_id": "task_candidate_signal_a0b6a7",
-        "run_id": "run_a1c284a0b6a7",
-        "agent_id": "model-production-agent",
-        "status": "SUCCEEDED",
-        "gate_status": "PASS",
-        "started_at": "2026-07-25T14:36:01.473Z",
-        "finished_at": "2026-07-25T14:36:01.473Z",
-        "data_cutoff": "2026-07-25",
-        "input_versions": {
-          "model": "model_v2.1.0",
-          "data_snapshot": "snap_88df65ff"
-        },
-        "output_versions": {
-          "candidate_signal": "cs_c7209555"
-        },
-        "metrics": {
-          "inserted": 0,
-          "updated": 0,
-          "skipped": 0,
-          "failed": 0
-        },
-        "watermarks": {},
-        "evidence": [
-          {
-            "evidence_id": "ev_f281f95dc723",
-            "type": "model_run",
-            "source": "mock_tool",
-            "data": {
-              "model_version": "model_v2.1.0",
-              "input_snapshot": "snap_88df65ff",
-              "candidate_signal": "cs_c7209555",
-              "sharpe_ratio": 1.5
-            },
-            "created_at": "2026-07-25T14:36:01.473Z",
-            "hash": "hash_df8328f7"
-          }
-        ],
-        "warnings": [],
-        "errors": [],
-        "next_action": "risk_review",
-        "mock": true
-      },
-      "task_risk_approval_a0b6a7": {
-        "task_id": "task_risk_approval_a0b6a7",
-        "run_id": "run_a1c284a0b6a7",
-        "agent_id": "model-risk-agent",
-        "status": "SUCCEEDED",
-        "gate_status": "NOT_EXECUTED",
-        "started_at": "2026-07-25T14:36:01.476Z",
-        "finished_at": "2026-07-25T14:36:01.476Z",
-        "data_cutoff": "2026-07-25",
-        "input_versions": {},
-        "output_versions": {},
-        "metrics": {
-          "inserted": 0,
-          "updated": 0,
-          "skipped": 0,
-          "failed": 0
-        },
-        "watermarks": {},
-        "evidence": [
-          {
-            "evidence_id": "ev_3e973f560fe8",
-            "type": "risk_review",
-            "source": "mock_tool",
-            "data": {
-              "review_status": "APPROVE",
-              "risk_level": "medium",
-              "reasons": [
-                "模型版本已登记",
-                "证据完整",
-                "数据截止日一致"
-              ]
-            },
-            "created_at": "2026-07-25T14:36:01.476Z",
-            "hash": "hash_c0741063"
-          }
-        ],
-        "warnings": [],
-        "errors": [],
-        "next_action": "human_approval",
-        "mock": true
-      },
-      "task_release_a0b6a7": {
-        "task_id": "task_release_a0b6a7",
-        "run_id": "run_a1c284a0b6a7",
-        "agent_id": "release-observer-agent",
-        "status": "SUCCEEDED",
-        "gate_status": "NOT_EXECUTED",
-        "started_at": "2026-07-25T14:36:01.481Z",
-        "finished_at": "2026-07-25T14:36:01.481Z",
-        "data_cutoff": "2026-07-25",
-        "input_versions": {},
-        "output_versions": {
-          "release": "rel_ade10bc6"
-        },
-        "metrics": {
-          "inserted": 0,
-          "updated": 0,
-          "skipped": 0,
-          "failed": 0
-        },
-        "watermarks": {},
-        "evidence": [
-          {
-            "evidence_id": "ev_ea87a41d4fbb",
-            "type": "release",
-            "source": "mock_tool",
-            "data": {
-              "release_version": "v_2026-07-25",
-              "published_at": "2026-07-25T14:36:01.481Z",
-              "target": "mock_downstream"
-            },
-            "created_at": "2026-07-25T14:36:01.481Z",
-            "hash": "hash_4d918c8b"
-          }
-        ],
-        "warnings": [],
-        "errors": [],
-        "next_action": "observation",
-        "mock": true
-      },
-      "task_post_release_observation_a0b6a7": {
-        "task_id": "task_post_release_observation_a0b6a7",
-        "run_id": "run_a1c284a0b6a7",
-        "agent_id": "release-observer-agent",
-        "status": "SUCCEEDED",
-        "gate_status": "NOT_EXECUTED",
-        "started_at": "2026-07-25T14:36:01.484Z",
-        "finished_at": "2026-07-25T14:36:01.484Z",
-        "data_cutoff": "2026-07-25",
-        "input_versions": {},
-        "output_versions": {},
-        "metrics": {
-          "inserted": 0,
-          "updated": 0,
-          "skipped": 0,
-          "failed": 0
-        },
-        "watermarks": {},
-        "evidence": [
-          {
-            "evidence_id": "ev_8a881756fe11",
-            "type": "observation",
-            "source": "mock_tool",
-            "data": {
-              "monitoring_status": "healthy",
-              "alerts_triggered": 0,
-              "downstream_received": true
-            },
-            "created_at": "2026-07-25T14:36:01.484Z",
-            "hash": "hash_5a9475af"
-          }
-        ],
-        "warnings": [],
-        "errors": [],
-        "next_action": "complete",
-        "mock": true
-      }
-    },
-    "gates": {
-      "gate_database_core": {
-        "gate_id": "gate_database_core",
-        "run_id": "run_a1c284a0b6a7",
-        "scope": "database_core",
-        "status": "PASS",
-        "checked_at": "2026-07-25T14:36:01.466Z",
-        "data_cutoff": "2026-07-25",
-        "rules": [
-          {
-            "rule_id": "coverage_check",
-            "display_name": "覆盖率检查",
-            "status": "PASS",
-            "actual": 0.9995,
-            "threshold": 0.999,
-            "operator": ">=",
-            "severity": "BLOCK",
-            "evidence_ref": "ev_9298c58e5e8c",
-            "description": "数据覆盖率必须 >= 99.9%"
-          },
-          {
-            "rule_id": "freshness_check",
-            "display_name": "新鲜度检查",
-            "status": "PASS",
-            "actual": 2,
-            "threshold": 24,
-            "operator": "<=",
-            "severity": "BLOCK",
-            "evidence_ref": "ev_1fd376d63065",
-            "description": "数据新鲜度必须在 24 小时内"
-          },
-          {
-            "rule_id": "uniqueness_check",
-            "display_name": "唯一性检查",
-            "status": "PASS",
-            "actual": 1,
-            "threshold": 1,
-            "operator": ">=",
-            "severity": "BLOCK",
-            "evidence_ref": "ev_91ad1ac1b8fc",
-            "description": "主键必须完全唯一"
-          },
-          {
-            "rule_id": "null_check",
-            "display_name": "空值检查",
-            "status": "PASS",
-            "actual": 0.0005,
-            "threshold": 0.001,
-            "operator": "<=",
-            "severity": "WARN",
-            "evidence_ref": "ev_d9e0b037b06d",
-            "description": "关键字段空值率必须 <= 0.1%"
-          },
-          {
-            "rule_id": "dependency_order_check",
-            "display_name": "依赖顺序检查",
-            "status": "PASS",
-            "actual": 0,
-            "threshold": 0,
-            "operator": "==",
-            "severity": "BLOCK",
-            "evidence_ref": "ev_ac42db0db2ae",
-            "description": "数据依赖顺序不允许违规"
-          },
-          {
-            "rule_id": "cutoff_check",
-            "display_name": "数据截止日检查",
-            "status": "PASS",
-            "actual": "2026-07-25",
-            "threshold": true,
-            "operator": "==",
-            "severity": "BLOCK",
-            "evidence_ref": "ev_f832f034a9f0",
-            "description": "数据截止日必须与任务参数一致"
-          }
-        ],
-        "block_reasons": [],
-        "warnings": []
-      },
-      "gate_model": {
-        "gate_id": "gate_model",
-        "run_id": "run_a1c284a0b6a7",
-        "scope": "model",
-        "status": "PASS",
-        "checked_at": "2026-07-25T14:36:01.473Z",
-        "data_cutoff": "2026-07-25",
-        "rules": [
-          {
-            "rule_id": "model_version_check",
-            "display_name": "模型版本检查",
-            "status": "PASS",
-            "actual": true,
-            "threshold": true,
-            "operator": "==",
-            "severity": "BLOCK",
-            "evidence_ref": "ev_31ab728d21aa",
-            "description": "模型版本必须已登记"
-          },
-          {
-            "rule_id": "backtest_sharpe_check",
-            "display_name": "回测夏普比检查",
-            "status": "PASS",
-            "actual": 1.5,
-            "threshold": 1,
-            "operator": ">=",
-            "severity": "WARN",
-            "evidence_ref": "ev_f54bf7468664",
-            "description": "回测夏普比建议 >= 1.0"
-          },
-          {
-            "rule_id": "backtest_max_drawdown_check",
-            "display_name": "回测最大回撤检查",
-            "status": "PASS",
-            "actual": 0.12,
-            "threshold": 0.2,
-            "operator": "<=",
-            "severity": "WARN",
-            "evidence_ref": "ev_71cc15cda131",
-            "description": "回测最大回撤建议 <= 20%"
-          },
-          {
-            "rule_id": "anomaly_check",
-            "display_name": "异常值检查",
-            "status": "PASS",
-            "actual": 2,
-            "threshold": 5,
-            "operator": "<=",
-            "severity": "WARN",
-            "evidence_ref": "ev_fe8a92f5d84d",
-            "description": "异常值数量建议 <= 5"
-          },
-          {
-            "rule_id": "evidence_completeness_check",
-            "display_name": "证据完整性检查",
-            "status": "PASS",
-            "actual": true,
-            "threshold": true,
-            "operator": "==",
-            "severity": "BLOCK",
-            "evidence_ref": "ev_cb6f90be49b9",
-            "description": "所有证据必须完整"
-          }
-        ],
-        "block_reasons": [],
-        "warnings": []
-      },
-      "gate_approval": {
-        "gate_id": "gate_approval",
-        "run_id": "run_a1c284a0b6a7",
-        "scope": "approval",
-        "status": "PASS",
-        "checked_at": "2026-07-25T14:36:01.477Z",
-        "data_cutoff": "2026-07-25",
-        "rules": [
-          {
-            "rule_id": "approval_check",
-            "display_name": "人工审批检查",
-            "status": "PASS",
-            "actual": "approved",
-            "threshold": "approved",
-            "operator": "eq",
-            "severity": "BLOCK",
-            "evidence_ref": "appr_17a1ddb30736",
-            "description": "Auto-approved by auto-risk-reviewer for scenario_a"
-          }
-        ],
-        "block_reasons": [],
-        "warnings": []
-      }
-    },
-    "approvals": {
-      "appr_17a1ddb30736": {
-        "approval_id": "appr_17a1ddb30736",
-        "run_id": "run_a1c284a0b6a7",
-        "task_id": "task_risk_approval_a0b6a7",
-        "approval_type": "human_release",
-        "status": "APPROVED",
-        "model_version": "",
-        "input_snapshot_id": "",
-        "data_cutoff": "2026-07-25",
-        "candidate_signal_version": "",
-        "approver": "auto-risk-reviewer",
-        "decided_at": "2026-07-25T14:36:01.477Z",
-        "opinion": "Scenario A auto-approval: all metrics within acceptable range",
-        "risk_level": "medium",
-        "created_at": "2026-07-25T14:36:01.476Z"
-      }
-    },
-    "current_node": "post_release_observation",
-    "block_reason": null
-  },
-  "run_89c2b6691049": {
-    "run_id": "run_89c2b6691049",
+  "run_d5f043ef5105": {
+    "run_id": "run_d5f043ef5105",
     "status": "BLOCKED",
     "scenario": "scenario_b",
-    "created_at": "2026-07-25T14:36:01.498Z",
+    "created_at": "2026-07-25T14:53:22.728Z",
     "created_by": "system",
-    "updated_at": "2026-07-25T14:36:01.515Z",
+    "updated_at": "2026-07-25T14:53:22.738Z",
     "data_cutoff": "2026-07-25",
     "tasks": {
-      "task_daily_kline_691049": {
-        "task_id": "task_daily_kline_691049",
-        "run_id": "run_89c2b6691049",
+      "task_daily_kline_ef5105": {
+        "task_id": "task_daily_kline_ef5105",
+        "run_id": "run_d5f043ef5105",
         "task_type": "data_update",
         "assigned_agent": "data-ops-agent",
         "status": "SUCCEEDED",
@@ -2206,15 +728,15 @@
         },
         "input_refs": [],
         "required_gates": [],
-        "created_at": "2026-07-25T14:36:01.498Z",
+        "created_at": "2026-07-25T14:53:22.728Z",
         "created_by": "system",
-        "idempotency_key": "run_89c2b6691049_daily_kline_v1",
+        "idempotency_key": "run_d5f043ef5105_daily_kline_v1",
         "dag_node": "daily_kline",
         "attempt": 1
       },
-      "task_adjustment_factors_691049": {
-        "task_id": "task_adjustment_factors_691049",
-        "run_id": "run_89c2b6691049",
+      "task_adjustment_factors_ef5105": {
+        "task_id": "task_adjustment_factors_ef5105",
+        "run_id": "run_d5f043ef5105",
         "task_type": "data_update",
         "assigned_agent": "data-ops-agent",
         "status": "SUCCEEDED",
@@ -2224,15 +746,15 @@
         },
         "input_refs": [],
         "required_gates": [],
-        "created_at": "2026-07-25T14:36:01.498Z",
+        "created_at": "2026-07-25T14:53:22.728Z",
         "created_by": "system",
-        "idempotency_key": "run_89c2b6691049_adjustment_factors_v1",
+        "idempotency_key": "run_d5f043ef5105_adjustment_factors_v1",
         "dag_node": "adjustment_factors",
         "attempt": 1
       },
-      "task_factor_data_691049": {
-        "task_id": "task_factor_data_691049",
-        "run_id": "run_89c2b6691049",
+      "task_factor_data_ef5105": {
+        "task_id": "task_factor_data_ef5105",
+        "run_id": "run_d5f043ef5105",
         "task_type": "data_update",
         "assigned_agent": "data-ops-agent",
         "status": "SUCCEEDED",
@@ -2242,15 +764,15 @@
         },
         "input_refs": [],
         "required_gates": [],
-        "created_at": "2026-07-25T14:36:01.498Z",
+        "created_at": "2026-07-25T14:53:22.728Z",
         "created_by": "system",
-        "idempotency_key": "run_89c2b6691049_factor_data_v1",
+        "idempotency_key": "run_d5f043ef5105_factor_data_v1",
         "dag_node": "factor_data",
         "attempt": 1
       },
-      "task_market_factors_691049": {
-        "task_id": "task_market_factors_691049",
-        "run_id": "run_89c2b6691049",
+      "task_market_factors_ef5105": {
+        "task_id": "task_market_factors_ef5105",
+        "run_id": "run_d5f043ef5105",
         "task_type": "data_update",
         "assigned_agent": "data-ops-agent",
         "status": "SUCCEEDED",
@@ -2260,15 +782,15 @@
         },
         "input_refs": [],
         "required_gates": [],
-        "created_at": "2026-07-25T14:36:01.498Z",
+        "created_at": "2026-07-25T14:53:22.728Z",
         "created_by": "system",
-        "idempotency_key": "run_89c2b6691049_market_factors_v1",
+        "idempotency_key": "run_d5f043ef5105_market_factors_v1",
         "dag_node": "market_factors",
         "attempt": 1
       },
-      "task_product_quality_gate_691049": {
-        "task_id": "task_product_quality_gate_691049",
-        "run_id": "run_89c2b6691049",
+      "task_product_quality_gate_ef5105": {
+        "task_id": "task_product_quality_gate_ef5105",
+        "run_id": "run_d5f043ef5105",
         "task_type": "quality_check",
         "assigned_agent": "data-quality-agent",
         "status": "FAILED",
@@ -2278,15 +800,15 @@
         },
         "input_refs": [],
         "required_gates": [],
-        "created_at": "2026-07-25T14:36:01.498Z",
+        "created_at": "2026-07-25T14:53:22.728Z",
         "created_by": "system",
-        "idempotency_key": "run_89c2b6691049_product_quality_gate_v1",
+        "idempotency_key": "run_d5f043ef5105_product_quality_gate_v1",
         "dag_node": "product_quality_gate",
         "attempt": 1
       },
-      "task_candidate_signal_691049": {
-        "task_id": "task_candidate_signal_691049",
-        "run_id": "run_89c2b6691049",
+      "task_candidate_signal_ef5105": {
+        "task_id": "task_candidate_signal_ef5105",
+        "run_id": "run_d5f043ef5105",
         "task_type": "model_run",
         "assigned_agent": "model-production-agent",
         "status": "SKIPPED_BY_GATE",
@@ -2298,15 +820,15 @@
         "required_gates": [
           "database_core"
         ],
-        "created_at": "2026-07-25T14:36:01.498Z",
+        "created_at": "2026-07-25T14:53:22.728Z",
         "created_by": "system",
-        "idempotency_key": "run_89c2b6691049_candidate_signal_v1",
+        "idempotency_key": "run_d5f043ef5105_candidate_signal_v1",
         "dag_node": "candidate_signal",
         "attempt": 1
       },
-      "task_risk_approval_691049": {
-        "task_id": "task_risk_approval_691049",
-        "run_id": "run_89c2b6691049",
+      "task_risk_approval_ef5105": {
+        "task_id": "task_risk_approval_ef5105",
+        "run_id": "run_d5f043ef5105",
         "task_type": "risk_review",
         "assigned_agent": "model-risk-agent",
         "status": "SKIPPED_BY_GATE",
@@ -2318,15 +840,15 @@
         "required_gates": [
           "model"
         ],
-        "created_at": "2026-07-25T14:36:01.498Z",
+        "created_at": "2026-07-25T14:53:22.728Z",
         "created_by": "system",
-        "idempotency_key": "run_89c2b6691049_risk_approval_v1",
+        "idempotency_key": "run_d5f043ef5105_risk_approval_v1",
         "dag_node": "risk_approval",
         "attempt": 1
       },
-      "task_release_691049": {
-        "task_id": "task_release_691049",
-        "run_id": "run_89c2b6691049",
+      "task_release_ef5105": {
+        "task_id": "task_release_ef5105",
+        "run_id": "run_d5f043ef5105",
         "task_type": "release",
         "assigned_agent": "release-observer-agent",
         "status": "SKIPPED_BY_GATE",
@@ -2339,15 +861,15 @@
           "model",
           "approval"
         ],
-        "created_at": "2026-07-25T14:36:01.498Z",
+        "created_at": "2026-07-25T14:53:22.728Z",
         "created_by": "system",
-        "idempotency_key": "run_89c2b6691049_release_v1",
+        "idempotency_key": "run_d5f043ef5105_release_v1",
         "dag_node": "release",
         "attempt": 1
       },
-      "task_post_release_observation_691049": {
-        "task_id": "task_post_release_observation_691049",
-        "run_id": "run_89c2b6691049",
+      "task_post_release_observation_ef5105": {
+        "task_id": "task_post_release_observation_ef5105",
+        "run_id": "run_d5f043ef5105",
         "task_type": "observation",
         "assigned_agent": "release-observer-agent",
         "status": "SKIPPED_BY_GATE",
@@ -2357,22 +879,22 @@
         },
         "input_refs": [],
         "required_gates": [],
-        "created_at": "2026-07-25T14:36:01.498Z",
+        "created_at": "2026-07-25T14:53:22.728Z",
         "created_by": "system",
-        "idempotency_key": "run_89c2b6691049_post_release_observation_v1",
+        "idempotency_key": "run_d5f043ef5105_post_release_observation_v1",
         "dag_node": "post_release_observation",
         "attempt": 1
       }
     },
     "results": {
-      "task_daily_kline_691049": {
-        "task_id": "task_daily_kline_691049",
-        "run_id": "run_89c2b6691049",
+      "task_daily_kline_ef5105": {
+        "task_id": "task_daily_kline_ef5105",
+        "run_id": "run_d5f043ef5105",
         "agent_id": "data-ops-agent",
         "status": "SUCCEEDED",
         "gate_status": "NOT_EXECUTED",
-        "started_at": "2026-07-25T14:36:01.501Z",
-        "finished_at": "2026-07-25T14:36:01.501Z",
+        "started_at": "2026-07-25T14:53:22.731Z",
+        "finished_at": "2026-07-25T14:53:22.731Z",
         "data_cutoff": "2026-07-25",
         "input_versions": {
           "daily_kline": "v_2026-07-25"
@@ -2391,7 +913,7 @@
         },
         "evidence": [
           {
-            "evidence_id": "ev_8feb4ba6e714",
+            "evidence_id": "ev_7559cbdb24cf",
             "type": "data_update_result",
             "source": "mock_tool",
             "data": {
@@ -2402,8 +924,8 @@
               "failed": 0,
               "data_cutoff": "2026-07-25"
             },
-            "created_at": "2026-07-25T14:36:01.501Z",
-            "hash": "hash_2f957a6a"
+            "created_at": "2026-07-25T14:53:22.731Z",
+            "hash": "hash_e18a89d0"
           }
         ],
         "warnings": [],
@@ -2411,14 +933,14 @@
         "next_action": "quality_check",
         "mock": true
       },
-      "task_adjustment_factors_691049": {
-        "task_id": "task_adjustment_factors_691049",
-        "run_id": "run_89c2b6691049",
+      "task_adjustment_factors_ef5105": {
+        "task_id": "task_adjustment_factors_ef5105",
+        "run_id": "run_d5f043ef5105",
         "agent_id": "data-ops-agent",
         "status": "SUCCEEDED",
         "gate_status": "NOT_EXECUTED",
-        "started_at": "2026-07-25T14:36:01.504Z",
-        "finished_at": "2026-07-25T14:36:01.504Z",
+        "started_at": "2026-07-25T14:53:22.733Z",
+        "finished_at": "2026-07-25T14:53:22.733Z",
         "data_cutoff": "2026-07-25",
         "input_versions": {
           "adjustment_factors": "v_2026-07-25"
@@ -2437,7 +959,7 @@
         },
         "evidence": [
           {
-            "evidence_id": "ev_6c58b5d69da7",
+            "evidence_id": "ev_3f10a9ecaa8e",
             "type": "data_update_result",
             "source": "mock_tool",
             "data": {
@@ -2448,8 +970,8 @@
               "failed": 20,
               "data_cutoff": "2026-07-25"
             },
-            "created_at": "2026-07-25T14:36:01.504Z",
-            "hash": "hash_5a7af656"
+            "created_at": "2026-07-25T14:53:22.733Z",
+            "hash": "hash_c8afbf9c"
           }
         ],
         "warnings": [
@@ -2459,14 +981,14 @@
         "next_action": "quality_check",
         "mock": true
       },
-      "task_factor_data_691049": {
-        "task_id": "task_factor_data_691049",
-        "run_id": "run_89c2b6691049",
+      "task_factor_data_ef5105": {
+        "task_id": "task_factor_data_ef5105",
+        "run_id": "run_d5f043ef5105",
         "agent_id": "data-ops-agent",
         "status": "SUCCEEDED",
         "gate_status": "NOT_EXECUTED",
-        "started_at": "2026-07-25T14:36:01.507Z",
-        "finished_at": "2026-07-25T14:36:01.507Z",
+        "started_at": "2026-07-25T14:53:22.734Z",
+        "finished_at": "2026-07-25T14:53:22.734Z",
         "data_cutoff": "2026-07-25",
         "input_versions": {
           "factor_data": "v_2026-07-25"
@@ -2485,7 +1007,7 @@
         },
         "evidence": [
           {
-            "evidence_id": "ev_c08b0700fe54",
+            "evidence_id": "ev_2667f604f14e",
             "type": "data_update_result",
             "source": "mock_tool",
             "data": {
@@ -2496,8 +1018,8 @@
               "failed": 0,
               "data_cutoff": "2026-07-25"
             },
-            "created_at": "2026-07-25T14:36:01.507Z",
-            "hash": "hash_25361ead"
+            "created_at": "2026-07-25T14:53:22.734Z",
+            "hash": "hash_79d40d07"
           }
         ],
         "warnings": [],
@@ -2505,14 +1027,14 @@
         "next_action": "quality_check",
         "mock": true
       },
-      "task_market_factors_691049": {
-        "task_id": "task_market_factors_691049",
-        "run_id": "run_89c2b6691049",
+      "task_market_factors_ef5105": {
+        "task_id": "task_market_factors_ef5105",
+        "run_id": "run_d5f043ef5105",
         "agent_id": "data-ops-agent",
         "status": "SUCCEEDED",
         "gate_status": "NOT_EXECUTED",
-        "started_at": "2026-07-25T14:36:01.511Z",
-        "finished_at": "2026-07-25T14:36:01.511Z",
+        "started_at": "2026-07-25T14:53:22.736Z",
+        "finished_at": "2026-07-25T14:53:22.736Z",
         "data_cutoff": "2026-07-25",
         "input_versions": {
           "market_factors": "v_2026-07-25"
@@ -2531,7 +1053,7 @@
         },
         "evidence": [
           {
-            "evidence_id": "ev_3e88828b7362",
+            "evidence_id": "ev_8c5f9466ffa7",
             "type": "data_update_result",
             "source": "mock_tool",
             "data": {
@@ -2542,8 +1064,8 @@
               "failed": 0,
               "data_cutoff": "2026-07-25"
             },
-            "created_at": "2026-07-25T14:36:01.511Z",
-            "hash": "hash_a090f294"
+            "created_at": "2026-07-25T14:53:22.736Z",
+            "hash": "hash_4e202df1"
           }
         ],
         "warnings": [],
@@ -2551,14 +1073,14 @@
         "next_action": "quality_check",
         "mock": true
       },
-      "task_product_quality_gate_691049": {
-        "task_id": "task_product_quality_gate_691049",
-        "run_id": "run_89c2b6691049",
+      "task_product_quality_gate_ef5105": {
+        "task_id": "task_product_quality_gate_ef5105",
+        "run_id": "run_d5f043ef5105",
         "agent_id": "data-quality-agent",
         "status": "FAILED",
         "gate_status": "BLOCK",
-        "started_at": "2026-07-25T14:36:01.514Z",
-        "finished_at": "2026-07-25T14:36:01.514Z",
+        "started_at": "2026-07-25T14:53:22.737Z",
+        "finished_at": "2026-07-25T14:53:22.737Z",
         "data_cutoff": "2026-07-25",
         "input_versions": {},
         "output_versions": {},
@@ -2571,70 +1093,70 @@
         "watermarks": {},
         "evidence": [
           {
-            "evidence_id": "ev_d8d9e6fd53c7",
+            "evidence_id": "ev_f32bd5586cd1",
             "type": "gate_rule",
             "source": "mock_tool",
             "data": {
               "rule_id": "coverage_check",
               "status": "BLOCK"
             },
-            "created_at": "2026-07-25T14:36:01.514Z",
-            "hash": "hash_d57e4605"
+            "created_at": "2026-07-25T14:53:22.737Z",
+            "hash": "hash_7971d04a"
           },
           {
-            "evidence_id": "ev_f397635a5cfe",
+            "evidence_id": "ev_d938354a67ee",
             "type": "gate_rule",
             "source": "mock_tool",
             "data": {
               "rule_id": "freshness_check",
               "status": "PASS"
             },
-            "created_at": "2026-07-25T14:36:01.514Z",
-            "hash": "hash_6eb3967d"
+            "created_at": "2026-07-25T14:53:22.737Z",
+            "hash": "hash_7d776ee3"
           },
           {
-            "evidence_id": "ev_d2c7a04d9a53",
+            "evidence_id": "ev_f13ce677201c",
             "type": "gate_rule",
             "source": "mock_tool",
             "data": {
               "rule_id": "uniqueness_check",
               "status": "PASS"
             },
-            "created_at": "2026-07-25T14:36:01.514Z",
-            "hash": "hash_a39fe41f"
+            "created_at": "2026-07-25T14:53:22.737Z",
+            "hash": "hash_7aa10eea"
           },
           {
-            "evidence_id": "ev_4364d52a12bd",
+            "evidence_id": "ev_bb445ea80907",
             "type": "gate_rule",
             "source": "mock_tool",
             "data": {
               "rule_id": "null_check",
               "status": "WARN"
             },
-            "created_at": "2026-07-25T14:36:01.514Z",
-            "hash": "hash_8a53b3f9"
+            "created_at": "2026-07-25T14:53:22.737Z",
+            "hash": "hash_bada4834"
           },
           {
-            "evidence_id": "ev_077998a56efb",
+            "evidence_id": "ev_b13155f9661d",
             "type": "gate_rule",
             "source": "mock_tool",
             "data": {
               "rule_id": "dependency_order_check",
               "status": "PASS"
             },
-            "created_at": "2026-07-25T14:36:01.514Z",
-            "hash": "hash_363a7a3d"
+            "created_at": "2026-07-25T14:53:22.737Z",
+            "hash": "hash_c43997f0"
           },
           {
-            "evidence_id": "ev_da66a667d00d",
+            "evidence_id": "ev_4a60da3cb957",
             "type": "gate_rule",
             "source": "mock_tool",
             "data": {
               "rule_id": "cutoff_check",
               "status": "PASS"
             },
-            "created_at": "2026-07-25T14:36:01.514Z",
-            "hash": "hash_ccde5050"
+            "created_at": "2026-07-25T14:53:22.737Z",
+            "hash": "hash_782afdc6"
           }
         ],
         "warnings": [
@@ -2650,10 +1172,10 @@
     "gates": {
       "gate_database_core": {
         "gate_id": "gate_database_core",
-        "run_id": "run_89c2b6691049",
+        "run_id": "run_d5f043ef5105",
         "scope": "database_core",
         "status": "BLOCK",
-        "checked_at": "2026-07-25T14:36:01.514Z",
+        "checked_at": "2026-07-25T14:53:22.737Z",
         "data_cutoff": "2026-07-25",
         "rules": [
           {
@@ -2664,7 +1186,7 @@
             "threshold": 0.999,
             "operator": ">=",
             "severity": "BLOCK",
-            "evidence_ref": "ev_68bfdbfab7c1",
+            "evidence_ref": "ev_262386e97d37",
             "description": "数据覆盖率必须 >= 99.9%"
           },
           {
@@ -2675,7 +1197,7 @@
             "threshold": 24,
             "operator": "<=",
             "severity": "BLOCK",
-            "evidence_ref": "ev_e0fc57682a86",
+            "evidence_ref": "ev_87d6183adc17",
             "description": "数据新鲜度必须在 24 小时内"
           },
           {
@@ -2686,7 +1208,7 @@
             "threshold": 1,
             "operator": ">=",
             "severity": "BLOCK",
-            "evidence_ref": "ev_79db72eb3aab",
+            "evidence_ref": "ev_693ba2ff0514",
             "description": "主键必须完全唯一"
           },
           {
@@ -2697,7 +1219,7 @@
             "threshold": 0.001,
             "operator": "<=",
             "severity": "WARN",
-            "evidence_ref": "ev_1b214c76fa87",
+            "evidence_ref": "ev_fe2700a4a063",
             "description": "关键字段空值率必须 <= 0.1%"
           },
           {
@@ -2708,7 +1230,7 @@
             "threshold": 0,
             "operator": "==",
             "severity": "BLOCK",
-            "evidence_ref": "ev_cf1e9511ae75",
+            "evidence_ref": "ev_3308cc35860b",
             "description": "数据依赖顺序不允许违规"
           },
           {
@@ -2719,7 +1241,7 @@
             "threshold": true,
             "operator": "==",
             "severity": "BLOCK",
-            "evidence_ref": "ev_44cd87c844bd",
+            "evidence_ref": "ev_392e9cb68998",
             "description": "数据截止日必须与任务参数一致"
           }
         ],
@@ -2734,5 +1256,2154 @@
     "approvals": {},
     "current_node": "product_quality_gate",
     "block_reason": "覆盖率 0.985 低于阈值 0.999"
+  },
+  "run_769f1e9317cc": {
+    "run_id": "run_769f1e9317cc",
+    "status": "COMPLETED",
+    "scenario": "scenario_a",
+    "created_at": "2026-07-25T14:53:22.743Z",
+    "created_by": "system",
+    "updated_at": "2026-07-25T14:53:22.766Z",
+    "data_cutoff": "2026-07-25",
+    "tasks": {
+      "task_daily_kline_9317cc": {
+        "task_id": "task_daily_kline_9317cc",
+        "run_id": "run_769f1e9317cc",
+        "task_type": "data_update",
+        "assigned_agent": "data-ops-agent",
+        "status": "SUCCEEDED",
+        "parameters": {
+          "dag_node": "daily_kline",
+          "data_object": "daily_kline"
+        },
+        "input_refs": [],
+        "required_gates": [],
+        "created_at": "2026-07-25T14:53:22.743Z",
+        "created_by": "system",
+        "idempotency_key": "run_769f1e9317cc_daily_kline_v1",
+        "dag_node": "daily_kline",
+        "attempt": 1
+      },
+      "task_adjustment_factors_9317cc": {
+        "task_id": "task_adjustment_factors_9317cc",
+        "run_id": "run_769f1e9317cc",
+        "task_type": "data_update",
+        "assigned_agent": "data-ops-agent",
+        "status": "SUCCEEDED",
+        "parameters": {
+          "dag_node": "adjustment_factors",
+          "data_object": "adjustment_factors"
+        },
+        "input_refs": [],
+        "required_gates": [],
+        "created_at": "2026-07-25T14:53:22.743Z",
+        "created_by": "system",
+        "idempotency_key": "run_769f1e9317cc_adjustment_factors_v1",
+        "dag_node": "adjustment_factors",
+        "attempt": 1
+      },
+      "task_factor_data_9317cc": {
+        "task_id": "task_factor_data_9317cc",
+        "run_id": "run_769f1e9317cc",
+        "task_type": "data_update",
+        "assigned_agent": "data-ops-agent",
+        "status": "SUCCEEDED",
+        "parameters": {
+          "dag_node": "factor_data",
+          "data_object": "factor_data"
+        },
+        "input_refs": [],
+        "required_gates": [],
+        "created_at": "2026-07-25T14:53:22.743Z",
+        "created_by": "system",
+        "idempotency_key": "run_769f1e9317cc_factor_data_v1",
+        "dag_node": "factor_data",
+        "attempt": 1
+      },
+      "task_market_factors_9317cc": {
+        "task_id": "task_market_factors_9317cc",
+        "run_id": "run_769f1e9317cc",
+        "task_type": "data_update",
+        "assigned_agent": "data-ops-agent",
+        "status": "SUCCEEDED",
+        "parameters": {
+          "dag_node": "market_factors",
+          "data_object": "market_factors"
+        },
+        "input_refs": [],
+        "required_gates": [],
+        "created_at": "2026-07-25T14:53:22.743Z",
+        "created_by": "system",
+        "idempotency_key": "run_769f1e9317cc_market_factors_v1",
+        "dag_node": "market_factors",
+        "attempt": 1
+      },
+      "task_product_quality_gate_9317cc": {
+        "task_id": "task_product_quality_gate_9317cc",
+        "run_id": "run_769f1e9317cc",
+        "task_type": "quality_check",
+        "assigned_agent": "data-quality-agent",
+        "status": "SUCCEEDED",
+        "parameters": {
+          "dag_node": "product_quality_gate",
+          "data_object": null
+        },
+        "input_refs": [],
+        "required_gates": [],
+        "created_at": "2026-07-25T14:53:22.743Z",
+        "created_by": "system",
+        "idempotency_key": "run_769f1e9317cc_product_quality_gate_v1",
+        "dag_node": "product_quality_gate",
+        "attempt": 1
+      },
+      "task_candidate_signal_9317cc": {
+        "task_id": "task_candidate_signal_9317cc",
+        "run_id": "run_769f1e9317cc",
+        "task_type": "model_run",
+        "assigned_agent": "model-production-agent",
+        "status": "SUCCEEDED",
+        "parameters": {
+          "dag_node": "candidate_signal",
+          "data_object": null
+        },
+        "input_refs": [],
+        "required_gates": [
+          "database_core"
+        ],
+        "created_at": "2026-07-25T14:53:22.743Z",
+        "created_by": "system",
+        "idempotency_key": "run_769f1e9317cc_candidate_signal_v1",
+        "dag_node": "candidate_signal",
+        "attempt": 1
+      },
+      "task_risk_approval_9317cc": {
+        "task_id": "task_risk_approval_9317cc",
+        "run_id": "run_769f1e9317cc",
+        "task_type": "risk_review",
+        "assigned_agent": "model-risk-agent",
+        "status": "SUCCEEDED",
+        "parameters": {
+          "dag_node": "risk_approval",
+          "data_object": null
+        },
+        "input_refs": [],
+        "required_gates": [
+          "model"
+        ],
+        "created_at": "2026-07-25T14:53:22.743Z",
+        "created_by": "system",
+        "idempotency_key": "run_769f1e9317cc_risk_approval_v1",
+        "dag_node": "risk_approval",
+        "attempt": 1
+      },
+      "task_release_9317cc": {
+        "task_id": "task_release_9317cc",
+        "run_id": "run_769f1e9317cc",
+        "task_type": "release",
+        "assigned_agent": "release-observer-agent",
+        "status": "SUCCEEDED",
+        "parameters": {
+          "dag_node": "release",
+          "data_object": null
+        },
+        "input_refs": [],
+        "required_gates": [
+          "model",
+          "approval"
+        ],
+        "created_at": "2026-07-25T14:53:22.743Z",
+        "created_by": "system",
+        "idempotency_key": "run_769f1e9317cc_release_v1",
+        "dag_node": "release",
+        "attempt": 1
+      },
+      "task_post_release_observation_9317cc": {
+        "task_id": "task_post_release_observation_9317cc",
+        "run_id": "run_769f1e9317cc",
+        "task_type": "observation",
+        "assigned_agent": "release-observer-agent",
+        "status": "SUCCEEDED",
+        "parameters": {
+          "dag_node": "post_release_observation",
+          "data_object": null
+        },
+        "input_refs": [],
+        "required_gates": [],
+        "created_at": "2026-07-25T14:53:22.743Z",
+        "created_by": "system",
+        "idempotency_key": "run_769f1e9317cc_post_release_observation_v1",
+        "dag_node": "post_release_observation",
+        "attempt": 1
+      }
+    },
+    "results": {
+      "task_daily_kline_9317cc": {
+        "task_id": "task_daily_kline_9317cc",
+        "run_id": "run_769f1e9317cc",
+        "agent_id": "data-ops-agent",
+        "status": "SUCCEEDED",
+        "gate_status": "NOT_EXECUTED",
+        "started_at": "2026-07-25T14:53:22.745Z",
+        "finished_at": "2026-07-25T14:53:22.745Z",
+        "data_cutoff": "2026-07-25",
+        "input_versions": {
+          "daily_kline": "v_2026-07-25"
+        },
+        "output_versions": {
+          "daily_kline": "v_2026-07-25_updated"
+        },
+        "metrics": {
+          "inserted": 250,
+          "updated": 50,
+          "skipped": 10,
+          "failed": 0
+        },
+        "watermarks": {
+          "daily_kline": "2026-07-25"
+        },
+        "evidence": [
+          {
+            "evidence_id": "ev_d9240aa1ec8b",
+            "type": "data_update_result",
+            "source": "mock_tool",
+            "data": {
+              "data_object": "daily_kline",
+              "inserted": 250,
+              "updated": 50,
+              "skipped": 10,
+              "failed": 0,
+              "data_cutoff": "2026-07-25"
+            },
+            "created_at": "2026-07-25T14:53:22.745Z",
+            "hash": "hash_aa98bd96"
+          }
+        ],
+        "warnings": [],
+        "errors": [],
+        "next_action": "quality_check",
+        "mock": true
+      },
+      "task_adjustment_factors_9317cc": {
+        "task_id": "task_adjustment_factors_9317cc",
+        "run_id": "run_769f1e9317cc",
+        "agent_id": "data-ops-agent",
+        "status": "SUCCEEDED",
+        "gate_status": "NOT_EXECUTED",
+        "started_at": "2026-07-25T14:53:22.747Z",
+        "finished_at": "2026-07-25T14:53:22.747Z",
+        "data_cutoff": "2026-07-25",
+        "input_versions": {
+          "adjustment_factors": "v_2026-07-25"
+        },
+        "output_versions": {
+          "adjustment_factors": "v_2026-07-25_updated"
+        },
+        "metrics": {
+          "inserted": 250,
+          "updated": 50,
+          "skipped": 10,
+          "failed": 0
+        },
+        "watermarks": {
+          "adjustment_factors": "2026-07-25"
+        },
+        "evidence": [
+          {
+            "evidence_id": "ev_134f1b5ec825",
+            "type": "data_update_result",
+            "source": "mock_tool",
+            "data": {
+              "data_object": "adjustment_factors",
+              "inserted": 250,
+              "updated": 50,
+              "skipped": 10,
+              "failed": 0,
+              "data_cutoff": "2026-07-25"
+            },
+            "created_at": "2026-07-25T14:53:22.747Z",
+            "hash": "hash_cc0f71a2"
+          }
+        ],
+        "warnings": [],
+        "errors": [],
+        "next_action": "quality_check",
+        "mock": true
+      },
+      "task_factor_data_9317cc": {
+        "task_id": "task_factor_data_9317cc",
+        "run_id": "run_769f1e9317cc",
+        "agent_id": "data-ops-agent",
+        "status": "SUCCEEDED",
+        "gate_status": "NOT_EXECUTED",
+        "started_at": "2026-07-25T14:53:22.749Z",
+        "finished_at": "2026-07-25T14:53:22.749Z",
+        "data_cutoff": "2026-07-25",
+        "input_versions": {
+          "factor_data": "v_2026-07-25"
+        },
+        "output_versions": {
+          "factor_data": "v_2026-07-25_updated"
+        },
+        "metrics": {
+          "inserted": 250,
+          "updated": 50,
+          "skipped": 10,
+          "failed": 0
+        },
+        "watermarks": {
+          "factor_data": "2026-07-25"
+        },
+        "evidence": [
+          {
+            "evidence_id": "ev_21a774393295",
+            "type": "data_update_result",
+            "source": "mock_tool",
+            "data": {
+              "data_object": "factor_data",
+              "inserted": 250,
+              "updated": 50,
+              "skipped": 10,
+              "failed": 0,
+              "data_cutoff": "2026-07-25"
+            },
+            "created_at": "2026-07-25T14:53:22.749Z",
+            "hash": "hash_88c4fe05"
+          }
+        ],
+        "warnings": [],
+        "errors": [],
+        "next_action": "quality_check",
+        "mock": true
+      },
+      "task_market_factors_9317cc": {
+        "task_id": "task_market_factors_9317cc",
+        "run_id": "run_769f1e9317cc",
+        "agent_id": "data-ops-agent",
+        "status": "SUCCEEDED",
+        "gate_status": "NOT_EXECUTED",
+        "started_at": "2026-07-25T14:53:22.751Z",
+        "finished_at": "2026-07-25T14:53:22.751Z",
+        "data_cutoff": "2026-07-25",
+        "input_versions": {
+          "market_factors": "v_2026-07-25"
+        },
+        "output_versions": {
+          "market_factors": "v_2026-07-25_updated"
+        },
+        "metrics": {
+          "inserted": 250,
+          "updated": 50,
+          "skipped": 10,
+          "failed": 0
+        },
+        "watermarks": {
+          "market_factors": "2026-07-25"
+        },
+        "evidence": [
+          {
+            "evidence_id": "ev_2aea35980526",
+            "type": "data_update_result",
+            "source": "mock_tool",
+            "data": {
+              "data_object": "market_factors",
+              "inserted": 250,
+              "updated": 50,
+              "skipped": 10,
+              "failed": 0,
+              "data_cutoff": "2026-07-25"
+            },
+            "created_at": "2026-07-25T14:53:22.751Z",
+            "hash": "hash_f3e6c228"
+          }
+        ],
+        "warnings": [],
+        "errors": [],
+        "next_action": "quality_check",
+        "mock": true
+      },
+      "task_product_quality_gate_9317cc": {
+        "task_id": "task_product_quality_gate_9317cc",
+        "run_id": "run_769f1e9317cc",
+        "agent_id": "data-quality-agent",
+        "status": "SUCCEEDED",
+        "gate_status": "PASS",
+        "started_at": "2026-07-25T14:53:22.753Z",
+        "finished_at": "2026-07-25T14:53:22.753Z",
+        "data_cutoff": "2026-07-25",
+        "input_versions": {},
+        "output_versions": {},
+        "metrics": {
+          "inserted": 0,
+          "updated": 0,
+          "skipped": 0,
+          "failed": 0
+        },
+        "watermarks": {},
+        "evidence": [
+          {
+            "evidence_id": "ev_bc9fbc0ef009",
+            "type": "gate_rule",
+            "source": "mock_tool",
+            "data": {
+              "rule_id": "coverage_check",
+              "status": "PASS"
+            },
+            "created_at": "2026-07-25T14:53:22.753Z",
+            "hash": "hash_87865612"
+          },
+          {
+            "evidence_id": "ev_79cfe402618a",
+            "type": "gate_rule",
+            "source": "mock_tool",
+            "data": {
+              "rule_id": "freshness_check",
+              "status": "PASS"
+            },
+            "created_at": "2026-07-25T14:53:22.753Z",
+            "hash": "hash_5ac127db"
+          },
+          {
+            "evidence_id": "ev_0d13de77b580",
+            "type": "gate_rule",
+            "source": "mock_tool",
+            "data": {
+              "rule_id": "uniqueness_check",
+              "status": "PASS"
+            },
+            "created_at": "2026-07-25T14:53:22.753Z",
+            "hash": "hash_514e9965"
+          },
+          {
+            "evidence_id": "ev_43da34e8d7ad",
+            "type": "gate_rule",
+            "source": "mock_tool",
+            "data": {
+              "rule_id": "null_check",
+              "status": "PASS"
+            },
+            "created_at": "2026-07-25T14:53:22.753Z",
+            "hash": "hash_cdf91773"
+          },
+          {
+            "evidence_id": "ev_8c10f623b332",
+            "type": "gate_rule",
+            "source": "mock_tool",
+            "data": {
+              "rule_id": "dependency_order_check",
+              "status": "PASS"
+            },
+            "created_at": "2026-07-25T14:53:22.753Z",
+            "hash": "hash_81a1ec41"
+          },
+          {
+            "evidence_id": "ev_639adaed84ff",
+            "type": "gate_rule",
+            "source": "mock_tool",
+            "data": {
+              "rule_id": "cutoff_check",
+              "status": "PASS"
+            },
+            "created_at": "2026-07-25T14:53:22.753Z",
+            "hash": "hash_9a5ca4a4"
+          }
+        ],
+        "warnings": [],
+        "errors": [],
+        "next_action": "model_run",
+        "mock": true
+      },
+      "task_candidate_signal_9317cc": {
+        "task_id": "task_candidate_signal_9317cc",
+        "run_id": "run_769f1e9317cc",
+        "agent_id": "model-production-agent",
+        "status": "SUCCEEDED",
+        "gate_status": "PASS",
+        "started_at": "2026-07-25T14:53:22.756Z",
+        "finished_at": "2026-07-25T14:53:22.756Z",
+        "data_cutoff": "2026-07-25",
+        "input_versions": {
+          "model": "model_v2.1.0",
+          "data_snapshot": "snap_b5112187"
+        },
+        "output_versions": {
+          "candidate_signal": "cs_7f21746b"
+        },
+        "metrics": {
+          "inserted": 0,
+          "updated": 0,
+          "skipped": 0,
+          "failed": 0
+        },
+        "watermarks": {},
+        "evidence": [
+          {
+            "evidence_id": "ev_e6da6b80591f",
+            "type": "model_run",
+            "source": "mock_tool",
+            "data": {
+              "model_version": "model_v2.1.0",
+              "input_snapshot": "snap_b5112187",
+              "candidate_signal": "cs_7f21746b",
+              "sharpe_ratio": 1.5
+            },
+            "created_at": "2026-07-25T14:53:22.756Z",
+            "hash": "hash_2dad129a"
+          }
+        ],
+        "warnings": [],
+        "errors": [],
+        "next_action": "risk_review",
+        "mock": true
+      },
+      "task_risk_approval_9317cc": {
+        "task_id": "task_risk_approval_9317cc",
+        "run_id": "run_769f1e9317cc",
+        "agent_id": "model-risk-agent",
+        "status": "SUCCEEDED",
+        "gate_status": "NOT_EXECUTED",
+        "started_at": "2026-07-25T14:53:22.758Z",
+        "finished_at": "2026-07-25T14:53:22.758Z",
+        "data_cutoff": "2026-07-25",
+        "input_versions": {},
+        "output_versions": {},
+        "metrics": {
+          "inserted": 0,
+          "updated": 0,
+          "skipped": 0,
+          "failed": 0
+        },
+        "watermarks": {},
+        "evidence": [
+          {
+            "evidence_id": "ev_dd93132950f3",
+            "type": "risk_review",
+            "source": "mock_tool",
+            "data": {
+              "review_status": "APPROVE",
+              "risk_level": "medium",
+              "reasons": [
+                "模型版本已登记",
+                "证据完整",
+                "数据截止日一致"
+              ]
+            },
+            "created_at": "2026-07-25T14:53:22.758Z",
+            "hash": "hash_35fc1ca0"
+          }
+        ],
+        "warnings": [],
+        "errors": [],
+        "next_action": "human_approval",
+        "mock": true
+      },
+      "task_release_9317cc": {
+        "task_id": "task_release_9317cc",
+        "run_id": "run_769f1e9317cc",
+        "agent_id": "release-observer-agent",
+        "status": "SUCCEEDED",
+        "gate_status": "NOT_EXECUTED",
+        "started_at": "2026-07-25T14:53:22.761Z",
+        "finished_at": "2026-07-25T14:53:22.761Z",
+        "data_cutoff": "2026-07-25",
+        "input_versions": {},
+        "output_versions": {
+          "release": "rel_82e605dd"
+        },
+        "metrics": {
+          "inserted": 0,
+          "updated": 0,
+          "skipped": 0,
+          "failed": 0
+        },
+        "watermarks": {},
+        "evidence": [
+          {
+            "evidence_id": "ev_3b4166a02110",
+            "type": "release",
+            "source": "mock_tool",
+            "data": {
+              "release_version": "v_2026-07-25",
+              "published_at": "2026-07-25T14:53:22.761Z",
+              "target": "mock_downstream"
+            },
+            "created_at": "2026-07-25T14:53:22.761Z",
+            "hash": "hash_9c4f4240"
+          }
+        ],
+        "warnings": [],
+        "errors": [],
+        "next_action": "observation",
+        "mock": true
+      },
+      "task_post_release_observation_9317cc": {
+        "task_id": "task_post_release_observation_9317cc",
+        "run_id": "run_769f1e9317cc",
+        "agent_id": "release-observer-agent",
+        "status": "SUCCEEDED",
+        "gate_status": "NOT_EXECUTED",
+        "started_at": "2026-07-25T14:53:22.764Z",
+        "finished_at": "2026-07-25T14:53:22.764Z",
+        "data_cutoff": "2026-07-25",
+        "input_versions": {},
+        "output_versions": {},
+        "metrics": {
+          "inserted": 0,
+          "updated": 0,
+          "skipped": 0,
+          "failed": 0
+        },
+        "watermarks": {},
+        "evidence": [
+          {
+            "evidence_id": "ev_8c2f786c2df1",
+            "type": "observation",
+            "source": "mock_tool",
+            "data": {
+              "monitoring_status": "healthy",
+              "alerts_triggered": 0,
+              "downstream_received": true
+            },
+            "created_at": "2026-07-25T14:53:22.764Z",
+            "hash": "hash_e5e355fe"
+          }
+        ],
+        "warnings": [],
+        "errors": [],
+        "next_action": "complete",
+        "mock": true
+      }
+    },
+    "gates": {
+      "gate_database_core": {
+        "gate_id": "gate_database_core",
+        "run_id": "run_769f1e9317cc",
+        "scope": "database_core",
+        "status": "PASS",
+        "checked_at": "2026-07-25T14:53:22.753Z",
+        "data_cutoff": "2026-07-25",
+        "rules": [
+          {
+            "rule_id": "coverage_check",
+            "display_name": "覆盖率检查",
+            "status": "PASS",
+            "actual": 0.9995,
+            "threshold": 0.999,
+            "operator": ">=",
+            "severity": "BLOCK",
+            "evidence_ref": "ev_48f3ffd177b9",
+            "description": "数据覆盖率必须 >= 99.9%"
+          },
+          {
+            "rule_id": "freshness_check",
+            "display_name": "新鲜度检查",
+            "status": "PASS",
+            "actual": 2,
+            "threshold": 24,
+            "operator": "<=",
+            "severity": "BLOCK",
+            "evidence_ref": "ev_c54a26bd96cc",
+            "description": "数据新鲜度必须在 24 小时内"
+          },
+          {
+            "rule_id": "uniqueness_check",
+            "display_name": "唯一性检查",
+            "status": "PASS",
+            "actual": 1,
+            "threshold": 1,
+            "operator": ">=",
+            "severity": "BLOCK",
+            "evidence_ref": "ev_051cda7a3028",
+            "description": "主键必须完全唯一"
+          },
+          {
+            "rule_id": "null_check",
+            "display_name": "空值检查",
+            "status": "PASS",
+            "actual": 0.0005,
+            "threshold": 0.001,
+            "operator": "<=",
+            "severity": "WARN",
+            "evidence_ref": "ev_6f6822786692",
+            "description": "关键字段空值率必须 <= 0.1%"
+          },
+          {
+            "rule_id": "dependency_order_check",
+            "display_name": "依赖顺序检查",
+            "status": "PASS",
+            "actual": 0,
+            "threshold": 0,
+            "operator": "==",
+            "severity": "BLOCK",
+            "evidence_ref": "ev_c70b20df4b93",
+            "description": "数据依赖顺序不允许违规"
+          },
+          {
+            "rule_id": "cutoff_check",
+            "display_name": "数据截止日检查",
+            "status": "PASS",
+            "actual": "2026-07-25",
+            "threshold": true,
+            "operator": "==",
+            "severity": "BLOCK",
+            "evidence_ref": "ev_417d9fd4876f",
+            "description": "数据截止日必须与任务参数一致"
+          }
+        ],
+        "block_reasons": [],
+        "warnings": []
+      },
+      "gate_model": {
+        "gate_id": "gate_model",
+        "run_id": "run_769f1e9317cc",
+        "scope": "model",
+        "status": "PASS",
+        "checked_at": "2026-07-25T14:53:22.756Z",
+        "data_cutoff": "2026-07-25",
+        "rules": [
+          {
+            "rule_id": "model_version_check",
+            "display_name": "模型版本检查",
+            "status": "PASS",
+            "actual": true,
+            "threshold": true,
+            "operator": "==",
+            "severity": "BLOCK",
+            "evidence_ref": "ev_10e7d09e96bf",
+            "description": "模型版本必须已登记"
+          },
+          {
+            "rule_id": "backtest_sharpe_check",
+            "display_name": "回测夏普比检查",
+            "status": "PASS",
+            "actual": 1.5,
+            "threshold": 1,
+            "operator": ">=",
+            "severity": "WARN",
+            "evidence_ref": "ev_bcd7ac04b602",
+            "description": "回测夏普比建议 >= 1.0"
+          },
+          {
+            "rule_id": "backtest_max_drawdown_check",
+            "display_name": "回测最大回撤检查",
+            "status": "PASS",
+            "actual": 0.12,
+            "threshold": 0.2,
+            "operator": "<=",
+            "severity": "WARN",
+            "evidence_ref": "ev_8d738f0d08b2",
+            "description": "回测最大回撤建议 <= 20%"
+          },
+          {
+            "rule_id": "anomaly_check",
+            "display_name": "异常值检查",
+            "status": "PASS",
+            "actual": 2,
+            "threshold": 5,
+            "operator": "<=",
+            "severity": "WARN",
+            "evidence_ref": "ev_c345d865fb59",
+            "description": "异常值数量建议 <= 5"
+          },
+          {
+            "rule_id": "evidence_completeness_check",
+            "display_name": "证据完整性检查",
+            "status": "PASS",
+            "actual": true,
+            "threshold": true,
+            "operator": "==",
+            "severity": "BLOCK",
+            "evidence_ref": "ev_a4714a1325af",
+            "description": "所有证据必须完整"
+          }
+        ],
+        "block_reasons": [],
+        "warnings": []
+      },
+      "gate_approval": {
+        "gate_id": "gate_approval",
+        "run_id": "run_769f1e9317cc",
+        "scope": "approval",
+        "status": "PASS",
+        "checked_at": "2026-07-25T14:53:22.759Z",
+        "data_cutoff": "2026-07-25",
+        "rules": [
+          {
+            "rule_id": "approval_check",
+            "display_name": "人工审批检查",
+            "status": "PASS",
+            "actual": "approved",
+            "threshold": "approved",
+            "operator": "eq",
+            "severity": "BLOCK",
+            "evidence_ref": "appr_c84f0cffe413",
+            "description": "Auto-approved by auto-risk-reviewer for scenario_a"
+          }
+        ],
+        "block_reasons": [],
+        "warnings": []
+      }
+    },
+    "approvals": {
+      "appr_c84f0cffe413": {
+        "approval_id": "appr_c84f0cffe413",
+        "run_id": "run_769f1e9317cc",
+        "task_id": "task_risk_approval_9317cc",
+        "approval_type": "human_release",
+        "status": "APPROVED",
+        "model_version": "",
+        "input_snapshot_id": "",
+        "data_cutoff": "2026-07-25",
+        "candidate_signal_version": "",
+        "approver": "auto-risk-reviewer",
+        "decided_at": "2026-07-25T14:53:22.759Z",
+        "opinion": "Scenario A auto-approval: all metrics within acceptable range",
+        "risk_level": "medium",
+        "created_at": "2026-07-25T14:53:22.758Z"
+      }
+    },
+    "current_node": "post_release_observation",
+    "block_reason": null
+  },
+  "run_f45c33503bab": {
+    "run_id": "run_f45c33503bab",
+    "status": "WAITING_APPROVAL",
+    "scenario": "scenario_c",
+    "created_at": "2026-07-25T14:53:22.782Z",
+    "created_by": "system",
+    "updated_at": "2026-07-25T14:53:22.802Z",
+    "data_cutoff": "2026-07-25",
+    "tasks": {
+      "task_daily_kline_503bab": {
+        "task_id": "task_daily_kline_503bab",
+        "run_id": "run_f45c33503bab",
+        "task_type": "data_update",
+        "assigned_agent": "data-ops-agent",
+        "status": "SUCCEEDED",
+        "parameters": {
+          "dag_node": "daily_kline",
+          "data_object": "daily_kline"
+        },
+        "input_refs": [],
+        "required_gates": [],
+        "created_at": "2026-07-25T14:53:22.782Z",
+        "created_by": "system",
+        "idempotency_key": "run_f45c33503bab_daily_kline_v1",
+        "dag_node": "daily_kline",
+        "attempt": 1
+      },
+      "task_adjustment_factors_503bab": {
+        "task_id": "task_adjustment_factors_503bab",
+        "run_id": "run_f45c33503bab",
+        "task_type": "data_update",
+        "assigned_agent": "data-ops-agent",
+        "status": "SUCCEEDED",
+        "parameters": {
+          "dag_node": "adjustment_factors",
+          "data_object": "adjustment_factors"
+        },
+        "input_refs": [],
+        "required_gates": [],
+        "created_at": "2026-07-25T14:53:22.782Z",
+        "created_by": "system",
+        "idempotency_key": "run_f45c33503bab_adjustment_factors_v1",
+        "dag_node": "adjustment_factors",
+        "attempt": 1
+      },
+      "task_factor_data_503bab": {
+        "task_id": "task_factor_data_503bab",
+        "run_id": "run_f45c33503bab",
+        "task_type": "data_update",
+        "assigned_agent": "data-ops-agent",
+        "status": "SUCCEEDED",
+        "parameters": {
+          "dag_node": "factor_data",
+          "data_object": "factor_data"
+        },
+        "input_refs": [],
+        "required_gates": [],
+        "created_at": "2026-07-25T14:53:22.782Z",
+        "created_by": "system",
+        "idempotency_key": "run_f45c33503bab_factor_data_v1",
+        "dag_node": "factor_data",
+        "attempt": 1
+      },
+      "task_market_factors_503bab": {
+        "task_id": "task_market_factors_503bab",
+        "run_id": "run_f45c33503bab",
+        "task_type": "data_update",
+        "assigned_agent": "data-ops-agent",
+        "status": "SUCCEEDED",
+        "parameters": {
+          "dag_node": "market_factors",
+          "data_object": "market_factors"
+        },
+        "input_refs": [],
+        "required_gates": [],
+        "created_at": "2026-07-25T14:53:22.782Z",
+        "created_by": "system",
+        "idempotency_key": "run_f45c33503bab_market_factors_v1",
+        "dag_node": "market_factors",
+        "attempt": 1
+      },
+      "task_product_quality_gate_503bab": {
+        "task_id": "task_product_quality_gate_503bab",
+        "run_id": "run_f45c33503bab",
+        "task_type": "quality_check",
+        "assigned_agent": "data-quality-agent",
+        "status": "SUCCEEDED",
+        "parameters": {
+          "dag_node": "product_quality_gate",
+          "data_object": null
+        },
+        "input_refs": [],
+        "required_gates": [],
+        "created_at": "2026-07-25T14:53:22.782Z",
+        "created_by": "system",
+        "idempotency_key": "run_f45c33503bab_product_quality_gate_v1",
+        "dag_node": "product_quality_gate",
+        "attempt": 1
+      },
+      "task_candidate_signal_503bab": {
+        "task_id": "task_candidate_signal_503bab",
+        "run_id": "run_f45c33503bab",
+        "task_type": "model_run",
+        "assigned_agent": "model-production-agent",
+        "status": "WAITING_APPROVAL",
+        "parameters": {
+          "dag_node": "candidate_signal",
+          "data_object": null
+        },
+        "input_refs": [],
+        "required_gates": [
+          "database_core"
+        ],
+        "created_at": "2026-07-25T14:53:22.782Z",
+        "created_by": "system",
+        "idempotency_key": "run_f45c33503bab_candidate_signal_v1",
+        "dag_node": "candidate_signal",
+        "attempt": 1
+      },
+      "task_risk_approval_503bab": {
+        "task_id": "task_risk_approval_503bab",
+        "run_id": "run_f45c33503bab",
+        "task_type": "risk_review",
+        "assigned_agent": "model-risk-agent",
+        "status": "PENDING",
+        "parameters": {
+          "dag_node": "risk_approval",
+          "data_object": null
+        },
+        "input_refs": [],
+        "required_gates": [
+          "model"
+        ],
+        "created_at": "2026-07-25T14:53:22.782Z",
+        "created_by": "system",
+        "idempotency_key": "run_f45c33503bab_risk_approval_v1",
+        "dag_node": "risk_approval",
+        "attempt": 1
+      },
+      "task_release_503bab": {
+        "task_id": "task_release_503bab",
+        "run_id": "run_f45c33503bab",
+        "task_type": "release",
+        "assigned_agent": "release-observer-agent",
+        "status": "PENDING",
+        "parameters": {
+          "dag_node": "release",
+          "data_object": null
+        },
+        "input_refs": [],
+        "required_gates": [
+          "model",
+          "approval"
+        ],
+        "created_at": "2026-07-25T14:53:22.782Z",
+        "created_by": "system",
+        "idempotency_key": "run_f45c33503bab_release_v1",
+        "dag_node": "release",
+        "attempt": 1
+      },
+      "task_post_release_observation_503bab": {
+        "task_id": "task_post_release_observation_503bab",
+        "run_id": "run_f45c33503bab",
+        "task_type": "observation",
+        "assigned_agent": "release-observer-agent",
+        "status": "PENDING",
+        "parameters": {
+          "dag_node": "post_release_observation",
+          "data_object": null
+        },
+        "input_refs": [],
+        "required_gates": [],
+        "created_at": "2026-07-25T14:53:22.782Z",
+        "created_by": "system",
+        "idempotency_key": "run_f45c33503bab_post_release_observation_v1",
+        "dag_node": "post_release_observation",
+        "attempt": 1
+      }
+    },
+    "results": {
+      "task_daily_kline_503bab": {
+        "task_id": "task_daily_kline_503bab",
+        "run_id": "run_f45c33503bab",
+        "agent_id": "data-ops-agent",
+        "status": "SUCCEEDED",
+        "gate_status": "NOT_EXECUTED",
+        "started_at": "2026-07-25T14:53:22.785Z",
+        "finished_at": "2026-07-25T14:53:22.785Z",
+        "data_cutoff": "2026-07-25",
+        "input_versions": {
+          "daily_kline": "v_2026-07-25"
+        },
+        "output_versions": {
+          "daily_kline": "v_2026-07-25_updated"
+        },
+        "metrics": {
+          "inserted": 250,
+          "updated": 50,
+          "skipped": 10,
+          "failed": 0
+        },
+        "watermarks": {
+          "daily_kline": "2026-07-25"
+        },
+        "evidence": [
+          {
+            "evidence_id": "ev_50bfaeadc307",
+            "type": "data_update_result",
+            "source": "mock_tool",
+            "data": {
+              "data_object": "daily_kline",
+              "inserted": 250,
+              "updated": 50,
+              "skipped": 10,
+              "failed": 0,
+              "data_cutoff": "2026-07-25"
+            },
+            "created_at": "2026-07-25T14:53:22.785Z",
+            "hash": "hash_c2c1c94e"
+          }
+        ],
+        "warnings": [],
+        "errors": [],
+        "next_action": "quality_check",
+        "mock": true
+      },
+      "task_adjustment_factors_503bab": {
+        "task_id": "task_adjustment_factors_503bab",
+        "run_id": "run_f45c33503bab",
+        "agent_id": "data-ops-agent",
+        "status": "SUCCEEDED",
+        "gate_status": "NOT_EXECUTED",
+        "started_at": "2026-07-25T14:53:22.788Z",
+        "finished_at": "2026-07-25T14:53:22.788Z",
+        "data_cutoff": "2026-07-25",
+        "input_versions": {
+          "adjustment_factors": "v_2026-07-25"
+        },
+        "output_versions": {
+          "adjustment_factors": "v_2026-07-25_updated"
+        },
+        "metrics": {
+          "inserted": 250,
+          "updated": 50,
+          "skipped": 10,
+          "failed": 0
+        },
+        "watermarks": {
+          "adjustment_factors": "2026-07-25"
+        },
+        "evidence": [
+          {
+            "evidence_id": "ev_feb297331fe7",
+            "type": "data_update_result",
+            "source": "mock_tool",
+            "data": {
+              "data_object": "adjustment_factors",
+              "inserted": 250,
+              "updated": 50,
+              "skipped": 10,
+              "failed": 0,
+              "data_cutoff": "2026-07-25"
+            },
+            "created_at": "2026-07-25T14:53:22.788Z",
+            "hash": "hash_f79fddfa"
+          }
+        ],
+        "warnings": [],
+        "errors": [],
+        "next_action": "quality_check",
+        "mock": true
+      },
+      "task_factor_data_503bab": {
+        "task_id": "task_factor_data_503bab",
+        "run_id": "run_f45c33503bab",
+        "agent_id": "data-ops-agent",
+        "status": "SUCCEEDED",
+        "gate_status": "NOT_EXECUTED",
+        "started_at": "2026-07-25T14:53:22.792Z",
+        "finished_at": "2026-07-25T14:53:22.792Z",
+        "data_cutoff": "2026-07-25",
+        "input_versions": {
+          "factor_data": "v_2026-07-25"
+        },
+        "output_versions": {
+          "factor_data": "v_2026-07-25_updated"
+        },
+        "metrics": {
+          "inserted": 250,
+          "updated": 50,
+          "skipped": 10,
+          "failed": 0
+        },
+        "watermarks": {
+          "factor_data": "2026-07-25"
+        },
+        "evidence": [
+          {
+            "evidence_id": "ev_139cf88b970b",
+            "type": "data_update_result",
+            "source": "mock_tool",
+            "data": {
+              "data_object": "factor_data",
+              "inserted": 250,
+              "updated": 50,
+              "skipped": 10,
+              "failed": 0,
+              "data_cutoff": "2026-07-25"
+            },
+            "created_at": "2026-07-25T14:53:22.792Z",
+            "hash": "hash_52231022"
+          }
+        ],
+        "warnings": [],
+        "errors": [],
+        "next_action": "quality_check",
+        "mock": true
+      },
+      "task_market_factors_503bab": {
+        "task_id": "task_market_factors_503bab",
+        "run_id": "run_f45c33503bab",
+        "agent_id": "data-ops-agent",
+        "status": "SUCCEEDED",
+        "gate_status": "NOT_EXECUTED",
+        "started_at": "2026-07-25T14:53:22.795Z",
+        "finished_at": "2026-07-25T14:53:22.795Z",
+        "data_cutoff": "2026-07-25",
+        "input_versions": {
+          "market_factors": "v_2026-07-25"
+        },
+        "output_versions": {
+          "market_factors": "v_2026-07-25_updated"
+        },
+        "metrics": {
+          "inserted": 250,
+          "updated": 50,
+          "skipped": 10,
+          "failed": 0
+        },
+        "watermarks": {
+          "market_factors": "2026-07-25"
+        },
+        "evidence": [
+          {
+            "evidence_id": "ev_186089884166",
+            "type": "data_update_result",
+            "source": "mock_tool",
+            "data": {
+              "data_object": "market_factors",
+              "inserted": 250,
+              "updated": 50,
+              "skipped": 10,
+              "failed": 0,
+              "data_cutoff": "2026-07-25"
+            },
+            "created_at": "2026-07-25T14:53:22.795Z",
+            "hash": "hash_a382ef72"
+          }
+        ],
+        "warnings": [],
+        "errors": [],
+        "next_action": "quality_check",
+        "mock": true
+      },
+      "task_product_quality_gate_503bab": {
+        "task_id": "task_product_quality_gate_503bab",
+        "run_id": "run_f45c33503bab",
+        "agent_id": "data-quality-agent",
+        "status": "SUCCEEDED",
+        "gate_status": "PASS",
+        "started_at": "2026-07-25T14:53:22.799Z",
+        "finished_at": "2026-07-25T14:53:22.799Z",
+        "data_cutoff": "2026-07-25",
+        "input_versions": {},
+        "output_versions": {},
+        "metrics": {
+          "inserted": 0,
+          "updated": 0,
+          "skipped": 0,
+          "failed": 0
+        },
+        "watermarks": {},
+        "evidence": [
+          {
+            "evidence_id": "ev_d29a948ac47d",
+            "type": "gate_rule",
+            "source": "mock_tool",
+            "data": {
+              "rule_id": "coverage_check",
+              "status": "PASS"
+            },
+            "created_at": "2026-07-25T14:53:22.799Z",
+            "hash": "hash_1b1a6ce4"
+          },
+          {
+            "evidence_id": "ev_cf6f77369d2e",
+            "type": "gate_rule",
+            "source": "mock_tool",
+            "data": {
+              "rule_id": "freshness_check",
+              "status": "PASS"
+            },
+            "created_at": "2026-07-25T14:53:22.799Z",
+            "hash": "hash_bd50a4f6"
+          },
+          {
+            "evidence_id": "ev_37e6a791b460",
+            "type": "gate_rule",
+            "source": "mock_tool",
+            "data": {
+              "rule_id": "uniqueness_check",
+              "status": "PASS"
+            },
+            "created_at": "2026-07-25T14:53:22.799Z",
+            "hash": "hash_d5199b00"
+          },
+          {
+            "evidence_id": "ev_d2163bc8a95a",
+            "type": "gate_rule",
+            "source": "mock_tool",
+            "data": {
+              "rule_id": "null_check",
+              "status": "PASS"
+            },
+            "created_at": "2026-07-25T14:53:22.799Z",
+            "hash": "hash_7ed37be2"
+          },
+          {
+            "evidence_id": "ev_71d7beed6aa9",
+            "type": "gate_rule",
+            "source": "mock_tool",
+            "data": {
+              "rule_id": "dependency_order_check",
+              "status": "PASS"
+            },
+            "created_at": "2026-07-25T14:53:22.799Z",
+            "hash": "hash_4eb8b897"
+          },
+          {
+            "evidence_id": "ev_17d1a19692c5",
+            "type": "gate_rule",
+            "source": "mock_tool",
+            "data": {
+              "rule_id": "cutoff_check",
+              "status": "PASS"
+            },
+            "created_at": "2026-07-25T14:53:22.799Z",
+            "hash": "hash_ec52ca90"
+          }
+        ],
+        "warnings": [],
+        "errors": [],
+        "next_action": "model_run",
+        "mock": true
+      },
+      "task_candidate_signal_503bab": {
+        "task_id": "task_candidate_signal_503bab",
+        "run_id": "run_f45c33503bab",
+        "agent_id": "model-production-agent",
+        "status": "SUCCEEDED",
+        "gate_status": "WARN",
+        "started_at": "2026-07-25T14:53:22.802Z",
+        "finished_at": "2026-07-25T14:53:22.802Z",
+        "data_cutoff": "2026-07-25",
+        "input_versions": {
+          "model": "model_v2.1.0",
+          "data_snapshot": "snap_dccb59a0"
+        },
+        "output_versions": {
+          "candidate_signal": "cs_7607daab"
+        },
+        "metrics": {
+          "inserted": 0,
+          "updated": 0,
+          "skipped": 0,
+          "failed": 0
+        },
+        "watermarks": {},
+        "evidence": [
+          {
+            "evidence_id": "ev_256d2577ff97",
+            "type": "model_run",
+            "source": "mock_tool",
+            "data": {
+              "model_version": "model_v2.1.0",
+              "input_snapshot": "snap_dccb59a0",
+              "candidate_signal": "cs_7607daab",
+              "sharpe_ratio": 0.8
+            },
+            "created_at": "2026-07-25T14:53:22.802Z",
+            "hash": "hash_3f1e214d"
+          }
+        ],
+        "warnings": [
+          "夏普比 0.8 低于建议阈值 1.0"
+        ],
+        "errors": [],
+        "next_action": "human_review",
+        "mock": true
+      }
+    },
+    "gates": {
+      "gate_database_core": {
+        "gate_id": "gate_database_core",
+        "run_id": "run_f45c33503bab",
+        "scope": "database_core",
+        "status": "PASS",
+        "checked_at": "2026-07-25T14:53:22.799Z",
+        "data_cutoff": "2026-07-25",
+        "rules": [
+          {
+            "rule_id": "coverage_check",
+            "display_name": "覆盖率检查",
+            "status": "PASS",
+            "actual": 0.9995,
+            "threshold": 0.999,
+            "operator": ">=",
+            "severity": "BLOCK",
+            "evidence_ref": "ev_0cce4227570f",
+            "description": "数据覆盖率必须 >= 99.9%"
+          },
+          {
+            "rule_id": "freshness_check",
+            "display_name": "新鲜度检查",
+            "status": "PASS",
+            "actual": 2,
+            "threshold": 24,
+            "operator": "<=",
+            "severity": "BLOCK",
+            "evidence_ref": "ev_bf8421ca0693",
+            "description": "数据新鲜度必须在 24 小时内"
+          },
+          {
+            "rule_id": "uniqueness_check",
+            "display_name": "唯一性检查",
+            "status": "PASS",
+            "actual": 1,
+            "threshold": 1,
+            "operator": ">=",
+            "severity": "BLOCK",
+            "evidence_ref": "ev_8668ef585cc7",
+            "description": "主键必须完全唯一"
+          },
+          {
+            "rule_id": "null_check",
+            "display_name": "空值检查",
+            "status": "PASS",
+            "actual": 0.0005,
+            "threshold": 0.001,
+            "operator": "<=",
+            "severity": "WARN",
+            "evidence_ref": "ev_1fca160e8aba",
+            "description": "关键字段空值率必须 <= 0.1%"
+          },
+          {
+            "rule_id": "dependency_order_check",
+            "display_name": "依赖顺序检查",
+            "status": "PASS",
+            "actual": 0,
+            "threshold": 0,
+            "operator": "==",
+            "severity": "BLOCK",
+            "evidence_ref": "ev_981a4ee9d116",
+            "description": "数据依赖顺序不允许违规"
+          },
+          {
+            "rule_id": "cutoff_check",
+            "display_name": "数据截止日检查",
+            "status": "PASS",
+            "actual": "2026-07-25",
+            "threshold": true,
+            "operator": "==",
+            "severity": "BLOCK",
+            "evidence_ref": "ev_9046ad34aad8",
+            "description": "数据截止日必须与任务参数一致"
+          }
+        ],
+        "block_reasons": [],
+        "warnings": []
+      },
+      "gate_model": {
+        "gate_id": "gate_model",
+        "run_id": "run_f45c33503bab",
+        "scope": "model",
+        "status": "WARN",
+        "checked_at": "2026-07-25T14:53:22.802Z",
+        "data_cutoff": "2026-07-25",
+        "rules": [
+          {
+            "rule_id": "model_version_check",
+            "display_name": "模型版本检查",
+            "status": "PASS",
+            "actual": true,
+            "threshold": true,
+            "operator": "==",
+            "severity": "BLOCK",
+            "evidence_ref": "ev_96e7db95ab03",
+            "description": "模型版本必须已登记"
+          },
+          {
+            "rule_id": "backtest_sharpe_check",
+            "display_name": "回测夏普比检查",
+            "status": "WARN",
+            "actual": 0.8,
+            "threshold": 1,
+            "operator": ">=",
+            "severity": "WARN",
+            "evidence_ref": "ev_6055de519ff0",
+            "description": "回测夏普比建议 >= 1.0"
+          },
+          {
+            "rule_id": "backtest_max_drawdown_check",
+            "display_name": "回测最大回撤检查",
+            "status": "PASS",
+            "actual": 0.12,
+            "threshold": 0.2,
+            "operator": "<=",
+            "severity": "WARN",
+            "evidence_ref": "ev_3a44718c9e9a",
+            "description": "回测最大回撤建议 <= 20%"
+          },
+          {
+            "rule_id": "anomaly_check",
+            "display_name": "异常值检查",
+            "status": "PASS",
+            "actual": 2,
+            "threshold": 5,
+            "operator": "<=",
+            "severity": "WARN",
+            "evidence_ref": "ev_ddb1e02cf514",
+            "description": "异常值数量建议 <= 5"
+          },
+          {
+            "rule_id": "evidence_completeness_check",
+            "display_name": "证据完整性检查",
+            "status": "PASS",
+            "actual": true,
+            "threshold": true,
+            "operator": "==",
+            "severity": "BLOCK",
+            "evidence_ref": "ev_f2a9b1e2dc77",
+            "description": "所有证据必须完整"
+          }
+        ],
+        "block_reasons": [],
+        "warnings": [
+          "夏普比 0.8 低于建议阈值 1.0"
+        ]
+      }
+    },
+    "approvals": {
+      "appr_43c7568f4f6d": {
+        "approval_id": "appr_43c7568f4f6d",
+        "run_id": "run_f45c33503bab",
+        "task_id": "task_candidate_signal_503bab",
+        "approval_type": "human_review",
+        "status": "PENDING",
+        "model_version": "model_v2.1.0",
+        "input_snapshot_id": "snap_dccb59a0",
+        "data_cutoff": "2026-07-25",
+        "candidate_signal_version": "cs_7607daab",
+        "approver": "",
+        "decided_at": null,
+        "opinion": "",
+        "risk_level": "high",
+        "created_at": "2026-07-25T14:53:22.802Z"
+      }
+    },
+    "current_node": "candidate_signal",
+    "block_reason": null
+  },
+  "run_d659fae81568": {
+    "run_id": "run_d659fae81568",
+    "status": "WAITING_APPROVAL",
+    "scenario": "scenario_c",
+    "created_at": "2026-07-25T14:53:29.270Z",
+    "created_by": "system",
+    "updated_at": "2026-07-25T14:53:29.300Z",
+    "data_cutoff": "2026-07-25",
+    "tasks": {
+      "task_daily_kline_e81568": {
+        "task_id": "task_daily_kline_e81568",
+        "run_id": "run_d659fae81568",
+        "task_type": "data_update",
+        "assigned_agent": "data-ops-agent",
+        "status": "SUCCEEDED",
+        "parameters": {
+          "dag_node": "daily_kline",
+          "data_object": "daily_kline"
+        },
+        "input_refs": [],
+        "required_gates": [],
+        "created_at": "2026-07-25T14:53:29.270Z",
+        "created_by": "system",
+        "idempotency_key": "run_d659fae81568_daily_kline_v1",
+        "dag_node": "daily_kline",
+        "attempt": 1
+      },
+      "task_adjustment_factors_e81568": {
+        "task_id": "task_adjustment_factors_e81568",
+        "run_id": "run_d659fae81568",
+        "task_type": "data_update",
+        "assigned_agent": "data-ops-agent",
+        "status": "SUCCEEDED",
+        "parameters": {
+          "dag_node": "adjustment_factors",
+          "data_object": "adjustment_factors"
+        },
+        "input_refs": [],
+        "required_gates": [],
+        "created_at": "2026-07-25T14:53:29.270Z",
+        "created_by": "system",
+        "idempotency_key": "run_d659fae81568_adjustment_factors_v1",
+        "dag_node": "adjustment_factors",
+        "attempt": 1
+      },
+      "task_factor_data_e81568": {
+        "task_id": "task_factor_data_e81568",
+        "run_id": "run_d659fae81568",
+        "task_type": "data_update",
+        "assigned_agent": "data-ops-agent",
+        "status": "SUCCEEDED",
+        "parameters": {
+          "dag_node": "factor_data",
+          "data_object": "factor_data"
+        },
+        "input_refs": [],
+        "required_gates": [],
+        "created_at": "2026-07-25T14:53:29.270Z",
+        "created_by": "system",
+        "idempotency_key": "run_d659fae81568_factor_data_v1",
+        "dag_node": "factor_data",
+        "attempt": 1
+      },
+      "task_market_factors_e81568": {
+        "task_id": "task_market_factors_e81568",
+        "run_id": "run_d659fae81568",
+        "task_type": "data_update",
+        "assigned_agent": "data-ops-agent",
+        "status": "SUCCEEDED",
+        "parameters": {
+          "dag_node": "market_factors",
+          "data_object": "market_factors"
+        },
+        "input_refs": [],
+        "required_gates": [],
+        "created_at": "2026-07-25T14:53:29.270Z",
+        "created_by": "system",
+        "idempotency_key": "run_d659fae81568_market_factors_v1",
+        "dag_node": "market_factors",
+        "attempt": 1
+      },
+      "task_product_quality_gate_e81568": {
+        "task_id": "task_product_quality_gate_e81568",
+        "run_id": "run_d659fae81568",
+        "task_type": "quality_check",
+        "assigned_agent": "data-quality-agent",
+        "status": "SUCCEEDED",
+        "parameters": {
+          "dag_node": "product_quality_gate",
+          "data_object": null
+        },
+        "input_refs": [],
+        "required_gates": [],
+        "created_at": "2026-07-25T14:53:29.270Z",
+        "created_by": "system",
+        "idempotency_key": "run_d659fae81568_product_quality_gate_v1",
+        "dag_node": "product_quality_gate",
+        "attempt": 1
+      },
+      "task_candidate_signal_e81568": {
+        "task_id": "task_candidate_signal_e81568",
+        "run_id": "run_d659fae81568",
+        "task_type": "model_run",
+        "assigned_agent": "model-production-agent",
+        "status": "WAITING_APPROVAL",
+        "parameters": {
+          "dag_node": "candidate_signal",
+          "data_object": null
+        },
+        "input_refs": [],
+        "required_gates": [
+          "database_core"
+        ],
+        "created_at": "2026-07-25T14:53:29.270Z",
+        "created_by": "system",
+        "idempotency_key": "run_d659fae81568_candidate_signal_v1",
+        "dag_node": "candidate_signal",
+        "attempt": 1
+      },
+      "task_risk_approval_e81568": {
+        "task_id": "task_risk_approval_e81568",
+        "run_id": "run_d659fae81568",
+        "task_type": "risk_review",
+        "assigned_agent": "model-risk-agent",
+        "status": "PENDING",
+        "parameters": {
+          "dag_node": "risk_approval",
+          "data_object": null
+        },
+        "input_refs": [],
+        "required_gates": [
+          "model"
+        ],
+        "created_at": "2026-07-25T14:53:29.270Z",
+        "created_by": "system",
+        "idempotency_key": "run_d659fae81568_risk_approval_v1",
+        "dag_node": "risk_approval",
+        "attempt": 1
+      },
+      "task_release_e81568": {
+        "task_id": "task_release_e81568",
+        "run_id": "run_d659fae81568",
+        "task_type": "release",
+        "assigned_agent": "release-observer-agent",
+        "status": "PENDING",
+        "parameters": {
+          "dag_node": "release",
+          "data_object": null
+        },
+        "input_refs": [],
+        "required_gates": [
+          "model",
+          "approval"
+        ],
+        "created_at": "2026-07-25T14:53:29.270Z",
+        "created_by": "system",
+        "idempotency_key": "run_d659fae81568_release_v1",
+        "dag_node": "release",
+        "attempt": 1
+      },
+      "task_post_release_observation_e81568": {
+        "task_id": "task_post_release_observation_e81568",
+        "run_id": "run_d659fae81568",
+        "task_type": "observation",
+        "assigned_agent": "release-observer-agent",
+        "status": "PENDING",
+        "parameters": {
+          "dag_node": "post_release_observation",
+          "data_object": null
+        },
+        "input_refs": [],
+        "required_gates": [],
+        "created_at": "2026-07-25T14:53:29.270Z",
+        "created_by": "system",
+        "idempotency_key": "run_d659fae81568_post_release_observation_v1",
+        "dag_node": "post_release_observation",
+        "attempt": 1
+      }
+    },
+    "results": {
+      "task_daily_kline_e81568": {
+        "task_id": "task_daily_kline_e81568",
+        "run_id": "run_d659fae81568",
+        "agent_id": "data-ops-agent",
+        "status": "SUCCEEDED",
+        "gate_status": "NOT_EXECUTED",
+        "started_at": "2026-07-25T14:53:29.275Z",
+        "finished_at": "2026-07-25T14:53:29.275Z",
+        "data_cutoff": "2026-07-25",
+        "input_versions": {
+          "daily_kline": "v_2026-07-25"
+        },
+        "output_versions": {
+          "daily_kline": "v_2026-07-25_updated"
+        },
+        "metrics": {
+          "inserted": 250,
+          "updated": 50,
+          "skipped": 10,
+          "failed": 0
+        },
+        "watermarks": {
+          "daily_kline": "2026-07-25"
+        },
+        "evidence": [
+          {
+            "evidence_id": "ev_c24d0a5f0e17",
+            "type": "data_update_result",
+            "source": "mock_tool",
+            "data": {
+              "data_object": "daily_kline",
+              "inserted": 250,
+              "updated": 50,
+              "skipped": 10,
+              "failed": 0,
+              "data_cutoff": "2026-07-25"
+            },
+            "created_at": "2026-07-25T14:53:29.275Z",
+            "hash": "hash_a72046e1"
+          }
+        ],
+        "warnings": [],
+        "errors": [],
+        "next_action": "quality_check",
+        "mock": true
+      },
+      "task_adjustment_factors_e81568": {
+        "task_id": "task_adjustment_factors_e81568",
+        "run_id": "run_d659fae81568",
+        "agent_id": "data-ops-agent",
+        "status": "SUCCEEDED",
+        "gate_status": "NOT_EXECUTED",
+        "started_at": "2026-07-25T14:53:29.284Z",
+        "finished_at": "2026-07-25T14:53:29.284Z",
+        "data_cutoff": "2026-07-25",
+        "input_versions": {
+          "adjustment_factors": "v_2026-07-25"
+        },
+        "output_versions": {
+          "adjustment_factors": "v_2026-07-25_updated"
+        },
+        "metrics": {
+          "inserted": 250,
+          "updated": 50,
+          "skipped": 10,
+          "failed": 0
+        },
+        "watermarks": {
+          "adjustment_factors": "2026-07-25"
+        },
+        "evidence": [
+          {
+            "evidence_id": "ev_e49af2fd6b4c",
+            "type": "data_update_result",
+            "source": "mock_tool",
+            "data": {
+              "data_object": "adjustment_factors",
+              "inserted": 250,
+              "updated": 50,
+              "skipped": 10,
+              "failed": 0,
+              "data_cutoff": "2026-07-25"
+            },
+            "created_at": "2026-07-25T14:53:29.284Z",
+            "hash": "hash_e10aeae2"
+          }
+        ],
+        "warnings": [],
+        "errors": [],
+        "next_action": "quality_check",
+        "mock": true
+      },
+      "task_factor_data_e81568": {
+        "task_id": "task_factor_data_e81568",
+        "run_id": "run_d659fae81568",
+        "agent_id": "data-ops-agent",
+        "status": "SUCCEEDED",
+        "gate_status": "NOT_EXECUTED",
+        "started_at": "2026-07-25T14:53:29.288Z",
+        "finished_at": "2026-07-25T14:53:29.288Z",
+        "data_cutoff": "2026-07-25",
+        "input_versions": {
+          "factor_data": "v_2026-07-25"
+        },
+        "output_versions": {
+          "factor_data": "v_2026-07-25_updated"
+        },
+        "metrics": {
+          "inserted": 250,
+          "updated": 50,
+          "skipped": 10,
+          "failed": 0
+        },
+        "watermarks": {
+          "factor_data": "2026-07-25"
+        },
+        "evidence": [
+          {
+            "evidence_id": "ev_bb2ce775d764",
+            "type": "data_update_result",
+            "source": "mock_tool",
+            "data": {
+              "data_object": "factor_data",
+              "inserted": 250,
+              "updated": 50,
+              "skipped": 10,
+              "failed": 0,
+              "data_cutoff": "2026-07-25"
+            },
+            "created_at": "2026-07-25T14:53:29.288Z",
+            "hash": "hash_e8906fcd"
+          }
+        ],
+        "warnings": [],
+        "errors": [],
+        "next_action": "quality_check",
+        "mock": true
+      },
+      "task_market_factors_e81568": {
+        "task_id": "task_market_factors_e81568",
+        "run_id": "run_d659fae81568",
+        "agent_id": "data-ops-agent",
+        "status": "SUCCEEDED",
+        "gate_status": "NOT_EXECUTED",
+        "started_at": "2026-07-25T14:53:29.292Z",
+        "finished_at": "2026-07-25T14:53:29.292Z",
+        "data_cutoff": "2026-07-25",
+        "input_versions": {
+          "market_factors": "v_2026-07-25"
+        },
+        "output_versions": {
+          "market_factors": "v_2026-07-25_updated"
+        },
+        "metrics": {
+          "inserted": 250,
+          "updated": 50,
+          "skipped": 10,
+          "failed": 0
+        },
+        "watermarks": {
+          "market_factors": "2026-07-25"
+        },
+        "evidence": [
+          {
+            "evidence_id": "ev_893f6708774d",
+            "type": "data_update_result",
+            "source": "mock_tool",
+            "data": {
+              "data_object": "market_factors",
+              "inserted": 250,
+              "updated": 50,
+              "skipped": 10,
+              "failed": 0,
+              "data_cutoff": "2026-07-25"
+            },
+            "created_at": "2026-07-25T14:53:29.292Z",
+            "hash": "hash_b3e80dfb"
+          }
+        ],
+        "warnings": [],
+        "errors": [],
+        "next_action": "quality_check",
+        "mock": true
+      },
+      "task_product_quality_gate_e81568": {
+        "task_id": "task_product_quality_gate_e81568",
+        "run_id": "run_d659fae81568",
+        "agent_id": "data-quality-agent",
+        "status": "SUCCEEDED",
+        "gate_status": "PASS",
+        "started_at": "2026-07-25T14:53:29.296Z",
+        "finished_at": "2026-07-25T14:53:29.296Z",
+        "data_cutoff": "2026-07-25",
+        "input_versions": {},
+        "output_versions": {},
+        "metrics": {
+          "inserted": 0,
+          "updated": 0,
+          "skipped": 0,
+          "failed": 0
+        },
+        "watermarks": {},
+        "evidence": [
+          {
+            "evidence_id": "ev_a7c6dbf51f8f",
+            "type": "gate_rule",
+            "source": "mock_tool",
+            "data": {
+              "rule_id": "coverage_check",
+              "status": "PASS"
+            },
+            "created_at": "2026-07-25T14:53:29.296Z",
+            "hash": "hash_5ddd2a51"
+          },
+          {
+            "evidence_id": "ev_bdf29ed85dd8",
+            "type": "gate_rule",
+            "source": "mock_tool",
+            "data": {
+              "rule_id": "freshness_check",
+              "status": "PASS"
+            },
+            "created_at": "2026-07-25T14:53:29.296Z",
+            "hash": "hash_f3e46b06"
+          },
+          {
+            "evidence_id": "ev_6a9d947e2884",
+            "type": "gate_rule",
+            "source": "mock_tool",
+            "data": {
+              "rule_id": "uniqueness_check",
+              "status": "PASS"
+            },
+            "created_at": "2026-07-25T14:53:29.296Z",
+            "hash": "hash_1b415145"
+          },
+          {
+            "evidence_id": "ev_003e336a58a8",
+            "type": "gate_rule",
+            "source": "mock_tool",
+            "data": {
+              "rule_id": "null_check",
+              "status": "PASS"
+            },
+            "created_at": "2026-07-25T14:53:29.296Z",
+            "hash": "hash_55dc9be7"
+          },
+          {
+            "evidence_id": "ev_66822d2bfeef",
+            "type": "gate_rule",
+            "source": "mock_tool",
+            "data": {
+              "rule_id": "dependency_order_check",
+              "status": "PASS"
+            },
+            "created_at": "2026-07-25T14:53:29.296Z",
+            "hash": "hash_cca93442"
+          },
+          {
+            "evidence_id": "ev_d9976553297a",
+            "type": "gate_rule",
+            "source": "mock_tool",
+            "data": {
+              "rule_id": "cutoff_check",
+              "status": "PASS"
+            },
+            "created_at": "2026-07-25T14:53:29.296Z",
+            "hash": "hash_e244bb4f"
+          }
+        ],
+        "warnings": [],
+        "errors": [],
+        "next_action": "model_run",
+        "mock": true
+      },
+      "task_candidate_signal_e81568": {
+        "task_id": "task_candidate_signal_e81568",
+        "run_id": "run_d659fae81568",
+        "agent_id": "model-production-agent",
+        "status": "SUCCEEDED",
+        "gate_status": "WARN",
+        "started_at": "2026-07-25T14:53:29.300Z",
+        "finished_at": "2026-07-25T14:53:29.300Z",
+        "data_cutoff": "2026-07-25",
+        "input_versions": {
+          "model": "model_v2.1.0",
+          "data_snapshot": "snap_95e31356"
+        },
+        "output_versions": {
+          "candidate_signal": "cs_cea9f84b"
+        },
+        "metrics": {
+          "inserted": 0,
+          "updated": 0,
+          "skipped": 0,
+          "failed": 0
+        },
+        "watermarks": {},
+        "evidence": [
+          {
+            "evidence_id": "ev_4bd3c9788993",
+            "type": "model_run",
+            "source": "mock_tool",
+            "data": {
+              "model_version": "model_v2.1.0",
+              "input_snapshot": "snap_95e31356",
+              "candidate_signal": "cs_cea9f84b",
+              "sharpe_ratio": 0.8
+            },
+            "created_at": "2026-07-25T14:53:29.300Z",
+            "hash": "hash_e1a4eabf"
+          }
+        ],
+        "warnings": [
+          "夏普比 0.8 低于建议阈值 1.0"
+        ],
+        "errors": [],
+        "next_action": "human_review",
+        "mock": true
+      }
+    },
+    "gates": {
+      "gate_database_core": {
+        "gate_id": "gate_database_core",
+        "run_id": "run_d659fae81568",
+        "scope": "database_core",
+        "status": "PASS",
+        "checked_at": "2026-07-25T14:53:29.296Z",
+        "data_cutoff": "2026-07-25",
+        "rules": [
+          {
+            "rule_id": "coverage_check",
+            "display_name": "覆盖率检查",
+            "status": "PASS",
+            "actual": 0.9995,
+            "threshold": 0.999,
+            "operator": ">=",
+            "severity": "BLOCK",
+            "evidence_ref": "ev_149ee4640ffa",
+            "description": "数据覆盖率必须 >= 99.9%"
+          },
+          {
+            "rule_id": "freshness_check",
+            "display_name": "新鲜度检查",
+            "status": "PASS",
+            "actual": 2,
+            "threshold": 24,
+            "operator": "<=",
+            "severity": "BLOCK",
+            "evidence_ref": "ev_7117c597a102",
+            "description": "数据新鲜度必须在 24 小时内"
+          },
+          {
+            "rule_id": "uniqueness_check",
+            "display_name": "唯一性检查",
+            "status": "PASS",
+            "actual": 1,
+            "threshold": 1,
+            "operator": ">=",
+            "severity": "BLOCK",
+            "evidence_ref": "ev_24edcffb3a19",
+            "description": "主键必须完全唯一"
+          },
+          {
+            "rule_id": "null_check",
+            "display_name": "空值检查",
+            "status": "PASS",
+            "actual": 0.0005,
+            "threshold": 0.001,
+            "operator": "<=",
+            "severity": "WARN",
+            "evidence_ref": "ev_32bcc9fea967",
+            "description": "关键字段空值率必须 <= 0.1%"
+          },
+          {
+            "rule_id": "dependency_order_check",
+            "display_name": "依赖顺序检查",
+            "status": "PASS",
+            "actual": 0,
+            "threshold": 0,
+            "operator": "==",
+            "severity": "BLOCK",
+            "evidence_ref": "ev_ad4b24fc5b61",
+            "description": "数据依赖顺序不允许违规"
+          },
+          {
+            "rule_id": "cutoff_check",
+            "display_name": "数据截止日检查",
+            "status": "PASS",
+            "actual": "2026-07-25",
+            "threshold": true,
+            "operator": "==",
+            "severity": "BLOCK",
+            "evidence_ref": "ev_e5544f7ef06e",
+            "description": "数据截止日必须与任务参数一致"
+          }
+        ],
+        "block_reasons": [],
+        "warnings": []
+      },
+      "gate_model": {
+        "gate_id": "gate_model",
+        "run_id": "run_d659fae81568",
+        "scope": "model",
+        "status": "WARN",
+        "checked_at": "2026-07-25T14:53:29.300Z",
+        "data_cutoff": "2026-07-25",
+        "rules": [
+          {
+            "rule_id": "model_version_check",
+            "display_name": "模型版本检查",
+            "status": "PASS",
+            "actual": true,
+            "threshold": true,
+            "operator": "==",
+            "severity": "BLOCK",
+            "evidence_ref": "ev_db44f503965f",
+            "description": "模型版本必须已登记"
+          },
+          {
+            "rule_id": "backtest_sharpe_check",
+            "display_name": "回测夏普比检查",
+            "status": "WARN",
+            "actual": 0.8,
+            "threshold": 1,
+            "operator": ">=",
+            "severity": "WARN",
+            "evidence_ref": "ev_09a1f0b3d21d",
+            "description": "回测夏普比建议 >= 1.0"
+          },
+          {
+            "rule_id": "backtest_max_drawdown_check",
+            "display_name": "回测最大回撤检查",
+            "status": "PASS",
+            "actual": 0.12,
+            "threshold": 0.2,
+            "operator": "<=",
+            "severity": "WARN",
+            "evidence_ref": "ev_84e0f2dab4bb",
+            "description": "回测最大回撤建议 <= 20%"
+          },
+          {
+            "rule_id": "anomaly_check",
+            "display_name": "异常值检查",
+            "status": "PASS",
+            "actual": 2,
+            "threshold": 5,
+            "operator": "<=",
+            "severity": "WARN",
+            "evidence_ref": "ev_34045ff908e5",
+            "description": "异常值数量建议 <= 5"
+          },
+          {
+            "rule_id": "evidence_completeness_check",
+            "display_name": "证据完整性检查",
+            "status": "PASS",
+            "actual": true,
+            "threshold": true,
+            "operator": "==",
+            "severity": "BLOCK",
+            "evidence_ref": "ev_0aeaacd9cd21",
+            "description": "所有证据必须完整"
+          }
+        ],
+        "block_reasons": [],
+        "warnings": [
+          "夏普比 0.8 低于建议阈值 1.0"
+        ]
+      }
+    },
+    "approvals": {
+      "appr_ce1dde8b2114": {
+        "approval_id": "appr_ce1dde8b2114",
+        "run_id": "run_d659fae81568",
+        "task_id": "task_candidate_signal_e81568",
+        "approval_type": "human_review",
+        "status": "PENDING",
+        "model_version": "model_v2.1.0",
+        "input_snapshot_id": "snap_95e31356",
+        "data_cutoff": "2026-07-25",
+        "candidate_signal_version": "cs_cea9f84b",
+        "approver": "",
+        "decided_at": null,
+        "opinion": "",
+        "risk_level": "high",
+        "created_at": "2026-07-25T14:53:29.300Z"
+      }
+    },
+    "current_node": "candidate_signal",
+    "block_reason": null
   }
 }

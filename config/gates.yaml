@@ -1,0 +1,131 @@
+# Gate Configuration - Quality Gate Thresholds
+# Thresholds are read-only; agents cannot modify them at runtime.
+
+gates:
+  database_core:
+    gate_id: gate_database_core
+    display_name: "\u6570\u636E\u5E93\u6838\u5FC3\u95E8\u7981"
+    scope: database_core
+    description: "\u68C0\u67E5\u6570\u636E\u5E93\u6838\u5FC3\u6570\u636E\u8D28\u91CF"
+    required_for:
+      - candidate_signal
+    rules:
+      - rule_id: coverage_check
+        display_name: "\u8986\u76D6\u7387\u68C0\u67E5"
+        metric: coverage_ratio
+        threshold: 0.999
+        operator: ">="
+        severity: BLOCK
+        description: "\u6570\u636E\u8986\u76D6\u7387\u5FC5\u987B >= 99.9%"
+
+      - rule_id: freshness_check
+        display_name: "\u65B0\u9C9C\u5EA6\u68C0\u67E5"
+        metric: freshness_hours
+        threshold: 24
+        operator: "<="
+        severity: BLOCK
+        description: "\u6570\u636E\u65B0\u9C9C\u5EA6\u5FC5\u987B\u5728 24 \u5C0F\u65F6\u5185"
+
+      - rule_id: uniqueness_check
+        display_name: "\u552F\u4E00\u6027\u68C0\u67E5"
+        metric: uniqueness_ratio
+        threshold: 1.0
+        operator: ">="
+        severity: BLOCK
+        description: "\u4E3B\u952E\u5FC5\u987B\u5B8C\u5168\u552F\u4E00"
+
+      - rule_id: null_check
+        display_name: "\u7A7A\u503C\u68C0\u67E5"
+        metric: null_ratio
+        threshold: 0.001
+        operator: "<="
+        severity: WARN
+        description: "\u5173\u952E\u5B57\u6BB5\u7A7A\u503C\u7387\u5FC5\u987B <= 0.1%"
+
+      - rule_id: dependency_order_check
+        display_name: "\u4F9D\u8D56\u987A\u5E8F\u68C0\u67E5"
+        metric: order_violations
+        threshold: 0
+        operator: "=="
+        severity: BLOCK
+        description: "\u6570\u636E\u4F9D\u8D56\u987A\u5E8F\u4E0D\u5141\u8BB8\u8FDD\u89C4"
+
+      - rule_id: cutoff_check
+        display_name: "\u6570\u636E\u622A\u6B62\u65E5\u68C0\u67E5"
+        metric: cutoff_match
+        threshold: true
+        operator: "=="
+        severity: BLOCK
+        description: "\u6570\u636E\u622A\u6B62\u65E5\u5FC5\u987B\u4E0E\u4EFB\u52A1\u53C2\u6570\u4E00\u81F4"
+
+  model:
+    gate_id: gate_model
+    display_name: "\u6A21\u578B\u95E8\u7981"
+    scope: model
+    description: "\u68C0\u67E5\u6A21\u578B\u8FD0\u884C\u7ED3\u679C\u8D28\u91CF"
+    required_for:
+      - release
+    rules:
+      - rule_id: model_version_check
+        display_name: "\u6A21\u578B\u7248\u672C\u68C0\u67E5"
+        metric: version_registered
+        threshold: true
+        operator: "=="
+        severity: BLOCK
+        description: "\u6A21\u578B\u7248\u672C\u5FC5\u987B\u5DF2\u767B\u8BB0"
+
+      - rule_id: backtest_sharpe_check
+        display_name: "\u56DE\u6D4B\u590F\u666E\u6BD4\u68C0\u67E5"
+        metric: sharpe_ratio
+        threshold: 1.0
+        operator: ">="
+        severity: WARN
+        description: "\u56DE\u6D4B\u590F\u666E\u6BD4\u5EFA\u8BAE >= 1.0"
+
+      - rule_id: backtest_max_drawdown_check
+        display_name: "\u56DE\u6D4B\u6700\u5927\u56DE\u64A4\u68C0\u67E5"
+        metric: max_drawdown
+        threshold: 0.2
+        operator: "<="
+        severity: WARN
+        description: "\u56DE\u6D4B\u6700\u5927\u56DE\u64A4\u5EFA\u8BAE <= 20%"
+
+      - rule_id: anomaly_check
+        display_name: "\u5F02\u5E38\u503C\u68C0\u67E5"
+        metric: anomaly_count
+        threshold: 5
+        operator: "<="
+        severity: WARN
+        description: "\u5F02\u5E38\u503C\u6570\u91CF\u5EFA\u8BAE <= 5"
+
+      - rule_id: evidence_completeness_check
+        display_name: "\u8BC1\u636E\u5B8C\u6574\u6027\u68C0\u67E5"
+        metric: evidence_complete
+        threshold: true
+        operator: "=="
+        severity: BLOCK
+        description: "\u6240\u6709\u8BC1\u636E\u5FC5\u987B\u5B8C\u6574"
+
+  approval:
+    gate_id: gate_approval
+    display_name: "\u5BA1\u6279\u95E8\u7981"
+    scope: approval
+    description: "\u786E\u4FDD\u6240\u6709\u5FC5\u8981\u5BA1\u6279\u5DF2\u5B8C\u6210"
+    required_for:
+      - release
+    rules:
+      - rule_id: risk_approval_check
+        display_name: "\u98CE\u63A7\u5BA1\u6279\u68C0\u67E5"
+        metric: risk_approved
+        threshold: true
+        operator: "=="
+        severity: BLOCK
+        description: "\u98CE\u63A7\u5BA1\u6279\u5FC5\u987B\u901A\u8FC7"
+
+      - rule_id: human_approval_check
+        display_name: "\u4EBA\u5DE5\u5BA1\u6279\u68C0\u67E5"
+        metric: human_approved
+        threshold: true
+        operator: "=="
+        severity: BLOCK
+        description: "\u4EBA\u5DE5\u5BA1\u6279\u5FC5\u987B\u901A\u8FC7"

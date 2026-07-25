@@ -3,57 +3,8 @@ import { Inspector } from 'react-dev-inspector';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: {
-    default: '新应用 | 扣子编程',
-    template: '%s | 扣子编程',
-  },
-  description:
-    '扣子编程是一款一站式云端 Vibe Coding 开发平台。通过对话轻松构建智能体、工作流和网站，实现从创意到上线的无缝衔接。',
-  keywords: [
-    '扣子编程',
-    'Coze Code',
-    'Vibe Coding',
-    'AI 编程',
-    '智能体搭建',
-    '工作流搭建',
-    '网站搭建',
-    '网站部署',
-    '全栈开发',
-    'AI 工程师',
-  ],
-  authors: [{ name: 'Coze Code Team', url: 'https://code.coze.cn' }],
-  generator: 'Coze Code',
-  // icons: {
-  //   icon: '',
-  // },
-  openGraph: {
-    title: '扣子编程 | 你的 AI 工程师已就位',
-    description:
-      '我正在使用扣子编程 Vibe Coding，让创意瞬间上线。告别拖拽，拥抱心流。',
-    url: 'https://code.coze.cn',
-    siteName: '扣子编程',
-    locale: 'zh_CN',
-    type: 'website',
-    // images: [
-    //   {
-    //     url: '',
-    //     width: 1200,
-    //     height: 630,
-    //     alt: '扣子编程 - 你的 AI 工程师',
-    //   },
-    // ],
-  },
-  // twitter: {
-  //   card: 'summary_large_image',
-  //   title: 'Coze Code | Your AI Engineer is Here',
-  //   description:
-  //     'Build and deploy full-stack applications through AI conversation. No env setup, just flow.',
-  //   // images: [''],
-  // },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  title: '\u91D1\u878D\u6295\u8D44\u667A\u80FD\u4F53\u8FD0\u8425\u5DE5\u4F5C\u53F0',
+  description: '\u7531\u4E03\u4E2A\u5C97\u4F4D Agent\u3001\u786E\u5B9A\u6027\u4EFB\u52A1 DAG\u3001\u8D28\u91CF\u95E8\u7981\u3001\u4EBA\u5DE5\u5BA1\u6279\u548C\u5B8C\u6574\u5BA1\u8BA1\u8BB0\u5F55\u7EC4\u6210\u7684\u91D1\u878D\u6570\u636E\u4E0E\u91CF\u5316\u6A21\u578B\u8FD0\u8425\u5DE5\u4F5C\u53F0',
 };
 
 export default function RootLayout({
@@ -64,8 +15,8 @@ export default function RootLayout({
   const isDev = process.env.COZE_PROJECT_ENV === 'DEV';
 
   return (
-    <html lang="en">
-      <body className={`antialiased`}>
+    <html lang="zh-CN">
+      <body className="antialiased bg-gray-50 text-gray-900">
         {isDev && <Inspector />}
         {children}
       </body>

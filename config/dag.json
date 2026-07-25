@@ -1,0 +1,108 @@
+{
+  "dag": {
+    "name": "daily-production-pipeline",
+    "description": "每日生产流水线 - 从数据更新到发布观察",
+    "nodes": {
+      "daily_kline": {
+        "display_name": "日线更新",
+        "agent": "data-ops-agent",
+        "task_type": "data_update",
+        "depends_on": [],
+        "required_gates": [],
+        "data_object": "daily_kline",
+        "description": "更新日线行情数据"
+      },
+      "adjustment_factors": {
+        "display_name": "复权因子更新",
+        "agent": "data-ops-agent",
+        "task_type": "data_update",
+        "depends_on": [
+          "daily_kline"
+        ],
+        "required_gates": [],
+        "data_object": "adjustment_factors",
+        "description": "更新复权因子数据"
+      },
+      "factor_data": {
+        "display_name": "基础因子更新",
+        "agent": "data-ops-agent",
+        "task_type": "data_update",
+        "depends_on": [
+          "adjustment_factors"
+        ],
+        "required_gates": [],
+        "data_object": "factor_data",
+        "description": "更新基础因子数据"
+      },
+      "market_factors": {
+        "display_name": "市场因子更新",
+        "agent": "data-ops-agent",
+        "task_type": "data_update",
+        "depends_on": [
+          "factor_data"
+        ],
+        "required_gates": [],
+        "data_object": "market_factors",
+        "description": "更新市场因子数据"
+      },
+      "product_quality_gate": {
+        "display_name": "数据质量门禁",
+        "agent": "data-quality-agent",
+        "task_type": "quality_check",
+        "depends_on": [
+          "market_factors"
+        ],
+        "required_gates": [],
+        "scope": "database_core",
+        "description": "检查数据质量是否达标"
+      },
+      "candidate_signal": {
+        "display_name": "候选信号生成",
+        "agent": "model-production-agent",
+        "task_type": "model_run",
+        "depends_on": [
+          "product_quality_gate"
+        ],
+        "required_gates": [
+          "database_core"
+        ],
+        "description": "基于通过门禁的数据生成候选信号"
+      },
+      "risk_approval": {
+        "display_name": "风控审批",
+        "agent": "model-risk-agent",
+        "task_type": "risk_review",
+        "depends_on": [
+          "candidate_signal"
+        ],
+        "required_gates": [
+          "model"
+        ],
+        "description": "独立审查模型结果并输出审批意见"
+      },
+      "release": {
+        "display_name": "正式发布",
+        "agent": "release-observer-agent",
+        "task_type": "release",
+        "depends_on": [
+          "risk_approval"
+        ],
+        "required_gates": [
+          "model",
+          "approval"
+        ],
+        "description": "发布已审批的正式信号"
+      },
+      "post_release_observation": {
+        "display_name": "发布后观察",
+        "agent": "release-observer-agent",
+        "task_type": "observation",
+        "depends_on": [
+          "release"
+        ],
+        "required_gates": [],
+        "description": "监控发布后状态并触发告警"
+      }
+    }
+  }
+}

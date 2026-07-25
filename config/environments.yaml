@@ -1,0 +1,36 @@
+# Environment Configuration
+# Production capabilities are disabled by default.
+
+environments:
+  simulation:
+    environment: simulation
+    mock_tools: true
+    production_write_enabled: false
+    production_model_enabled: false
+    production_release_enabled: false
+    database_core_gate_default: BLOCK
+    model_gate_default: WARN
+    description: "\u6A21\u62DF\u73AF\u5883 - \u6240\u6709\u751F\u4EA7\u5199\u5165\u3001\u6A21\u578B\u8FD0\u884C\u548C\u4FE1\u53F7\u53D1\u5E03\u5747\u672A\u542F\u7528"
+
+  staging:
+    environment: staging
+    mock_tools: false
+    production_write_enabled: false
+    production_model_enabled: true
+    production_release_enabled: false
+    database_core_gate_default: BLOCK
+    model_gate_default: WARN
+    description: "\u9884\u53D1\u73AF\u5883 - \u6A21\u578B\u53EF\u8FD0\u884C\u4F46\u4E0D\u53D1\u5E03"
+
+  production:
+    environment: production
+    mock_tools: false
+    production_write_enabled: true
+    production_model_enabled: true
+    production_release_enabled: true
+    database_core_gate_default: BLOCK
+    model_gate_default: WARN
+    description: "\u751F\u4EA7\u73AF\u5883 - \u6240\u6709\u80FD\u529B\u542F\u7528\uFF08\u9700\u663E\u5F0F\u542F\u7528\uFF09"
+
+# Current active environment
+active_environment: simulation

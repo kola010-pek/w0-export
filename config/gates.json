@@ -1,0 +1,154 @@
+{
+  "gates": {
+    "database_core": {
+      "gate_id": "gate_database_core",
+      "display_name": "数据库核心门禁",
+      "scope": "database_core",
+      "description": "检查数据库核心数据质量",
+      "required_for": [
+        "candidate_signal"
+      ],
+      "rules": [
+        {
+          "rule_id": "coverage_check",
+          "display_name": "覆盖率检查",
+          "metric": "coverage_ratio",
+          "threshold": 0.999,
+          "operator": ">=",
+          "severity": "BLOCK",
+          "description": "数据覆盖率必须 >= 99.9%"
+        },
+        {
+          "rule_id": "freshness_check",
+          "display_name": "新鲜度检查",
+          "metric": "freshness_hours",
+          "threshold": 24,
+          "operator": "<=",
+          "severity": "BLOCK",
+          "description": "数据新鲜度必须在 24 小时内"
+        },
+        {
+          "rule_id": "uniqueness_check",
+          "display_name": "唯一性检查",
+          "metric": "uniqueness_ratio",
+          "threshold": 1,
+          "operator": ">=",
+          "severity": "BLOCK",
+          "description": "主键必须完全唯一"
+        },
+        {
+          "rule_id": "null_check",
+          "display_name": "空值检查",
+          "metric": "null_ratio",
+          "threshold": 0.001,
+          "operator": "<=",
+          "severity": "WARN",
+          "description": "关键字段空值率必须 <= 0.1%"
+        },
+        {
+          "rule_id": "dependency_order_check",
+          "display_name": "依赖顺序检查",
+          "metric": "order_violations",
+          "threshold": 0,
+          "operator": "==",
+          "severity": "BLOCK",
+          "description": "数据依赖顺序不允许违规"
+        },
+        {
+          "rule_id": "cutoff_check",
+          "display_name": "数据截止日检查",
+          "metric": "cutoff_match",
+          "threshold": true,
+          "operator": "==",
+          "severity": "BLOCK",
+          "description": "数据截止日必须与任务参数一致"
+        }
+      ]
+    },
+    "model": {
+      "gate_id": "gate_model",
+      "display_name": "模型门禁",
+      "scope": "model",
+      "description": "检查模型运行结果质量",
+      "required_for": [
+        "release"
+      ],
+      "rules": [
+        {
+          "rule_id": "model_version_check",
+          "display_name": "模型版本检查",
+          "metric": "version_registered",
+          "threshold": true,
+          "operator": "==",
+          "severity": "BLOCK",
+          "description": "模型版本必须已登记"
+        },
+        {
+          "rule_id": "backtest_sharpe_check",
+          "display_name": "回测夏普比检查",
+          "metric": "sharpe_ratio",
+          "threshold": 1,
+          "operator": ">=",
+          "severity": "WARN",
+          "description": "回测夏普比建议 >= 1.0"
+        },
+        {
+          "rule_id": "backtest_max_drawdown_check",
+          "display_name": "回测最大回撤检查",
+          "metric": "max_drawdown",
+          "threshold": 0.2,
+          "operator": "<=",
+          "severity": "WARN",
+          "description": "回测最大回撤建议 <= 20%"
+        },
+        {
+          "rule_id": "anomaly_check",
+          "display_name": "异常值检查",
+          "metric": "anomaly_count",
+          "threshold": 5,
+          "operator": "<=",
+          "severity": "WARN",
+          "description": "异常值数量建议 <= 5"
+        },
+        {
+          "rule_id": "evidence_completeness_check",
+          "display_name": "证据完整性检查",
+          "metric": "evidence_complete",
+          "threshold": true,
+          "operator": "==",
+          "severity": "BLOCK",
+          "description": "所有证据必须完整"
+        }
+      ]
+    },
+    "approval": {
+      "gate_id": "gate_approval",
+      "display_name": "审批门禁",
+      "scope": "approval",
+      "description": "确保所有必要审批已完成",
+      "required_for": [
+        "release"
+      ],
+      "rules": [
+        {
+          "rule_id": "risk_approval_check",
+          "display_name": "风控审批检查",
+          "metric": "risk_approved",
+          "threshold": true,
+          "operator": "==",
+          "severity": "BLOCK",
+          "description": "风控审批必须通过"
+        },
+        {
+          "rule_id": "human_approval_check",
+          "display_name": "人工审批检查",
+          "metric": "human_approved",
+          "threshold": true,
+          "operator": "==",
+          "severity": "BLOCK",
+          "description": "人工审批必须通过"
+        }
+      ]
+    }
+  }
+}

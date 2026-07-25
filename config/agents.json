@@ -1,0 +1,314 @@
+{
+  "agents": {
+    "orchestrator-agent": {
+      "agent_id": "orchestrator-agent",
+      "display_name": "总调度官",
+      "domain": "production-dispatch",
+      "role": "接收负责人任务，创建 run_id，按 DAG 派发、暂停、重试和终止任务，汇总证据向负责人报告",
+      "goal": "确保生产 DAG 按依赖顺序正确执行，及时发现阻断并报告",
+      "allowed_inputs": [
+        "human_task_request",
+        "dag_status",
+        "gate_results",
+        "approval_results"
+      ],
+      "required_preconditions": [],
+      "allowed_tools": [
+        "create_run",
+        "dispatch_task",
+        "pause_run",
+        "retry_task",
+        "terminate_run",
+        "get_run_status",
+        "get_gate_status",
+        "get_approval_status",
+        "summarize_evidence"
+      ],
+      "forbidden_actions": [
+        "direct_database_write",
+        "bypass_block",
+        "modify_quality_thresholds",
+        "modify_model_parameters",
+        "approve_model_risk",
+        "release_signals"
+      ],
+      "output_schema": "run_summary",
+      "handoff_to": [
+        "data-ops-agent",
+        "data-quality-agent",
+        "model-production-agent",
+        "model-risk-agent",
+        "release-observer-agent"
+      ],
+      "approval_required": false,
+      "audit_fields": [
+        "run_id",
+        "action",
+        "target_task_id",
+        "result_summary",
+        "timestamp"
+      ]
+    },
+    "data-ops-agent": {
+      "agent_id": "data-ops-agent",
+      "display_name": "数据运维",
+      "domain": "data-operations",
+      "role": "执行受控数据更新任务，返回数据水位和操作证据",
+      "goal": "完成行情、复权因子、基础因子、市场因子的受控更新",
+      "allowed_inputs": [
+        "data_update_task",
+        "target_date_range",
+        "data_object_type"
+      ],
+      "required_preconditions": [
+        "valid_task_assignment"
+      ],
+      "allowed_tools": [
+        "update_daily_kline",
+        "update_adjustment_factors",
+        "update_factor_data",
+        "update_market_factors",
+        "get_data_watermark"
+      ],
+      "forbidden_actions": [
+        "execute_arbitrary_sql",
+        "choose_database_path",
+        "delete_or_rebuild_tables",
+        "guess_fill_missing_data",
+        "lower_quality_thresholds",
+        "expand_scope_without_task"
+      ],
+      "output_schema": "data_update_result",
+      "handoff_to": [
+        "data-quality-agent"
+      ],
+      "approval_required": false,
+      "audit_fields": [
+        "task_id",
+        "run_id",
+        "data_object",
+        "inserted_count",
+        "updated_count",
+        "skipped_count",
+        "failed_count",
+        "watermark"
+      ]
+    },
+    "data-quality-agent": {
+      "agent_id": "data-quality-agent",
+      "display_name": "数据质量",
+      "domain": "quality-assurance",
+      "role": "执行只读质量检查，输出 PASS/WARN/BLOCK",
+      "goal": "确保数据覆盖率、新鲜度、唯一性等指标达标",
+      "allowed_inputs": [
+        "quality_check_task",
+        "data_watermarks",
+        "gate_thresholds"
+      ],
+      "required_preconditions": [
+        "valid_task_assignment",
+        "upstream_data_completed"
+      ],
+      "allowed_tools": [
+        "check_coverage",
+        "check_freshness",
+        "check_uniqueness",
+        "check_null_values",
+        "check_dependency_order",
+        "check_data_cutoff",
+        "check_database_consistency"
+      ],
+      "forbidden_actions": [
+        "modify_business_data",
+        "auto_repair_data",
+        "change_check_criteria",
+        "mark_unknown_as_pass"
+      ],
+      "output_schema": "gate_result",
+      "handoff_to": [
+        "model-production-agent"
+      ],
+      "approval_required": false,
+      "audit_fields": [
+        "task_id",
+        "run_id",
+        "gate_id",
+        "status",
+        "rules_checked",
+        "block_reasons",
+        "warnings"
+      ]
+    },
+    "model-production-agent": {
+      "agent_id": "model-production-agent",
+      "display_name": "模型生产",
+      "domain": "model-production",
+      "role": "使用已通过门禁的数据生成候选信号",
+      "goal": "基于已验证数据运行生产模型，生成候选信号和运行证据",
+      "allowed_inputs": [
+        "model_run_task",
+        "passed_gate_snapshot",
+        "registered_model_version"
+      ],
+      "required_preconditions": [
+        "valid_task_assignment",
+        "product_quality_gate_passed"
+      ],
+      "allowed_tools": [
+        "run_production_model",
+        "generate_candidate_signal",
+        "get_model_version",
+        "get_input_snapshot"
+      ],
+      "forbidden_actions": [
+        "use_incomplete_data",
+        "use_future_data",
+        "modify_model_code",
+        "modify_model_parameters",
+        "promote_candidate_to_production",
+        "self_approve_results"
+      ],
+      "output_schema": "candidate_signal_result",
+      "handoff_to": [
+        "model-risk-agent"
+      ],
+      "approval_required": false,
+      "audit_fields": [
+        "task_id",
+        "run_id",
+        "model_version",
+        "input_snapshot_id",
+        "candidate_signal_id",
+        "data_cutoff"
+      ]
+    },
+    "model-risk-agent": {
+      "agent_id": "model-risk-agent",
+      "display_name": "模型风控",
+      "domain": "risk-control",
+      "role": "独立审查模型结果，输出 APPROVE/REJECT/NEEDS_REVIEW",
+      "goal": "确保模型结果符合风控标准，高风险事项提交人工审批",
+      "allowed_inputs": [
+        "risk_review_task",
+        "candidate_signal",
+        "model_version",
+        "input_snapshot",
+        "backtest_summary"
+      ],
+      "required_preconditions": [
+        "valid_task_assignment",
+        "candidate_signal_available"
+      ],
+      "allowed_tools": [
+        "check_model_version",
+        "check_input_snapshot",
+        "check_data_cutoff",
+        "check_backtest_summary",
+        "check_anomalies",
+        "check_candidate_signal",
+        "request_human_review"
+      ],
+      "forbidden_actions": [
+        "modify_candidate_signal",
+        "modify_model_parameters",
+        "approve_must_human_items",
+        "approve_missing_evidence"
+      ],
+      "output_schema": "risk_review_result",
+      "handoff_to": [
+        "release-observer-agent"
+      ],
+      "approval_required": false,
+      "audit_fields": [
+        "task_id",
+        "run_id",
+        "review_status",
+        "risk_level",
+        "reasons",
+        "human_review_requested"
+      ]
+    },
+    "release-observer-agent": {
+      "agent_id": "release-observer-agent",
+      "display_name": "发布观察",
+      "domain": "release-management",
+      "role": "发布已审批的正式版本，监控发布后状态",
+      "goal": "安全发布并观察结果，及时触发告警或回滚申请",
+      "allowed_inputs": [
+        "release_task",
+        "approved_signal",
+        "release_checklist"
+      ],
+      "required_preconditions": [
+        "valid_task_assignment",
+        "all_gates_passed",
+        "all_approvals_obtained"
+      ],
+      "allowed_tools": [
+        "publish_approved_signal",
+        "record_release_manifest",
+        "monitor_release_status",
+        "trigger_alert",
+        "request_rollback"
+      ],
+      "forbidden_actions": [
+        "publish_unapproved_signal",
+        "modify_signal_content",
+        "execute_irreversible_rollback",
+        "treat_display_as_received"
+      ],
+      "output_schema": "release_result",
+      "handoff_to": [],
+      "approval_required": true,
+      "audit_fields": [
+        "task_id",
+        "run_id",
+        "release_version",
+        "published_at",
+        "target",
+        "monitoring_status"
+      ]
+    },
+    "research-agent": {
+      "agent_id": "research-agent",
+      "display_name": "量化研究员",
+      "domain": "research",
+      "role": "在研究域分析数据，形成假设和候选模型",
+      "goal": "探索新的因子、模型和策略，提交候选进入独立评审",
+      "allowed_inputs": [
+        "research_request",
+        "historical_data",
+        "research_parameters"
+      ],
+      "required_preconditions": [
+        "valid_research_scope"
+      ],
+      "allowed_tools": [
+        "analyze_data",
+        "generate_hypothesis",
+        "run_backtest",
+        "create_candidate_model",
+        "submit_for_review"
+      ],
+      "forbidden_actions": [
+        "write_to_production_database",
+        "modify_production_model",
+        "call_release_tools",
+        "mark_research_as_production",
+        "bypass_risk_approval"
+      ],
+      "output_schema": "research_result",
+      "handoff_to": [
+        "model-production-agent"
+      ],
+      "approval_required": false,
+      "audit_fields": [
+        "task_id",
+        "run_id",
+        "hypothesis_id",
+        "candidate_model_id",
+        "experiment_results"
+      ]
+    }
+  }
+}

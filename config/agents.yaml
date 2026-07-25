@@ -1,0 +1,273 @@
+# Agent Configuration - Financial Investment Agent Operations Workbench
+# Each agent has strictly defined permissions and boundaries.
+
+agents:
+  orchestrator-agent:
+    agent_id: orchestrator-agent
+    display_name: "\u603B\u8C03\u5EA6\u5B98"
+    domain: production-dispatch
+    role: "\u63A5\u6536\u8D1F\u8D23\u4EBA\u4EFB\u52A1\uFF0C\u521B\u5EFA run_id\uFF0C\u6309 DAG \u6D3E\u53D1\u3001\u6682\u505C\u3001\u91CD\u8BD5\u548C\u7EC8\u6B62\u4EFB\u52A1\uFF0C\u6C47\u603B\u8BC1\u636E\u5411\u8D1F\u8D23\u4EBA\u62A5\u544A"
+    goal: "\u786E\u4FDD\u751F\u4EA7 DAG \u6309\u4F9D\u8D56\u987A\u5E8F\u6B63\u786E\u6267\u884C\uFF0C\u53CA\u65F6\u53D1\u73B0\u963B\u65AD\u5E76\u62A5\u544A"
+    allowed_inputs:
+      - human_task_request
+      - dag_status
+      - gate_results
+      - approval_results
+    required_preconditions: []
+    allowed_tools:
+      - create_run
+      - dispatch_task
+      - pause_run
+      - retry_task
+      - terminate_run
+      - get_run_status
+      - get_gate_status
+      - get_approval_status
+      - summarize_evidence
+    forbidden_actions:
+      - direct_database_write
+      - bypass_block
+      - modify_quality_thresholds
+      - modify_model_parameters
+      - approve_model_risk
+      - release_signals
+    output_schema: run_summary
+    handoff_to:
+      - data-ops-agent
+      - data-quality-agent
+      - model-production-agent
+      - model-risk-agent
+      - release-observer-agent
+    approval_required: false
+    audit_fields:
+      - run_id
+      - action
+      - target_task_id
+      - result_summary
+      - timestamp
+
+  data-ops-agent:
+    agent_id: data-ops-agent
+    display_name: "\u6570\u636E\u8FD0\u7EF4"
+    domain: data-operations
+    role: "\u6267\u884C\u53D7\u63A7\u6570\u636E\u66F4\u65B0\u4EFB\u52A1\uFF0C\u8FD4\u56DE\u6570\u636E\u6C34\u4F4D\u548C\u64CD\u4F5C\u8BC1\u636E"
+    goal: "\u5B8C\u6210\u884C\u60C5\u3001\u590D\u6743\u56E0\u5B50\u3001\u57FA\u7840\u56E0\u5B50\u3001\u5E02\u573A\u56E0\u5B50\u7684\u53D7\u63A7\u66F4\u65B0"
+    allowed_inputs:
+      - data_update_task
+      - target_date_range
+      - data_object_type
+    required_preconditions:
+      - valid_task_assignment
+    allowed_tools:
+      - update_daily_kline
+      - update_adjustment_factors
+      - update_factor_data
+      - update_market_factors
+      - get_data_watermark
+    forbidden_actions:
+      - execute_arbitrary_sql
+      - choose_database_path
+      - delete_or_rebuild_tables
+      - guess_fill_missing_data
+      - lower_quality_thresholds
+      - expand_scope_without_task
+    output_schema: data_update_result
+    handoff_to:
+      - data-quality-agent
+    approval_required: false
+    audit_fields:
+      - task_id
+      - run_id
+      - data_object
+      - inserted_count
+      - updated_count
+      - skipped_count
+      - failed_count
+      - watermark
+
+  data-quality-agent:
+    agent_id: data-quality-agent
+    display_name: "\u6570\u636E\u8D28\u91CF"
+    domain: quality-assurance
+    role: "\u6267\u884C\u53EA\u8BFB\u8D28\u91CF\u68C0\u67E5\uFF0C\u8F93\u51FA PASS/WARN/BLOCK"
+    goal: "\u786E\u4FDD\u6570\u636E\u8986\u76D6\u7387\u3001\u65B0\u9C9C\u5EA6\u3001\u552F\u4E00\u6027\u7B49\u6307\u6807\u8FBE\u6807"
+    allowed_inputs:
+      - quality_check_task
+      - data_watermarks
+      - gate_thresholds
+    required_preconditions:
+      - valid_task_assignment
+      - upstream_data_completed
+    allowed_tools:
+      - check_coverage
+      - check_freshness
+      - check_uniqueness
+      - check_null_values
+      - check_dependency_order
+      - check_data_cutoff
+      - check_database_consistency
+    forbidden_actions:
+      - modify_business_data
+      - auto_repair_data
+      - change_check_criteria
+      - mark_unknown_as_pass
+    output_schema: gate_result
+    handoff_to:
+      - model-production-agent
+    approval_required: false
+    audit_fields:
+      - task_id
+      - run_id
+      - gate_id
+      - status
+      - rules_checked
+      - block_reasons
+      - warnings
+
+  model-production-agent:
+    agent_id: model-production-agent
+    display_name: "\u6A21\u578B\u751F\u4EA7"
+    domain: model-production
+    role: "\u4F7F\u7528\u5DF2\u901A\u8FC7\u95E8\u7981\u7684\u6570\u636E\u751F\u6210\u5019\u9009\u4FE1\u53F7"
+    goal: "\u57FA\u4E8E\u5DF2\u9A8C\u8BC1\u6570\u636E\u8FD0\u884C\u751F\u4EA7\u6A21\u578B\uFF0C\u751F\u6210\u5019\u9009\u4FE1\u53F7\u548C\u8FD0\u884C\u8BC1\u636E"
+    allowed_inputs:
+      - model_run_task
+      - passed_gate_snapshot
+      - registered_model_version
+    required_preconditions:
+      - valid_task_assignment
+      - product_quality_gate_passed
+    allowed_tools:
+      - run_production_model
+      - generate_candidate_signal
+      - get_model_version
+      - get_input_snapshot
+    forbidden_actions:
+      - use_incomplete_data
+      - use_future_data
+      - modify_model_code
+      - modify_model_parameters
+      - promote_candidate_to_production
+      - self_approve_results
+    output_schema: candidate_signal_result
+    handoff_to:
+      - model-risk-agent
+    approval_required: false
+    audit_fields:
+      - task_id
+      - run_id
+      - model_version
+      - input_snapshot_id
+      - candidate_signal_id
+      - data_cutoff
+
+  model-risk-agent:
+    agent_id: model-risk-agent
+    display_name: "\u6A21\u578B\u98CE\u63A7"
+    domain: risk-control
+    role: "\u72EC\u7ACB\u5BA1\u67E5\u6A21\u578B\u7ED3\u679C\uFF0C\u8F93\u51FA APPROVE/REJECT/NEEDS_REVIEW"
+    goal: "\u786E\u4FDD\u6A21\u578B\u7ED3\u679C\u7B26\u5408\u98CE\u63A7\u6807\u51C6\uFF0C\u9AD8\u98CE\u9669\u4E8B\u9879\u63D0\u4EA4\u4EBA\u5DE5\u5BA1\u6279"
+    allowed_inputs:
+      - risk_review_task
+      - candidate_signal
+      - model_version
+      - input_snapshot
+      - backtest_summary
+    required_preconditions:
+      - valid_task_assignment
+      - candidate_signal_available
+    allowed_tools:
+      - check_model_version
+      - check_input_snapshot
+      - check_data_cutoff
+      - check_backtest_summary
+      - check_anomalies
+      - check_candidate_signal
+      - request_human_review
+    forbidden_actions:
+      - modify_candidate_signal
+      - modify_model_parameters
+      - approve_must_human_items
+      - approve_missing_evidence
+    output_schema: risk_review_result
+    handoff_to:
+      - release-observer-agent
+    approval_required: false
+    audit_fields:
+      - task_id
+      - run_id
+      - review_status
+      - risk_level
+      - reasons
+      - human_review_requested
+
+  release-observer-agent:
+    agent_id: release-observer-agent
+    display_name: "\u53D1\u5E03\u89C2\u5BDF"
+    domain: release-management
+    role: "\u53D1\u5E03\u5DF2\u5BA1\u6279\u7684\u6B63\u5F0F\u7248\u672C\uFF0C\u76D1\u63A7\u53D1\u5E03\u540E\u72B6\u6001"
+    goal: "\u5B89\u5168\u53D1\u5E03\u5E76\u89C2\u5BDF\u7ED3\u679C\uFF0C\u53CA\u65F6\u89E6\u53D1\u544A\u8B66\u6216\u56DE\u6EDA\u7533\u8BF7"
+    allowed_inputs:
+      - release_task
+      - approved_signal
+      - release_checklist
+    required_preconditions:
+      - valid_task_assignment
+      - all_gates_passed
+      - all_approvals_obtained
+    allowed_tools:
+      - publish_approved_signal
+      - record_release_manifest
+      - monitor_release_status
+      - trigger_alert
+      - request_rollback
+    forbidden_actions:
+      - publish_unapproved_signal
+      - modify_signal_content
+      - execute_irreversible_rollback
+      - treat_display_as_received
+    output_schema: release_result
+    handoff_to: []
+    approval_required: true
+    audit_fields:
+      - task_id
+      - run_id
+      - release_version
+      - published_at
+      - target
+      - monitoring_status
+
+  research-agent:
+    agent_id: research-agent
+    display_name: "\u91CF\u5316\u7814\u7A76\u5458"
+    domain: research
+    role: "\u5728\u7814\u7A76\u57DF\u5206\u6790\u6570\u636E\uFF0C\u5F62\u6210\u5047\u8BBE\u548C\u5019\u9009\u6A21\u578B"
+    goal: "\u63A2\u7D22\u65B0\u7684\u56E0\u5B50\u3001\u6A21\u578B\u548C\u7B56\u7565\uFF0C\u63D0\u4EA4\u5019\u9009\u8FDB\u5165\u72EC\u7ACB\u8BC4\u5BA1"
+    allowed_inputs:
+      - research_request
+      - historical_data
+      - research_parameters
+    required_preconditions:
+      - valid_research_scope
+    allowed_tools:
+      - analyze_data
+      - generate_hypothesis
+      - run_backtest
+      - create_candidate_model
+      - submit_for_review
+    forbidden_actions:
+      - write_to_production_database
+      - modify_production_model
+      - call_release_tools
+      - mark_research_as_production
+      - bypass_risk_approval
+    output_schema: research_result
+    handoff_to:
+      - model-production-agent
+    approval_required: false
+    audit_fields:
+      - task_id
+      - run_id
+      - hypothesis_id
+      - candidate_model_id
+      - experiment_results

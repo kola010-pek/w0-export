@@ -1,0 +1,35 @@
+{
+  "environments": {
+    "simulation": {
+      "environment": "simulation",
+      "mock_tools": true,
+      "production_write_enabled": false,
+      "production_model_enabled": false,
+      "production_release_enabled": false,
+      "database_core_gate_default": "BLOCK",
+      "model_gate_default": "WARN",
+      "description": "模拟环境 - 所有生产写入、模型运行和信号发布均未启用"
+    },
+    "staging": {
+      "environment": "staging",
+      "mock_tools": false,
+      "production_write_enabled": false,
+      "production_model_enabled": true,
+      "production_release_enabled": false,
+      "database_core_gate_default": "BLOCK",
+      "model_gate_default": "WARN",
+      "description": "预发环境 - 模型可运行但不发布"
+    },
+    "production": {
+      "environment": "production",
+      "mock_tools": false,
+      "production_write_enabled": true,
+      "production_model_enabled": true,
+      "production_release_enabled": true,
+      "database_core_gate_default": "BLOCK",
+      "model_gate_default": "WARN",
+      "description": "生产环境 - 所有能力启用（需显式启用）"
+    }
+  },
+  "active_environment": "simulation"
+}

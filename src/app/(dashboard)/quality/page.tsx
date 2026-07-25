@@ -1,0 +1,188 @@
+'use client';
+
+import { useEffect, useState, useCallback } from 'react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+
+interface GateData {
+  gate_id: string;
+  scope: string;
+  status: string;
+  checked_at: string;
+  data_cutoff: string;
+  rules: Array<{
+    rule_id: string;
+    display_name: string;
+    status: string;
+    actual: unknown;
+    threshold: unknown;
+    operator: string;
+    severity: string;
+    evidence_ref: string;
+    description: string;
+  }>;
+  block_reasons: string[];
+  warnings: string[];
+}
+
+const STATUS_COLORS: Record<string, string> = {
+  PASS: 'bg-green-100 text-green-800',
+  WARN: 'bg-yellow-100 text-yellow-800',
+  BLOCK: 'bg-red-100 text-red-800',
+  NOT_EXECUTED: 'bg-gray-100 text-gray-500',
+};
+
+export default function QualityPage() {
+  const [runs, setRuns] = useState<Array<{ run_id: string; status: string }>>([]);
+  const [selectedRun, setSelectedRun] = useState<string>('');
+  const [gates, setGates] = useState<Record<string, GateData>>({});
+
+  const fetchRuns = useCallback(async () => {
+    const res = await fetch('/api/runs');
+    const data = await res.json();
+    if (data.success) {
+      setRuns(data.data);
+      if (data.data.length > 0 && !selectedRun) {
+        setSelectedRun(data.data[0].run_id);
+      }
+    }
+  }, [selectedRun]);
+
+  useEffect(() => { fetchRuns(); }, [fetchRuns]);
+
+  useEffect(() => {
+    if (!selectedRun) return;
+    fetch(`/api/gates/${selectedRun}`)
+      .then(r => r.json())
+      .then(data => { if (data.success) setGates(data.data); })
+      .catch(console.error);
+  }, [selectedRun]);
+
+  const downloadEvidence = () => {
+    const evidenceData = JSON.stringify(gates, null, 2);
+    const blob = new Blob([evidenceData], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `quality_evidence_${selectedRun}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div className="p-6 space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">\u6570\u636E\u8D28\u91CF</h1>
+          <p className="text-sm text-gray-500 mt-1">\u8986\u76D6\u7387\u3001\u65B0\u9C9C\u5EA6\u3001\u552F\u4E00\u6027\u3001\u7A7A\u503C\u3001\u4F9D\u8D56\u987A\u5E8F\u68C0\u67E5\u7ED3\u679C</p>
+        </div>
+        <div className="flex gap-2 items-center">
+          <Select value={selectedRun} onValueChange={setSelectedRun}>
+            <SelectTrigger className="w-64">
+              <SelectValue placeholder="\u9009\u62E9\u8FD0\u884C" />
+            </SelectTrigger>
+            <SelectContent>
+              {runs.map(r => (
+                <SelectItem key={r.run_id} value={r.run_id}>{r.run_id.slice(0, 16)}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button size="sm" variant="outline" onClick={downloadEvidence} disabled={Object.keys(gates).length === 0}>
+            \u4E0B\u8F7D\u8BC1\u636E
+          </Button>
+        </div>
+      </div>
+
+      {Object.keys(gates).length === 0 ? (
+        <Card>
+          <CardContent className="py-12 text-center text-gray-500">
+            \u6682\u65E0\u8D28\u91CF\u68C0\u67E5\u6570\u636E\u3002\u8BF7\u5148\u8FD0\u884C\u573A\u666F\u3002
+          </CardContent>
+        </Card>
+      ) : (
+        Object.values(gates).map(gate => (
+          <Card key={gate.gate_id}>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>{gate.gate_id}</CardTitle>
+                  <CardDescription>
+                    \u68C0\u67E5\u65F6\u95F4: {gate.checked_at ? new Date(gate.checked_at).toLocaleString('zh-CN') : '-'} | \u6570\u636E\u622A\u6B62: {gate.data_cutoff}
+                  </CardDescription>
+                </div>
+                <Badge className={`${STATUS_COLORS[gate.status]} text-sm px-3 py-1`}>{gate.status}</Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Rules Table */}
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>\u89C4\u5219</TableHead>
+                    <TableHead>\u63CF\u8FF0</TableHead>
+                    <TableHead>\u5B9E\u9645\u503C</TableHead>
+                    <TableHead>\u9608\u503C</TableHead>
+                    <TableHead>\u64CD\u4F5C\u7B26</TableHead>
+                    <TableHead>\u4E25\u91CD\u7EA7</TableHead>
+                    <TableHead>\u72B6\u6001</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {gate.rules.map(rule => (
+                    <TableRow key={rule.rule_id}>
+                      <TableCell className="font-medium text-sm">{rule.display_name}</TableCell>
+                      <TableCell className="text-xs text-gray-500">{rule.description}</TableCell>
+                      <TableCell className="font-mono text-sm">{String(rule.actual)}</TableCell>
+                      <TableCell className="font-mono text-sm">{String(rule.threshold)}</TableCell>
+                      <TableCell className="font-mono text-sm">{rule.operator}</TableCell>
+                      <TableCell>
+                        <Badge variant={rule.severity === 'BLOCK' ? 'destructive' : 'secondary'} className="text-xs">
+                          {rule.severity}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge className={`${STATUS_COLORS[rule.status]} text-xs`}>{rule.status}</Badge>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+
+              {/* Block Reasons */}
+              {gate.block_reasons.length > 0 && (
+                <div className="bg-red-50 border border-red-200 rounded p-3">
+                  <p className="text-sm font-medium text-red-800">\u963B\u65AD\u539F\u56E0:</p>
+                  <ul className="mt-1 text-sm text-red-700 list-disc list-inside">
+                    {gate.block_reasons.map((r, i) => <li key={i}>{r}</li>)}
+                  </ul>
+                </div>
+              )}
+
+              {/* Warnings */}
+              {gate.warnings.length > 0 && (
+                <div className="bg-yellow-50 border border-yellow-200 rounded p-3">
+                  <p className="text-sm font-medium text-yellow-800">\u8B66\u544A:</p>
+                  <ul className="mt-1 text-sm text-yellow-700 list-disc list-inside">
+                    {gate.warnings.map((w, i) => <li key={i}>{w}</li>)}
+                  </ul>
+                </div>
+              )}
+
+              {/* NOT_EXECUTED Warning */}
+              {gate.status === 'NOT_EXECUTED' && (
+                <div className="bg-gray-50 border border-gray-200 rounded p-3">
+                  <p className="text-sm font-medium text-gray-700">
+                    NOT_EXECUTED: \u68C0\u67E5\u672A\u5B9E\u9645\u6267\u884C\uFF0C\u4E0D\u80FD\u89C6\u4E3A PASS
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        ))
+      )}
+    </div>
+  );
+}

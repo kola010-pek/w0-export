@@ -3,6 +3,18 @@
 import { useEffect, useState } from 'react';
 import type { Phase2Response } from '@/lib/data-source';
 
+// Test report item interface
+interface TestReportItem {
+  test_id: string;
+  executed_at: string;
+  input_fixture: string;
+  expected_status: string;
+  actual_status: string;
+  assertion_result: string;
+  evidence_id: string;
+  details: string;
+}
+
 // ============ Types ============
 interface HealthData {
   status: 'healthy' | 'degraded' | 'unhealthy';
@@ -202,6 +214,7 @@ export default function Phase2Page() {
   const [healthData, setHealthData] = useState<Phase2Response<HealthData> | null>(null);
   const [watermarksData, setWatermarksData] = useState<Phase2Response<WatermarksData> | null>(null);
   const [qualityData, setQualityData] = useState<Phase2Response<QualityGatesData> | null>(null);
+  const [testReport, setTestReport] = useState<TestReportItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -211,10 +224,11 @@ export default function Phase2Page() {
         setLoading(true);
         setError(null);
 
-        const [healthRes, watermarksRes, qualityRes] = await Promise.all([
+        const [healthRes, watermarksRes, qualityRes, testReportRes] = await Promise.all([
           fetch('/api/health'),
           fetch('/api/data/watermarks'),
           fetch('/api/quality/gates'),
+          fetch('/api/test-report'),
         ]);
 
         // Check if any response is not OK - must BLOCK, never degrade
@@ -238,6 +252,14 @@ export default function Phase2Page() {
         setHealthData(health);
         setWatermarksData(watermarks);
         setQualityData(quality);
+
+        // Parse test report (optional - don't fail if not available)
+        if (testReportRes.ok) {
+          const testReportJson = await testReportRes.json();
+          if (testReportJson.success && Array.isArray(testReportJson.data)) {
+            setTestReport(testReportJson.data);
+          }
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : '数据加载失败');
       } finally {
@@ -560,46 +582,25 @@ export default function Phase2Page() {
         </div>
       )}
 
-      {/* Negative Test Scenarios */}
+      {/* Negative Test Scenarios - Dynamic from API */}
       <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-5">
-        <h2 className="text-lg font-semibold text-white mb-4">负向测试场景验证</h2>
-        <div className="space-y-3">
-          <NegativeTestScenario
-            name="接口不可达"
-            description="模拟接口返回 500 或超时"
-            expectedStatus="BLOCK"
-            testResult="PASS"
-            details="当接口返回非 200 状态码时，前端显示 BLOCK 状态，不降级为 PASS"
-          />
-          <NegativeTestScenario
-            name="证据缺失"
-            description="evidence_id 为空或格式异常"
-            expectedStatus="BLOCK"
-            testResult="PASS"
-            details="当 evidence_id 缺失或格式不符合 evt_* 规范时，触发 BLOCK"
-          />
-          <NegativeTestScenario
-            name="数据陈旧 (24-48h)"
-            description="数据更新时间在 24-48 小时之间"
-            expectedStatus="WARN"
-            testResult="PASS"
-            details="数据陈旧但未过期时，显示 WARN 警告，提示数据可能不准确"
-          />
-          <NegativeTestScenario
-            name="数据过期 (>48h)"
-            description="数据更新时间超过 48 小时"
-            expectedStatus="BLOCK"
-            testResult="PASS"
-            details="数据超过 48 小时未更新时，触发 BLOCK，禁止继续使用"
-          />
-          <NegativeTestScenario
-            name="响应格式异常"
-            description="返回非 JSON 或字段缺失"
-            expectedStatus="BLOCK"
-            testResult="PASS"
-            details="当响应不是合法 JSON 或缺少必要字段时，触发 BLOCK"
-          />
-        </div>
+        <h2 className="text-lg font-semibold text-white mb-4">负向测试报告（动态读取）</h2>
+        {testReport.length === 0 ? (
+          <div className="text-slate-400 text-sm">暂无测试报告数据</div>
+        ) : (
+          <div className="space-y-3">
+            {testReport.map((test) => (
+              <NegativeTestScenario
+                key={test.test_id}
+                name={test.test_id.replace('NEG_', '').replace(/_/g, ' ')}
+                description={test.details}
+                expectedStatus={test.expected_status}
+                testResult={test.assertion_result}
+                details={`${test.input_fixture} · 期望: ${test.expected_status} · 实际: ${test.actual_status} · 证据: ${test.evidence_id}`}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Footer Info */}

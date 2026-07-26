@@ -24,6 +24,79 @@ const DB_CONFIG = {
 
 let dbInstance: Database.Database | null = null;
 let connectionError: Error | null = null;
+let schemaCache: Map<string, ColumnInfo[]> | null = null;
+
+interface ColumnInfo {
+  name: string;
+  type: string;
+  notnull: number;
+  pk: number;
+}
+
+/**
+ * Detect real schema from database - do not assume fields match sample database.
+ * Returns a map of table name to column info.
+ */
+export function detectSchema(): { schema: Map<string, ColumnInfo[]> | null; error: string | null } {
+  if (schemaCache) {
+    return { schema: schemaCache, error: null };
+  }
+
+  const { db, error } = getReadOnlyConnection();
+  if (!db || error) {
+    return { schema: null, error: error?.message || 'Database connection failed' };
+  }
+
+  try {
+    const detectedSchema = new Map<string, ColumnInfo[]>();
+    
+    for (const tableName of DB_CONFIG.requiredTables) {
+      // Check if table exists
+      const tableExists = db.prepare(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name=?"
+      ).get(tableName);
+      
+      if (!tableExists) {
+        return { schema: null, error: `Required table '${tableName}' not found in database` };
+      }
+      
+      // Get column info for this table
+      const columns = db.prepare(`PRAGMA table_info(${tableName})`).all() as ColumnInfo[];
+      detectedSchema.set(tableName, columns);
+    }
+    
+    schemaCache = detectedSchema;
+    return { schema: detectedSchema, error: null };
+  } catch (err) {
+    return { schema: null, error: `Schema detection failed: ${err}` };
+  }
+}
+
+/**
+ * Check if a column exists in a table's schema.
+ */
+export function hasColumn(tableName: string, columnName: string): boolean {
+  const { schema } = detectSchema();
+  if (!schema) return false;
+  
+  const columns = schema.get(tableName);
+  if (!columns) return false;
+  
+  return columns.some(col => col.name.toLowerCase() === columnName.toLowerCase());
+}
+
+/**
+ * Get all column names for a table.
+ */
+export function getTableColumns(tableName: string): string[] {
+  const { schema } = detectSchema();
+  if (!schema) return [];
+  
+  const columns = schema.get(tableName);
+  if (!columns) return [];
+  
+  return columns.map(col => col.name);
+}
 
 /**
  * Get or create a read-only SQLite database connection.

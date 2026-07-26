@@ -149,8 +149,8 @@ interface PreflightData {
     production_release_enabled: false;
     sql_input_accepted: false;
     db_path_selectable: false;
-    auto_migration_disabled: false;
-    auto_fill_disabled: false;
+    auto_migration_disabled: true;
+    auto_fill_disabled: true;
   };
 }
 
@@ -339,8 +339,15 @@ export default function Phase2Page() {
 
         // Parse preflight data (optional - don't fail if not available)
         if (preflightRes.ok) {
-          const preflight = await preflightRes.json();
-          setPreflightData(preflight);
+          try {
+            const preflight = await preflightRes.json();
+            // Validate basic structure
+            if (preflight && typeof preflight === 'object') {
+              setPreflightData(preflight);
+            }
+          } catch {
+            // Preflight parse failure is non-fatal
+          }
         }
 
         // Parse real negative test report (optional)
@@ -789,6 +796,21 @@ export default function Phase2Page() {
         </div>
 
         {/* Configuration Status */}
+        {!preflightData?.data?.configuration ? (
+          <div className="bg-amber-900/20 border border-amber-700/30 rounded-lg p-4 mb-4">
+            <div className="flex items-start gap-3">
+              <span className="text-amber-400 text-xl">!</span>
+              <div className="flex-1">
+                <h3 className="text-sm font-semibold text-amber-300 mb-1">
+                  预检响应格式异常
+                </h3>
+                <p className="text-xs text-amber-200/80">
+                  {preflightData ? '预检数据中缺少 configuration 字段，请检查接口契约。' : '预检数据尚未加载。'}
+                </p>
+              </div>
+            </div>
+          </div>
+        ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div className="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30">
             <h4 className="text-xs font-medium text-slate-400 mb-2">数据源配置</h4>
@@ -796,19 +818,19 @@ export default function Phase2Page() {
               <div className="flex items-center justify-between">
                 <span className="text-xs text-slate-500">data_source_mode</span>
                 <span className="text-xs font-mono text-purple-300">
-                  {preflightData?.data.configuration.data_source_mode || 'real_readonly'}
+                  {preflightData.data.configuration.data_source_mode || 'real_readonly'}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-xs text-slate-500">data_source_kind</span>
                 <span className="text-xs font-mono text-purple-300">
-                  {preflightData?.data.configuration.data_source_kind || 'production_database_readonly'}
+                  {preflightData.data.configuration.data_source_kind || 'production_database_readonly'}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-xs text-slate-500">real_db_path_configured</span>
-                <span className={`text-xs font-mono ${preflightData?.data.configuration.real_db_path_configured ? 'text-green-400' : 'text-red-400'}`}>
-                  {String(preflightData?.data.configuration.real_db_path_configured ?? false)}
+                <span className={`text-xs font-mono ${preflightData.data.configuration.real_db_path_configured ? 'text-green-400' : 'text-red-400'}`}>
+                  {String(preflightData.data.configuration.real_db_path_configured ?? false)}
                 </span>
               </div>
             </div>
@@ -820,19 +842,19 @@ export default function Phase2Page() {
               <div className="flex items-center justify-between">
                 <span className="text-xs text-slate-500">connection_status</span>
                 <span className="text-xs font-mono text-red-400">
-                  {preflightData?.data.connection.status || 'not_configured'}
+                  {preflightData.data.connection?.status || 'not_configured'}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-xs text-slate-500">readonly_connection</span>
                 <span className="text-xs font-mono text-slate-500">
-                  {String(preflightData?.data.connection.readonly_connection ?? false)}
+                  {String(preflightData.data.connection?.readonly_connection ?? false)}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-xs text-slate-500">query_only</span>
                 <span className="text-xs font-mono text-slate-500">
-                  {String(preflightData?.data.connection.query_only ?? false)}
+                  {String(preflightData.data.connection?.query_only ?? false)}
                 </span>
               </div>
               <div className="flex items-center justify-between">
@@ -842,14 +864,16 @@ export default function Phase2Page() {
             </div>
           </div>
         </div>
+        )}
 
         {/* Safety Flags */}
         <div className="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30 mb-4">
           <h4 className="text-xs font-medium text-slate-400 mb-2">安全状态（全部禁用）</h4>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
             {[
-              { key: '数据库写入', value: false },
-              { key: '自动补数', value: false },
+              { key: '数据库写入', value: preflightData?.data?.safety?.production_write_enabled ?? false },
+              { key: '自动补数', value: preflightData?.data?.safety?.auto_fill_disabled ?? true },
+              { key: '自动迁移', value: preflightData?.data?.safety?.auto_migration_disabled ?? true },
               { key: 'Schema 修改', value: false },
               { key: '正式模型运行', value: false },
               { key: '模型晋升', value: false },
@@ -866,7 +890,7 @@ export default function Phase2Page() {
         </div>
 
         {/* Schema Probe Summary */}
-        {preflightData?.data.schema_probe.probed && (
+        {preflightData?.data?.schema_probe?.probed && (
           <div className="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30 mb-4">
             <h4 className="text-xs font-medium text-slate-400 mb-2">Schema 探测结果</h4>
             <div className="overflow-x-auto">

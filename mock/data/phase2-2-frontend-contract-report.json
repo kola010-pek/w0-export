@@ -1,0 +1,54 @@
+{
+  "test_run_id": "run_frontend_contract_19f9d057ee9",
+  "generated_at": "2026-07-26T06:03:30.967Z",
+  "total_tests": 5,
+  "passed_tests": 5,
+  "failed_tests": 0,
+  "results": [
+    {
+      "test_id": "PREFLIGHT_UI_001",
+      "test_run_id": "run_frontend_contract_19f9d057ee9",
+      "test_evidence_id": "evt_fc_PREFLIGHT_UI_001_19f9d057ee9_819ad5",
+      "expected_status": "BLOCK",
+      "actual_status": "BLOCK",
+      "assertion_result": "PASS",
+      "details": "preflight 直接返回 {success,data} 包装，前端可安全读取 data.configuration/connection/schema_probe/safety"
+    },
+    {
+      "test_id": "PREFLIGHT_UI_002",
+      "test_run_id": "run_frontend_contract_19f9d057ee9",
+      "test_evidence_id": "evt_fc_PREFLIGHT_UI_002_19f9d057f10_5daa1d",
+      "expected_status": "loading",
+      "actual_status": "loading",
+      "assertion_result": "PASS",
+      "details": "请求未完成时 preflightData=null，页面安全显示加载/默认状态，不崩溃"
+    },
+    {
+      "test_id": "PREFLIGHT_UI_003",
+      "test_run_id": "run_frontend_contract_19f9d057ee9",
+      "test_evidence_id": "evt_fc_PREFLIGHT_UI_003_19f9d057f10_27d325",
+      "expected_status": "BLOCK",
+      "actual_status": "BLOCK",
+      "assertion_result": "PASS",
+      "details": "请求失败时 preflightData=null，页面显示 BLOCK + 格式异常提示，不崩溃"
+    },
+    {
+      "test_id": "PREFLIGHT_UI_004",
+      "test_run_id": "run_frontend_contract_19f9d057ee9",
+      "test_evidence_id": "evt_fc_PREFLIGHT_UI_004_19f9d057f10_969e9d",
+      "expected_status": "format_error",
+      "actual_status": "format_error",
+      "assertion_result": "PASS",
+      "details": "configuration 缺失时页面显示\"预检响应格式异常\"，不崩溃"
+    },
+    {
+      "test_id": "PREFLIGHT_UI_005",
+      "test_run_id": "run_frontend_contract_19f9d057ee9",
+      "test_evidence_id": "evt_fc_PREFLIGHT_UI_005_19f9d057f10_00af83",
+      "expected_status": "all_disabled",
+      "actual_status": "all_disabled",
+      "assertion_result": "PASS",
+      "details": "auto_migration_disabled=true, auto_fill_disabled=true, production_write_enabled=false, sql_input_accepted=false"
+    }
+  ]
+}

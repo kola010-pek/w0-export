@@ -1,31 +1,31 @@
 [
   {
-    "event_id": "evt_4a9b8b429fd7",
-    "timestamp": "2026-07-26T05:48:16.648Z",
+    "event_id": "evt_fd33e122a32e",
+    "timestamp": "2026-07-26T06:03:40.073Z",
     "actor": "test",
     "action": "create_run",
-    "run_id": "run_d227f29f1aec",
+    "run_id": "run_80a2cb6964dc",
     "task_id": null,
     "input_summary": {
       "scenario": "scenario_a",
       "data_cutoff": "2026-07-26"
     },
     "output_summary": {
-      "run_id": "run_d227f29f1aec",
+      "run_id": "run_80a2cb6964dc",
       "task_count": 9
     },
     "status_before": null,
     "status_after": "CREATED",
     "gate_changes": [],
-    "details": "Run run_d227f29f1aec created by test with scenario scenario_a"
+    "details": "Run run_80a2cb6964dc created by test with scenario scenario_a"
   },
   {
-    "event_id": "evt_0c95c0278f25",
-    "timestamp": "2026-07-26T05:48:16.648Z",
+    "event_id": "evt_9877b6fabf31",
+    "timestamp": "2026-07-26T06:03:40.073Z",
     "actor": "data-ops-agent",
     "action": "execute_task",
-    "run_id": "run_d227f29f1aec",
-    "task_id": "task_daily_kline_9f1aec",
+    "run_id": "run_80a2cb6964dc",
+    "task_id": "task_daily_kline_6964dc",
     "input_summary": {
       "node": "daily_kline",
       "tool": "data_update"
@@ -37,12 +37,12 @@
     "details": "Executing node daily_kline"
   },
   {
-    "event_id": "evt_18e3e8eeeb72",
-    "timestamp": "2026-07-26T05:48:16.648Z",
+    "event_id": "evt_ac5dbf8fa5df",
+    "timestamp": "2026-07-26T06:03:40.073Z",
     "actor": "data-ops-agent",
     "action": "task_completed",
-    "run_id": "run_d227f29f1aec",
-    "task_id": "task_daily_kline_9f1aec",
+    "run_id": "run_80a2cb6964dc",
+    "task_id": "task_daily_kline_6964dc",
     "input_summary": {
       "node": "daily_kline"
     },
@@ -56,12 +56,12 @@
     "details": "Node daily_kline completed with status SUCCEEDED"
   },
   {
-    "event_id": "evt_01c4c4ff7d74",
-    "timestamp": "2026-07-26T05:48:16.649Z",
+    "event_id": "evt_ee0986401b43",
+    "timestamp": "2026-07-26T06:03:40.074Z",
     "actor": "data-ops-agent",
     "action": "execute_task",
-    "run_id": "run_d227f29f1aec",
-    "task_id": "task_adjustment_factors_9f1aec",
+    "run_id": "run_80a2cb6964dc",
+    "task_id": "task_adjustment_factors_6964dc",
     "input_summary": {
       "node": "adjustment_factors",
       "tool": "data_update"
@@ -73,12 +73,12 @@
     "details": "Executing node adjustment_factors"
   },
   {
-    "event_id": "evt_ebc90841a247",
-    "timestamp": "2026-07-26T05:48:16.649Z",
+    "event_id": "evt_41be7ad4d12d",
+    "timestamp": "2026-07-26T06:03:40.074Z",
     "actor": "data-ops-agent",
     "action": "task_completed",
-    "run_id": "run_d227f29f1aec",
-    "task_id": "task_adjustment_factors_9f1aec",
+    "run_id": "run_80a2cb6964dc",
+    "task_id": "task_adjustment_factors_6964dc",
     "input_summary": {
       "node": "adjustment_factors"
     },
@@ -92,12 +92,12 @@
     "details": "Node adjustment_factors completed with status SUCCEEDED"
   },
   {
-    "event_id": "evt_65e6ce99bbc4",
-    "timestamp": "2026-07-26T05:48:16.649Z",
+    "event_id": "evt_ed12d5448a53",
+    "timestamp": "2026-07-26T06:03:40.074Z",
     "actor": "data-ops-agent",
     "action": "execute_task",
-    "run_id": "run_d227f29f1aec",
-    "task_id": "task_factor_data_9f1aec",
+    "run_id": "run_80a2cb6964dc",
+    "task_id": "task_factor_data_6964dc",
     "input_summary": {
       "node": "factor_data",
       "tool": "data_update"
@@ -109,12 +109,12 @@
     "details": "Executing node factor_data"
   },
   {
-    "event_id": "evt_8f49e3573eb3",
-    "timestamp": "2026-07-26T05:48:16.649Z",
+    "event_id": "evt_a1a33461662b",
+    "timestamp": "2026-07-26T06:03:40.074Z",
     "actor": "data-ops-agent",
     "action": "task_completed",
-    "run_id": "run_d227f29f1aec",
-    "task_id": "task_factor_data_9f1aec",
+    "run_id": "run_80a2cb6964dc",
+    "task_id": "task_factor_data_6964dc",
     "input_summary": {
       "node": "factor_data"
     },
@@ -128,12 +128,12 @@
     "details": "Node factor_data completed with status SUCCEEDED"
   },
   {
-    "event_id": "evt_5120e0df45af",
-    "timestamp": "2026-07-26T05:48:16.650Z",
+    "event_id": "evt_b6a57fecadb9",
+    "timestamp": "2026-07-26T06:03:40.075Z",
     "actor": "data-ops-agent",
     "action": "execute_task",
-    "run_id": "run_d227f29f1aec",
-    "task_id": "task_market_factors_9f1aec",
+    "run_id": "run_80a2cb6964dc",
+    "task_id": "task_market_factors_6964dc",
     "input_summary": {
       "node": "market_factors",
       "tool": "data_update"
@@ -145,12 +145,12 @@
     "details": "Executing node market_factors"
   },
   {
-    "event_id": "evt_c1866e712c86",
-    "timestamp": "2026-07-26T05:48:16.650Z",
+    "event_id": "evt_b8efbad30c24",
+    "timestamp": "2026-07-26T06:03:40.075Z",
     "actor": "data-ops-agent",
     "action": "task_completed",
-    "run_id": "run_d227f29f1aec",
-    "task_id": "task_market_factors_9f1aec",
+    "run_id": "run_80a2cb6964dc",
+    "task_id": "task_market_factors_6964dc",
     "input_summary": {
       "node": "market_factors"
     },
@@ -164,12 +164,12 @@
     "details": "Node market_factors completed with status SUCCEEDED"
   },
   {
-    "event_id": "evt_aa2c7c937f2c",
-    "timestamp": "2026-07-26T05:48:16.650Z",
+    "event_id": "evt_d9812d4f4923",
+    "timestamp": "2026-07-26T06:03:40.075Z",
     "actor": "data-quality-agent",
     "action": "execute_task",
-    "run_id": "run_d227f29f1aec",
-    "task_id": "task_product_quality_gate_9f1aec",
+    "run_id": "run_80a2cb6964dc",
+    "task_id": "task_product_quality_gate_6964dc",
     "input_summary": {
       "node": "product_quality_gate",
       "tool": "quality_check"
@@ -181,12 +181,12 @@
     "details": "Executing node product_quality_gate"
   },
   {
-    "event_id": "evt_90accea2fabf",
-    "timestamp": "2026-07-26T05:48:16.651Z",
+    "event_id": "evt_a2120efe3cc3",
+    "timestamp": "2026-07-26T06:03:40.076Z",
     "actor": "data-quality-agent",
     "action": "task_completed",
-    "run_id": "run_d227f29f1aec",
-    "task_id": "task_product_quality_gate_9f1aec",
+    "run_id": "run_80a2cb6964dc",
+    "task_id": "task_product_quality_gate_6964dc",
     "input_summary": {
       "node": "product_quality_gate"
     },
@@ -200,12 +200,12 @@
     "details": "Node product_quality_gate completed with status SUCCEEDED"
   },
   {
-    "event_id": "evt_f53a6f419747",
-    "timestamp": "2026-07-26T05:48:16.651Z",
+    "event_id": "evt_c52212d8c271",
+    "timestamp": "2026-07-26T06:03:40.076Z",
     "actor": "model-production-agent",
     "action": "execute_task",
-    "run_id": "run_d227f29f1aec",
-    "task_id": "task_candidate_signal_9f1aec",
+    "run_id": "run_80a2cb6964dc",
+    "task_id": "task_candidate_signal_6964dc",
     "input_summary": {
       "node": "candidate_signal",
       "tool": "model_run"
@@ -217,12 +217,12 @@
     "details": "Executing node candidate_signal"
   },
   {
-    "event_id": "evt_7f0adf101d17",
-    "timestamp": "2026-07-26T05:48:16.652Z",
+    "event_id": "evt_e497a1d95d79",
+    "timestamp": "2026-07-26T06:03:40.077Z",
     "actor": "model-production-agent",
     "action": "task_completed",
-    "run_id": "run_d227f29f1aec",
-    "task_id": "task_candidate_signal_9f1aec",
+    "run_id": "run_80a2cb6964dc",
+    "task_id": "task_candidate_signal_6964dc",
     "input_summary": {
       "node": "candidate_signal"
     },
@@ -236,12 +236,12 @@
     "details": "Node candidate_signal completed with status SUCCEEDED"
   },
   {
-    "event_id": "evt_c8370325a1e5",
-    "timestamp": "2026-07-26T05:48:16.653Z",
+    "event_id": "evt_89d501a956bc",
+    "timestamp": "2026-07-26T06:03:40.078Z",
     "actor": "model-risk-agent",
     "action": "execute_task",
-    "run_id": "run_d227f29f1aec",
-    "task_id": "task_risk_approval_9f1aec",
+    "run_id": "run_80a2cb6964dc",
+    "task_id": "task_risk_approval_6964dc",
     "input_summary": {
       "node": "risk_approval",
       "tool": "risk_review"
@@ -253,12 +253,12 @@
     "details": "Executing node risk_approval"
   },
   {
-    "event_id": "evt_8b5cba2c60d3",
-    "timestamp": "2026-07-26T05:48:16.653Z",
+    "event_id": "evt_143ec480e57e",
+    "timestamp": "2026-07-26T06:03:40.078Z",
     "actor": "model-risk-agent",
     "action": "task_completed",
-    "run_id": "run_d227f29f1aec",
-    "task_id": "task_risk_approval_9f1aec",
+    "run_id": "run_80a2cb6964dc",
+    "task_id": "task_risk_approval_6964dc",
     "input_summary": {
       "node": "risk_approval"
     },

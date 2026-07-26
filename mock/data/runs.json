@@ -1,16 +1,16 @@
 {
-  "run_d227f29f1aec": {
-    "run_id": "run_d227f29f1aec",
+  "run_80a2cb6964dc": {
+    "run_id": "run_80a2cb6964dc",
     "status": "WAITING_APPROVAL",
     "scenario": "scenario_a",
-    "created_at": "2026-07-26T05:48:16.648Z",
+    "created_at": "2026-07-26T06:03:40.073Z",
     "created_by": "test",
-    "updated_at": "2026-07-26T05:48:16.653Z",
+    "updated_at": "2026-07-26T06:03:40.078Z",
     "data_cutoff": "2026-07-26",
     "tasks": {
-      "task_daily_kline_9f1aec": {
-        "task_id": "task_daily_kline_9f1aec",
-        "run_id": "run_d227f29f1aec",
+      "task_daily_kline_6964dc": {
+        "task_id": "task_daily_kline_6964dc",
+        "run_id": "run_80a2cb6964dc",
         "task_type": "data_update",
         "assigned_agent": "data-ops-agent",
         "status": "SUCCEEDED",
@@ -20,15 +20,15 @@
         },
         "input_refs": [],
         "required_gates": [],
-        "created_at": "2026-07-26T05:48:16.648Z",
+        "created_at": "2026-07-26T06:03:40.073Z",
         "created_by": "test",
-        "idempotency_key": "run_d227f29f1aec_daily_kline_v1",
+        "idempotency_key": "run_80a2cb6964dc_daily_kline_v1",
         "dag_node": "daily_kline",
         "attempt": 1
       },
-      "task_adjustment_factors_9f1aec": {
-        "task_id": "task_adjustment_factors_9f1aec",
-        "run_id": "run_d227f29f1aec",
+      "task_adjustment_factors_6964dc": {
+        "task_id": "task_adjustment_factors_6964dc",
+        "run_id": "run_80a2cb6964dc",
         "task_type": "data_update",
         "assigned_agent": "data-ops-agent",
         "status": "SUCCEEDED",
@@ -38,15 +38,15 @@
         },
         "input_refs": [],
         "required_gates": [],
-        "created_at": "2026-07-26T05:48:16.648Z",
+        "created_at": "2026-07-26T06:03:40.073Z",
         "created_by": "test",
-        "idempotency_key": "run_d227f29f1aec_adjustment_factors_v1",
+        "idempotency_key": "run_80a2cb6964dc_adjustment_factors_v1",
         "dag_node": "adjustment_factors",
         "attempt": 1
       },
-      "task_factor_data_9f1aec": {
-        "task_id": "task_factor_data_9f1aec",
-        "run_id": "run_d227f29f1aec",
+      "task_factor_data_6964dc": {
+        "task_id": "task_factor_data_6964dc",
+        "run_id": "run_80a2cb6964dc",
         "task_type": "data_update",
         "assigned_agent": "data-ops-agent",
         "status": "SUCCEEDED",
@@ -56,15 +56,15 @@
         },
         "input_refs": [],
         "required_gates": [],
-        "created_at": "2026-07-26T05:48:16.648Z",
+        "created_at": "2026-07-26T06:03:40.073Z",
         "created_by": "test",
-        "idempotency_key": "run_d227f29f1aec_factor_data_v1",
+        "idempotency_key": "run_80a2cb6964dc_factor_data_v1",
         "dag_node": "factor_data",
         "attempt": 1
       },
-      "task_market_factors_9f1aec": {
-        "task_id": "task_market_factors_9f1aec",
-        "run_id": "run_d227f29f1aec",
+      "task_market_factors_6964dc": {
+        "task_id": "task_market_factors_6964dc",
+        "run_id": "run_80a2cb6964dc",
         "task_type": "data_update",
         "assigned_agent": "data-ops-agent",
         "status": "SUCCEEDED",
@@ -74,15 +74,15 @@
         },
         "input_refs": [],
         "required_gates": [],
-        "created_at": "2026-07-26T05:48:16.648Z",
+        "created_at": "2026-07-26T06:03:40.073Z",
         "created_by": "test",
-        "idempotency_key": "run_d227f29f1aec_market_factors_v1",
+        "idempotency_key": "run_80a2cb6964dc_market_factors_v1",
         "dag_node": "market_factors",
         "attempt": 1
       },
-      "task_product_quality_gate_9f1aec": {
-        "task_id": "task_product_quality_gate_9f1aec",
-        "run_id": "run_d227f29f1aec",
+      "task_product_quality_gate_6964dc": {
+        "task_id": "task_product_quality_gate_6964dc",
+        "run_id": "run_80a2cb6964dc",
         "task_type": "quality_check",
         "assigned_agent": "data-quality-agent",
         "status": "SUCCEEDED",
@@ -92,15 +92,15 @@
         },
         "input_refs": [],
         "required_gates": [],
-        "created_at": "2026-07-26T05:48:16.648Z",
+        "created_at": "2026-07-26T06:03:40.073Z",
         "created_by": "test",
-        "idempotency_key": "run_d227f29f1aec_product_quality_gate_v1",
+        "idempotency_key": "run_80a2cb6964dc_product_quality_gate_v1",
         "dag_node": "product_quality_gate",
         "attempt": 1
       },
-      "task_candidate_signal_9f1aec": {
-        "task_id": "task_candidate_signal_9f1aec",
-        "run_id": "run_d227f29f1aec",
+      "task_candidate_signal_6964dc": {
+        "task_id": "task_candidate_signal_6964dc",
+        "run_id": "run_80a2cb6964dc",
         "task_type": "model_run",
         "assigned_agent": "model-production-agent",
         "status": "SUCCEEDED",
@@ -112,15 +112,15 @@
         "required_gates": [
           "database_core"
         ],
-        "created_at": "2026-07-26T05:48:16.648Z",
+        "created_at": "2026-07-26T06:03:40.073Z",
         "created_by": "test",
-        "idempotency_key": "run_d227f29f1aec_candidate_signal_v1",
+        "idempotency_key": "run_80a2cb6964dc_candidate_signal_v1",
         "dag_node": "candidate_signal",
         "attempt": 1
       },
-      "task_risk_approval_9f1aec": {
-        "task_id": "task_risk_approval_9f1aec",
-        "run_id": "run_d227f29f1aec",
+      "task_risk_approval_6964dc": {
+        "task_id": "task_risk_approval_6964dc",
+        "run_id": "run_80a2cb6964dc",
         "task_type": "risk_review",
         "assigned_agent": "model-risk-agent",
         "status": "WAITING_APPROVAL",
@@ -132,15 +132,15 @@
         "required_gates": [
           "model"
         ],
-        "created_at": "2026-07-26T05:48:16.648Z",
+        "created_at": "2026-07-26T06:03:40.073Z",
         "created_by": "test",
-        "idempotency_key": "run_d227f29f1aec_risk_approval_v1",
+        "idempotency_key": "run_80a2cb6964dc_risk_approval_v1",
         "dag_node": "risk_approval",
         "attempt": 1
       },
-      "task_release_9f1aec": {
-        "task_id": "task_release_9f1aec",
-        "run_id": "run_d227f29f1aec",
+      "task_release_6964dc": {
+        "task_id": "task_release_6964dc",
+        "run_id": "run_80a2cb6964dc",
         "task_type": "release",
         "assigned_agent": "release-observer-agent",
         "status": "PENDING",
@@ -153,15 +153,15 @@
           "model",
           "approval"
         ],
-        "created_at": "2026-07-26T05:48:16.648Z",
+        "created_at": "2026-07-26T06:03:40.073Z",
         "created_by": "test",
-        "idempotency_key": "run_d227f29f1aec_release_v1",
+        "idempotency_key": "run_80a2cb6964dc_release_v1",
         "dag_node": "release",
         "attempt": 1
       },
-      "task_post_release_observation_9f1aec": {
-        "task_id": "task_post_release_observation_9f1aec",
-        "run_id": "run_d227f29f1aec",
+      "task_post_release_observation_6964dc": {
+        "task_id": "task_post_release_observation_6964dc",
+        "run_id": "run_80a2cb6964dc",
         "task_type": "observation",
         "assigned_agent": "release-observer-agent",
         "status": "PENDING",
@@ -171,22 +171,22 @@
         },
         "input_refs": [],
         "required_gates": [],
-        "created_at": "2026-07-26T05:48:16.648Z",
+        "created_at": "2026-07-26T06:03:40.073Z",
         "created_by": "test",
-        "idempotency_key": "run_d227f29f1aec_post_release_observation_v1",
+        "idempotency_key": "run_80a2cb6964dc_post_release_observation_v1",
         "dag_node": "post_release_observation",
         "attempt": 1
       }
     },
     "results": {
-      "task_daily_kline_9f1aec": {
-        "task_id": "task_daily_kline_9f1aec",
-        "run_id": "run_d227f29f1aec",
+      "task_daily_kline_6964dc": {
+        "task_id": "task_daily_kline_6964dc",
+        "run_id": "run_80a2cb6964dc",
         "agent_id": "data-ops-agent",
         "status": "SUCCEEDED",
         "gate_status": "NOT_EXECUTED",
-        "started_at": "2026-07-26T05:48:16.648Z",
-        "finished_at": "2026-07-26T05:48:16.648Z",
+        "started_at": "2026-07-26T06:03:40.073Z",
+        "finished_at": "2026-07-26T06:03:40.073Z",
         "data_cutoff": "2026-07-26",
         "input_versions": {
           "daily_kline": "v_2026-07-26"
@@ -205,7 +205,7 @@
         },
         "evidence": [
           {
-            "evidence_id": "ev_6f363a67b913",
+            "evidence_id": "ev_95bb28b80cae",
             "type": "data_update_result",
             "source": "mock_tool",
             "data": {
@@ -216,8 +216,8 @@
               "failed": 0,
               "data_cutoff": "2026-07-26"
             },
-            "created_at": "2026-07-26T05:48:16.648Z",
-            "hash": "hash_c2fa8243"
+            "created_at": "2026-07-26T06:03:40.073Z",
+            "hash": "hash_23447aee"
           }
         ],
         "warnings": [],
@@ -225,14 +225,14 @@
         "next_action": "quality_check",
         "mock": true
       },
-      "task_adjustment_factors_9f1aec": {
-        "task_id": "task_adjustment_factors_9f1aec",
-        "run_id": "run_d227f29f1aec",
+      "task_adjustment_factors_6964dc": {
+        "task_id": "task_adjustment_factors_6964dc",
+        "run_id": "run_80a2cb6964dc",
         "agent_id": "data-ops-agent",
         "status": "SUCCEEDED",
         "gate_status": "NOT_EXECUTED",
-        "started_at": "2026-07-26T05:48:16.649Z",
-        "finished_at": "2026-07-26T05:48:16.649Z",
+        "started_at": "2026-07-26T06:03:40.074Z",
+        "finished_at": "2026-07-26T06:03:40.074Z",
         "data_cutoff": "2026-07-26",
         "input_versions": {
           "adjustment_factors": "v_2026-07-26"
@@ -251,7 +251,7 @@
         },
         "evidence": [
           {
-            "evidence_id": "ev_a917be2f0a65",
+            "evidence_id": "ev_fdcd1b444cac",
             "type": "data_update_result",
             "source": "mock_tool",
             "data": {
@@ -262,8 +262,8 @@
               "failed": 0,
               "data_cutoff": "2026-07-26"
             },
-            "created_at": "2026-07-26T05:48:16.649Z",
-            "hash": "hash_2d7f8ba4"
+            "created_at": "2026-07-26T06:03:40.074Z",
+            "hash": "hash_23b4fb52"
           }
         ],
         "warnings": [],
@@ -271,14 +271,14 @@
         "next_action": "quality_check",
         "mock": true
       },
-      "task_factor_data_9f1aec": {
-        "task_id": "task_factor_data_9f1aec",
-        "run_id": "run_d227f29f1aec",
+      "task_factor_data_6964dc": {
+        "task_id": "task_factor_data_6964dc",
+        "run_id": "run_80a2cb6964dc",
         "agent_id": "data-ops-agent",
         "status": "SUCCEEDED",
         "gate_status": "NOT_EXECUTED",
-        "started_at": "2026-07-26T05:48:16.649Z",
-        "finished_at": "2026-07-26T05:48:16.649Z",
+        "started_at": "2026-07-26T06:03:40.074Z",
+        "finished_at": "2026-07-26T06:03:40.074Z",
         "data_cutoff": "2026-07-26",
         "input_versions": {
           "factor_data": "v_2026-07-26"
@@ -297,7 +297,7 @@
         },
         "evidence": [
           {
-            "evidence_id": "ev_235955e81b4c",
+            "evidence_id": "ev_94b1ffd57fcb",
             "type": "data_update_result",
             "source": "mock_tool",
             "data": {
@@ -308,8 +308,8 @@
               "failed": 0,
               "data_cutoff": "2026-07-26"
             },
-            "created_at": "2026-07-26T05:48:16.649Z",
-            "hash": "hash_195033c5"
+            "created_at": "2026-07-26T06:03:40.074Z",
+            "hash": "hash_a858dc00"
           }
         ],
         "warnings": [],
@@ -317,14 +317,14 @@
         "next_action": "quality_check",
         "mock": true
       },
-      "task_market_factors_9f1aec": {
-        "task_id": "task_market_factors_9f1aec",
-        "run_id": "run_d227f29f1aec",
+      "task_market_factors_6964dc": {
+        "task_id": "task_market_factors_6964dc",
+        "run_id": "run_80a2cb6964dc",
         "agent_id": "data-ops-agent",
         "status": "SUCCEEDED",
         "gate_status": "NOT_EXECUTED",
-        "started_at": "2026-07-26T05:48:16.650Z",
-        "finished_at": "2026-07-26T05:48:16.650Z",
+        "started_at": "2026-07-26T06:03:40.075Z",
+        "finished_at": "2026-07-26T06:03:40.075Z",
         "data_cutoff": "2026-07-26",
         "input_versions": {
           "market_factors": "v_2026-07-26"
@@ -343,7 +343,7 @@
         },
         "evidence": [
           {
-            "evidence_id": "ev_ccf01ceb31e7",
+            "evidence_id": "ev_c961dc41404c",
             "type": "data_update_result",
             "source": "mock_tool",
             "data": {
@@ -354,8 +354,8 @@
               "failed": 0,
               "data_cutoff": "2026-07-26"
             },
-            "created_at": "2026-07-26T05:48:16.650Z",
-            "hash": "hash_aa5b0863"
+            "created_at": "2026-07-26T06:03:40.075Z",
+            "hash": "hash_deb693d6"
           }
         ],
         "warnings": [],
@@ -363,14 +363,14 @@
         "next_action": "quality_check",
         "mock": true
       },
-      "task_product_quality_gate_9f1aec": {
-        "task_id": "task_product_quality_gate_9f1aec",
-        "run_id": "run_d227f29f1aec",
+      "task_product_quality_gate_6964dc": {
+        "task_id": "task_product_quality_gate_6964dc",
+        "run_id": "run_80a2cb6964dc",
         "agent_id": "data-quality-agent",
         "status": "SUCCEEDED",
         "gate_status": "PASS",
-        "started_at": "2026-07-26T05:48:16.651Z",
-        "finished_at": "2026-07-26T05:48:16.651Z",
+        "started_at": "2026-07-26T06:03:40.075Z",
+        "finished_at": "2026-07-26T06:03:40.075Z",
         "data_cutoff": "2026-07-26",
         "input_versions": {},
         "output_versions": {},
@@ -383,70 +383,70 @@
         "watermarks": {},
         "evidence": [
           {
-            "evidence_id": "ev_80a966fd6628",
+            "evidence_id": "ev_356850e0df37",
             "type": "gate_rule",
             "source": "mock_tool",
             "data": {
               "rule_id": "coverage_check",
               "status": "PASS"
             },
-            "created_at": "2026-07-26T05:48:16.651Z",
-            "hash": "hash_9ec39572"
+            "created_at": "2026-07-26T06:03:40.075Z",
+            "hash": "hash_cf86786c"
           },
           {
-            "evidence_id": "ev_1ce0dec6c608",
+            "evidence_id": "ev_582b97f75c3d",
             "type": "gate_rule",
             "source": "mock_tool",
             "data": {
               "rule_id": "freshness_check",
               "status": "PASS"
             },
-            "created_at": "2026-07-26T05:48:16.651Z",
-            "hash": "hash_c8fc618d"
+            "created_at": "2026-07-26T06:03:40.075Z",
+            "hash": "hash_5ea44942"
           },
           {
-            "evidence_id": "ev_6f3d18ce6e89",
+            "evidence_id": "ev_b619d0e08e79",
             "type": "gate_rule",
             "source": "mock_tool",
             "data": {
               "rule_id": "uniqueness_check",
               "status": "PASS"
             },
-            "created_at": "2026-07-26T05:48:16.651Z",
-            "hash": "hash_cdc617c8"
+            "created_at": "2026-07-26T06:03:40.075Z",
+            "hash": "hash_f9f14f7c"
           },
           {
-            "evidence_id": "ev_079315553c2a",
+            "evidence_id": "ev_5ebaba7c92f7",
             "type": "gate_rule",
             "source": "mock_tool",
             "data": {
               "rule_id": "null_check",
               "status": "PASS"
             },
-            "created_at": "2026-07-26T05:48:16.651Z",
-            "hash": "hash_d1838747"
+            "created_at": "2026-07-26T06:03:40.075Z",
+            "hash": "hash_a18242fa"
           },
           {
-            "evidence_id": "ev_922397c06864",
+            "evidence_id": "ev_51990ab4c267",
             "type": "gate_rule",
             "source": "mock_tool",
             "data": {
               "rule_id": "dependency_order_check",
               "status": "PASS"
             },
-            "created_at": "2026-07-26T05:48:16.651Z",
-            "hash": "hash_d9ed4f88"
+            "created_at": "2026-07-26T06:03:40.075Z",
+            "hash": "hash_cff2e377"
           },
           {
-            "evidence_id": "ev_2aa550e8f519",
+            "evidence_id": "ev_6221676cce60",
             "type": "gate_rule",
             "source": "mock_tool",
             "data": {
               "rule_id": "cutoff_check",
               "status": "PASS"
             },
-            "created_at": "2026-07-26T05:48:16.651Z",
-            "hash": "hash_cf35f499"
+            "created_at": "2026-07-26T06:03:40.075Z",
+            "hash": "hash_633bd866"
           }
         ],
         "warnings": [],
@@ -454,21 +454,21 @@
         "next_action": "model_run",
         "mock": true
       },
-      "task_candidate_signal_9f1aec": {
-        "task_id": "task_candidate_signal_9f1aec",
-        "run_id": "run_d227f29f1aec",
+      "task_candidate_signal_6964dc": {
+        "task_id": "task_candidate_signal_6964dc",
+        "run_id": "run_80a2cb6964dc",
         "agent_id": "model-production-agent",
         "status": "SUCCEEDED",
         "gate_status": "PASS",
-        "started_at": "2026-07-26T05:48:16.652Z",
-        "finished_at": "2026-07-26T05:48:16.652Z",
+        "started_at": "2026-07-26T06:03:40.077Z",
+        "finished_at": "2026-07-26T06:03:40.077Z",
         "data_cutoff": "2026-07-26",
         "input_versions": {
           "model": "model_v2.1.0",
-          "data_snapshot": "snap_5a67d279"
+          "data_snapshot": "snap_21b460d3"
         },
         "output_versions": {
-          "candidate_signal": "cs_971c354d"
+          "candidate_signal": "cs_2c948cd8"
         },
         "metrics": {
           "inserted": 0,
@@ -479,17 +479,17 @@
         "watermarks": {},
         "evidence": [
           {
-            "evidence_id": "ev_b95d65241e69",
+            "evidence_id": "ev_6331b71884b9",
             "type": "model_run",
             "source": "mock_tool",
             "data": {
               "model_version": "model_v2.1.0",
-              "input_snapshot": "snap_5a67d279",
-              "candidate_signal": "cs_971c354d",
+              "input_snapshot": "snap_21b460d3",
+              "candidate_signal": "cs_2c948cd8",
               "sharpe_ratio": 1.5
             },
-            "created_at": "2026-07-26T05:48:16.652Z",
-            "hash": "hash_02780611"
+            "created_at": "2026-07-26T06:03:40.077Z",
+            "hash": "hash_aef22d79"
           }
         ],
         "warnings": [],
@@ -497,14 +497,14 @@
         "next_action": "risk_review",
         "mock": true
       },
-      "task_risk_approval_9f1aec": {
-        "task_id": "task_risk_approval_9f1aec",
-        "run_id": "run_d227f29f1aec",
+      "task_risk_approval_6964dc": {
+        "task_id": "task_risk_approval_6964dc",
+        "run_id": "run_80a2cb6964dc",
         "agent_id": "model-risk-agent",
         "status": "SUCCEEDED",
         "gate_status": "NOT_EXECUTED",
-        "started_at": "2026-07-26T05:48:16.653Z",
-        "finished_at": "2026-07-26T05:48:16.653Z",
+        "started_at": "2026-07-26T06:03:40.078Z",
+        "finished_at": "2026-07-26T06:03:40.078Z",
         "data_cutoff": "2026-07-26",
         "input_versions": {},
         "output_versions": {},
@@ -517,7 +517,7 @@
         "watermarks": {},
         "evidence": [
           {
-            "evidence_id": "ev_c15f3ad841d0",
+            "evidence_id": "ev_9cd09d44b9c9",
             "type": "risk_review",
             "source": "mock_tool",
             "data": {
@@ -529,8 +529,8 @@
                 "数据截止日一致"
               ]
             },
-            "created_at": "2026-07-26T05:48:16.653Z",
-            "hash": "hash_2e0f4669"
+            "created_at": "2026-07-26T06:03:40.078Z",
+            "hash": "hash_f4bdc0c2"
           }
         ],
         "warnings": [],
@@ -542,10 +542,10 @@
     "gates": {
       "gate_database_core": {
         "gate_id": "gate_database_core",
-        "run_id": "run_d227f29f1aec",
+        "run_id": "run_80a2cb6964dc",
         "scope": "database_core",
         "status": "PASS",
-        "checked_at": "2026-07-26T05:48:16.651Z",
+        "checked_at": "2026-07-26T06:03:40.075Z",
         "data_cutoff": "2026-07-26",
         "rules": [
           {
@@ -556,7 +556,7 @@
             "threshold": 0.999,
             "operator": ">=",
             "severity": "BLOCK",
-            "evidence_ref": "ev_bfe2711afe44",
+            "evidence_ref": "ev_b23c5aa737bb",
             "description": "数据覆盖率必须 >= 99.9%",
             "unit": "%",
             "data_range": {
@@ -564,7 +564,7 @@
               "end": "2026-07-26"
             },
             "rule_version": "v1.2.0",
-            "checked_at": "2026-07-26T05:48:16.650Z",
+            "checked_at": "2026-07-26T06:03:40.075Z",
             "source": "quality_engine"
           },
           {
@@ -575,7 +575,7 @@
             "threshold": 24,
             "operator": "<=",
             "severity": "BLOCK",
-            "evidence_ref": "ev_ec320c9efff4",
+            "evidence_ref": "ev_22f60eafdcb1",
             "description": "数据新鲜度必须在 24 小时内",
             "unit": "小时",
             "data_range": {
@@ -583,7 +583,7 @@
               "end": "2026-07-26"
             },
             "rule_version": "v1.1.0",
-            "checked_at": "2026-07-26T05:48:16.650Z",
+            "checked_at": "2026-07-26T06:03:40.075Z",
             "source": "quality_engine"
           },
           {
@@ -594,7 +594,7 @@
             "threshold": 1,
             "operator": ">=",
             "severity": "BLOCK",
-            "evidence_ref": "ev_08e44f962306",
+            "evidence_ref": "ev_be67caefb8c9",
             "description": "主键必须完全唯一",
             "unit": "比率",
             "data_range": {
@@ -602,7 +602,7 @@
               "end": "2026-07-26"
             },
             "rule_version": "v1.0.0",
-            "checked_at": "2026-07-26T05:48:16.650Z",
+            "checked_at": "2026-07-26T06:03:40.075Z",
             "source": "quality_engine"
           },
           {
@@ -613,7 +613,7 @@
             "threshold": 0.001,
             "operator": "<=",
             "severity": "WARN",
-            "evidence_ref": "ev_652262199737",
+            "evidence_ref": "ev_8cc31de44629",
             "description": "关键字段空值率必须 <= 0.1%",
             "unit": "比率",
             "data_range": {
@@ -621,7 +621,7 @@
               "end": "2026-07-26"
             },
             "rule_version": "v1.0.0",
-            "checked_at": "2026-07-26T05:48:16.650Z",
+            "checked_at": "2026-07-26T06:03:40.075Z",
             "source": "quality_engine"
           },
           {
@@ -632,7 +632,7 @@
             "threshold": 0,
             "operator": "==",
             "severity": "BLOCK",
-            "evidence_ref": "ev_40a6f69bc54c",
+            "evidence_ref": "ev_fce8dc54c04a",
             "description": "数据依赖顺序不允许违规",
             "unit": "次",
             "data_range": {
@@ -640,7 +640,7 @@
               "end": "2026-07-26"
             },
             "rule_version": "v1.0.0",
-            "checked_at": "2026-07-26T05:48:16.650Z",
+            "checked_at": "2026-07-26T06:03:40.075Z",
             "source": "quality_engine"
           },
           {
@@ -651,7 +651,7 @@
             "threshold": true,
             "operator": "==",
             "severity": "BLOCK",
-            "evidence_ref": "ev_9da39f230d80",
+            "evidence_ref": "ev_86b65321354c",
             "description": "数据截止日必须与任务参数一致",
             "unit": "日期",
             "data_range": {
@@ -659,7 +659,7 @@
               "end": "2026-07-26"
             },
             "rule_version": "v1.0.0",
-            "checked_at": "2026-07-26T05:48:16.650Z",
+            "checked_at": "2026-07-26T06:03:40.075Z",
             "source": "quality_engine"
           }
         ],
@@ -668,10 +668,10 @@
       },
       "gate_model": {
         "gate_id": "gate_model",
-        "run_id": "run_d227f29f1aec",
+        "run_id": "run_80a2cb6964dc",
         "scope": "model",
         "status": "PASS",
-        "checked_at": "2026-07-26T05:48:16.652Z",
+        "checked_at": "2026-07-26T06:03:40.077Z",
         "data_cutoff": "2026-07-26",
         "rules": [
           {
@@ -682,7 +682,7 @@
             "threshold": true,
             "operator": "==",
             "severity": "BLOCK",
-            "evidence_ref": "ev_76d23bb54258",
+            "evidence_ref": "ev_40c447082df0",
             "description": "模型版本必须已登记"
           },
           {
@@ -693,7 +693,7 @@
             "threshold": 1,
             "operator": ">=",
             "severity": "WARN",
-            "evidence_ref": "ev_b1c5e0b07f94",
+            "evidence_ref": "ev_449638fed010",
             "description": "回测夏普比建议 >= 1.0"
           },
           {
@@ -704,7 +704,7 @@
             "threshold": 0.2,
             "operator": "<=",
             "severity": "WARN",
-            "evidence_ref": "ev_c9489573065d",
+            "evidence_ref": "ev_aa1e391198d5",
             "description": "回测最大回撤建议 <= 20%"
           },
           {
@@ -715,7 +715,7 @@
             "threshold": 5,
             "operator": "<=",
             "severity": "WARN",
-            "evidence_ref": "ev_88b966bbddbb",
+            "evidence_ref": "ev_a396416dcdbc",
             "description": "异常值数量建议 <= 5"
           },
           {
@@ -726,7 +726,7 @@
             "threshold": true,
             "operator": "==",
             "severity": "BLOCK",
-            "evidence_ref": "ev_92f233f3c212",
+            "evidence_ref": "ev_572082a2d395",
             "description": "所有证据必须完整"
           }
         ],
@@ -735,10 +735,10 @@
       }
     },
     "approvals": {
-      "appr_1d19d65ed2ff": {
-        "approval_id": "appr_1d19d65ed2ff",
-        "run_id": "run_d227f29f1aec",
-        "task_id": "task_risk_approval_9f1aec",
+      "appr_3fd558592274": {
+        "approval_id": "appr_3fd558592274",
+        "run_id": "run_80a2cb6964dc",
+        "task_id": "task_risk_approval_6964dc",
         "approval_type": "human_release",
         "status": "PENDING",
         "model_version": "",
@@ -749,7 +749,7 @@
         "decided_at": null,
         "opinion": "",
         "risk_level": "medium",
-        "created_at": "2026-07-26T05:48:16.653Z"
+        "created_at": "2026-07-26T06:03:40.078Z"
       }
     },
     "current_node": "risk_approval",

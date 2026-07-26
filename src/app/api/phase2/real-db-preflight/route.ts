@@ -52,8 +52,8 @@ interface PreflightData {
     production_release_enabled: false;
     sql_input_accepted: false;
     db_path_selectable: false;
-    auto_migration_disabled: false;
-    auto_fill_disabled: false;
+    auto_migration_disabled: true;
+    auto_fill_disabled: true;
   };
 }
 
@@ -90,8 +90,8 @@ function buildNotConfiguredPreflight(): PreflightData {
       production_release_enabled: false,
       sql_input_accepted: false,
       db_path_selectable: false,
-      auto_migration_disabled: false,
-      auto_fill_disabled: false,
+      auto_migration_disabled: true,
+      auto_fill_disabled: true,
     },
   };
 }
@@ -100,27 +100,21 @@ export async function GET() {
   try {
     // If not in real_readonly mode, return safe BLOCK with production_database_readonly identity
     if (!isRealReadonlyMode()) {
-      const baseData = buildNotConfiguredPreflight();
-      return NextResponse.json({
-        ...baseData,
-        // Override to show production_database_readonly identity
-        environment: 'staging',
-        data_source_kind: 'production_database_readonly',
-        database: 'unavailable',
-        is_mock: false,
-        is_sample: false,
-        fallback_used: false,
-        data_cutoff: null,
-        generated_at: new Date().toISOString(),
-        source: 'real_db_preflight',
-        evidence_id: `evt_preflight_not_configured_${Date.now().toString(16)}`,
-        gate_status: 'BLOCK',
-        schema_version: '1.0',
-        service_health: 'BLOCK',
-        readiness: 'BLOCK',
-        release_eligibility: 'BLOCK',
-        block_reasons: ['real_db_path_not_configured'],
-      });
+      const data = buildNotConfiguredPreflight();
+      return NextResponse.json(
+        buildPhase2Response({
+          data,
+          source: 'real_db_preflight',
+          evidencePrefix: 'preflight',
+          gateStatus: 'BLOCK',
+          extra: {
+            service_health: 'BLOCK',
+            readiness: 'BLOCK',
+            release_eligibility: 'BLOCK',
+            block_reasons: ['real_db_path_not_configured'],
+          },
+        })
+      );
     }
 
     // Establish read-only connection
@@ -132,25 +126,20 @@ export async function GET() {
       data.configuration.real_db_path_configured = true; // Path is configured but connection failed
       data.connection.status = 'failed';
 
-      return NextResponse.json({
-        ...data,
-        environment: 'staging',
-        data_source_kind: 'production_database_readonly',
-        database: 'unavailable',
-        is_mock: false,
-        is_sample: false,
-        fallback_used: false,
-        data_cutoff: null,
-        generated_at: new Date().toISOString(),
-        source: 'real_db_preflight',
-        evidence_id: `evt_preflight_conn_failed_${Date.now().toString(16)}`,
-        gate_status: 'BLOCK',
-        schema_version: '1.0',
-        service_health: 'BLOCK',
-        readiness: 'BLOCK',
-        release_eligibility: 'BLOCK',
-        block_reasons: connResult.block_reasons,
-      });
+      return NextResponse.json(
+        buildPhase2Response({
+          data,
+          source: 'real_db_preflight',
+          evidencePrefix: 'preflight',
+          gateStatus: 'BLOCK',
+          extra: {
+            service_health: 'BLOCK',
+            readiness: 'BLOCK',
+            release_eligibility: 'BLOCK',
+            block_reasons: connResult.block_reasons,
+          },
+        })
+      );
     }
 
     // Connection successful - probe schema
@@ -237,8 +226,8 @@ export async function GET() {
         production_release_enabled: false,
         sql_input_accepted: false,
         db_path_selectable: false,
-        auto_migration_disabled: false,
-        auto_fill_disabled: false,
+        auto_migration_disabled: true,
+        auto_fill_disabled: true,
       },
     };
 
@@ -252,33 +241,26 @@ export async function GET() {
         extra: {
           service_health: gateStatus,
           readiness: gateStatus,
-          release_eligibility: gateStatus === 'PASS' ? 'BLOCK' : 'BLOCK', // Always BLOCK in Phase 2.2A
+          release_eligibility: 'BLOCK', // Always BLOCK in Phase 2.2A
         },
       })
     );
   } catch (error) {
     // Any unexpected error -> BLOCK, never degrade to PASS
-    const baseData = buildNotConfiguredPreflight();
-    return NextResponse.json({
-      ...baseData,
-      environment: 'staging',
-      data_source_kind: 'production_database_readonly',
-      database: 'unavailable',
-      is_mock: false,
-      is_sample: false,
-      fallback_used: false,
-      data_cutoff: null,
-      generated_at: new Date().toISOString(),
-      source: 'real_db_preflight',
-      evidence_id: `evt_preflight_error_${Date.now().toString(16)}`,
-      gate_status: 'BLOCK',
-      schema_version: '1.0',
-      service_health: 'BLOCK',
-      readiness: 'BLOCK',
-      release_eligibility: 'BLOCK',
-      block_reasons: ['preflight_unexpected_error'],
-      error: 'Preflight check encountered an unexpected error',
-      success: false,
-    }, { status: 500 });
+    const data = buildNotConfiguredPreflight();
+    return NextResponse.json(
+      buildPhase2Response({
+        data,
+        source: 'real_db_preflight',
+        evidencePrefix: 'preflight',
+        gateStatus: 'BLOCK',
+        extra: {
+          service_health: 'BLOCK',
+          readiness: 'BLOCK',
+          release_eligibility: 'BLOCK',
+          block_reasons: ['preflight_unexpected_error'],
+        },
+      })
+    );
   }
 }

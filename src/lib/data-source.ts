@@ -178,6 +178,7 @@ export function buildPhase2Response<T>(params: {
     quality_gate_status?: 'PASS' | 'WARN' | 'BLOCK';
     readiness?: 'PASS' | 'WARN' | 'BLOCK';
     release_eligibility?: 'PASS' | 'BLOCK';
+    block_reasons?: string[];
   };
 }): Phase2Response<T> {
   const isMock = isMockMode();
@@ -244,6 +245,7 @@ export function buildPhase2Response<T>(params: {
     ...(params.extra?.quality_gate_status ? { quality_gate_status: params.extra.quality_gate_status } : {}),
     ...(params.extra?.readiness ? { readiness: params.extra.readiness } : {}),
     ...(params.extra?.release_eligibility ? { release_eligibility: params.extra.release_eligibility } : {}),
+    ...(params.extra?.block_reasons ? { block_reasons: params.extra.block_reasons } : {}),
   };
 }
 

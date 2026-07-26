@@ -52,9 +52,13 @@ interface GateData {
     status: string;
     details?: string;
     metric?: string;
+    display_name?: string;
+    actual?: number | string | null;
     actual_value?: number;
-    threshold?: number;
+    threshold?: number | string | null;
+    operator?: string;
     compare?: string;
+    severity?: string;
     unit?: string;
     data_range?: { start: string; end: string };
     cutoff_date?: string;
@@ -62,6 +66,7 @@ interface GateData {
     checked_at?: string;
     source?: string;
     evidence_id?: string;
+    evidence_ref?: string;
   }>;
 }
 
@@ -359,30 +364,30 @@ export default function RunDetailPage() {
                         {gate.rules.map(rule => (
                           <div key={rule.rule_id} className="border-l-4 border-gray-200 pl-4 py-2">
                             <div className="flex items-center gap-2 mb-1">
-                              <span className="font-mono text-sm font-medium">{rule.metric || rule.rule_id}</span>
+                              <span className="font-mono text-sm font-medium">{rule.display_name || rule.rule_id}</span>
                               <Badge className={GATE_COLORS[rule.status]}>{rule.status}</Badge>
-                              {rule.evidence_id && (
-                                <span className="text-xs text-gray-400 font-mono">evidence: {rule.evidence_id}</span>
+                              {rule.evidence_ref && (
+                                <span className="text-xs text-gray-400 font-mono">evidence: {rule.evidence_ref}</span>
                               )}
                             </div>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
                               <div>
                                 <span className="text-gray-500">实际值:</span>{' '}
-                                <span className="font-mono">{rule.actual_value ?? '-'}</span>
+                                <span className="font-mono">{rule.actual !== undefined ? String(rule.actual) : '-'}</span>
                                 {rule.unit && <span className="text-gray-400 ml-1">{rule.unit}</span>}
                               </div>
                               <div>
                                 <span className="text-gray-500">阈值:</span>{' '}
-                                <span className="font-mono">{rule.threshold ?? '-'}</span>
-                                {rule.compare && <span className="text-gray-400 ml-1">({rule.compare})</span>}
-                              </div>
-                              <div>
-                                <span className="text-gray-500">截止日:</span>{' '}
-                                <span className="font-mono">{rule.cutoff_date || '-'}</span>
+                                <span className="font-mono">{rule.threshold !== undefined ? String(rule.threshold) : '-'}</span>
+                                {rule.operator && <span className="text-gray-400 ml-1">({rule.operator})</span>}
                               </div>
                               <div>
                                 <span className="text-gray-500">规则版本:</span>{' '}
                                 <span className="font-mono">{rule.rule_version || '-'}</span>
+                              </div>
+                              <div>
+                                <span className="text-gray-500">严重性:</span>{' '}
+                                <span className="font-mono">{rule.severity || '-'}</span>
                               </div>
                             </div>
                             {rule.data_range && (
@@ -394,6 +399,11 @@ export default function RunDetailPage() {
                             {rule.checked_at && (
                               <div className="text-xs text-gray-400 mt-1">
                                 检查时间: {new Date(rule.checked_at).toLocaleString('zh-CN')}
+                              </div>
+                            )}
+                            {rule.source && (
+                              <div className="text-xs text-gray-400 mt-1">
+                                来源: {rule.source}
                               </div>
                             )}
                           </div>

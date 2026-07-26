@@ -217,6 +217,13 @@ export default function Phase2Page() {
   const [watermarksData, setWatermarksData] = useState<Phase2Response<WatermarksData> | null>(null);
   const [qualityData, setQualityData] = useState<Phase2Response<QualityGatesData> | null>(null);
   const [testReport, setTestReport] = useState<TestReportItem[]>([]);
+  const [testRunId, setTestRunId] = useState<string | null>(null);
+  const [testSummary, setTestSummary] = useState<{
+    total_tests: number;
+    passed_tests: number;
+    failed_tests: number;
+    evidence_id_uniqueness: boolean;
+  } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -258,8 +265,22 @@ export default function Phase2Page() {
         // Parse test report (optional - don't fail if not available)
         if (testReportRes.ok) {
           const testReportJson = await testReportRes.json();
-          if (testReportJson.success && Array.isArray(testReportJson.data)) {
-            setTestReport(testReportJson.data);
+          if (testReportJson.success && testReportJson.data) {
+            // New format: response.data.results
+            if (Array.isArray(testReportJson.data.results)) {
+              setTestReport(testReportJson.data.results);
+              setTestRunId(testReportJson.data.test_run_id || null);
+              setTestSummary({
+                total_tests: testReportJson.data.total_tests || 0,
+                passed_tests: testReportJson.data.passed_tests || 0,
+                failed_tests: testReportJson.data.failed_tests || 0,
+                evidence_id_uniqueness: testReportJson.data.evidence_id_uniqueness || false,
+              });
+            }
+            // Legacy format: response.data as array
+            else if (Array.isArray(testReportJson.data)) {
+              setTestReport(testReportJson.data);
+            }
           }
         }
       } catch (err) {
@@ -589,6 +610,41 @@ export default function Phase2Page() {
       {/* Negative Test Scenarios - Dynamic from API */}
       <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-5">
         <h2 className="text-lg font-semibold text-white mb-4">负向测试报告（动态读取）</h2>
+        
+        {/* Test Summary */}
+        {testSummary && (
+          <div className="mb-4 p-3 bg-slate-700/30 rounded-lg border border-slate-600/30">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+              <div>
+                <span className="text-slate-400">Test Run ID:</span>
+                <div className="text-white font-mono text-xs truncate" title={testRunId || ''}>
+                  {testRunId || '-'}
+                </div>
+              </div>
+              <div>
+                <span className="text-slate-400">总测试数:</span>
+                <div className="text-white font-semibold">{testSummary.total_tests}</div>
+              </div>
+              <div>
+                <span className="text-slate-400">通过:</span>
+                <div className="text-emerald-400 font-semibold">{testSummary.passed_tests}</div>
+              </div>
+              <div>
+                <span className="text-slate-400">失败:</span>
+                <div className={`font-semibold ${testSummary.failed_tests > 0 ? 'text-red-400' : 'text-emerald-400'}`}>
+                  {testSummary.failed_tests}
+                </div>
+              </div>
+            </div>
+            <div className="mt-2 text-xs">
+              <span className="text-slate-400">证据 ID 唯一性: </span>
+              <span className={testSummary.evidence_id_uniqueness ? 'text-emerald-400' : 'text-red-400'}>
+                {testSummary.evidence_id_uniqueness ? '✓ 通过' : '✗ 失败'}
+              </span>
+            </div>
+          </div>
+        )}
+        
         {testReport.length === 0 ? (
           <div className="text-slate-400 text-sm">暂无测试报告数据</div>
         ) : (

@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { RunProvider, useRunContext } from '@/components/dashboard/run-context';
 
@@ -28,6 +29,42 @@ function CurrentRunBadge() {
   );
 }
 
+function EnvironmentBadge() {
+  const [environment, setEnvironment] = useState<string>('simulation');
+
+  useEffect(() => {
+    fetch('/api/health')
+      .then(res => res.json())
+      .then(data => {
+        setEnvironment(data.environment || 'simulation');
+      })
+      .catch(() => {
+        setEnvironment('simulation');
+      });
+  }, []);
+
+  const getEnvironmentText = (env: string) => {
+    switch (env) {
+      case 'simulation':
+        return '模拟环境 · 生产功能未启用';
+      case 'staging':
+        return 'Sample Staging 只读环境 · 生产功能未启用';
+      case 'production':
+        return '生产环境（当前不得启用）';
+      default:
+        return '模拟环境 · 生产功能未启用';
+    }
+  };
+
+  return (
+    <div className="px-3 py-2">
+      <div className="bg-amber-900/30 border border-amber-700/50 rounded px-2 py-1.5 text-xs text-amber-300">
+        {getEnvironmentText(environment)}
+      </div>
+    </div>
+  );
+}
+
 function SidebarContent() {
   const pathname = usePathname();
   const router = useRouter();
@@ -42,11 +79,7 @@ function SidebarContent() {
         <h1 className="text-sm font-bold tracking-wide">金融投资智能体</h1>
         <p className="text-xs text-slate-400 mt-1">运营工作台</p>
       </div>
-      <div className="px-3 py-2">
-        <div className="bg-amber-900/30 border border-amber-700/50 rounded px-2 py-1.5 text-xs text-amber-300">
-          模拟环境 · 生产功能未启用
-        </div>
-      </div>
+      <EnvironmentBadge />
       <CurrentRunBadge />
       <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-y-auto">
         {NAV_ITEMS.map((item) => {

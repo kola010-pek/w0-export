@@ -114,6 +114,11 @@ export interface GateRule {
   severity: 'BLOCK' | 'WARN';
   evidence_ref: string;
   description: string;
+  unit?: string;
+  data_range?: { start: string; end: string };
+  rule_version?: string;
+  checked_at?: string;
+  source?: string;
 }
 
 export interface GateResult {
@@ -158,6 +163,8 @@ export interface AuditEvent {
   action: string;
   run_id: string | null;
   task_id: string | null;
+  approval_id?: string | null;
+  evidence_id?: string | null;
   input_summary: Record<string, unknown>;
   output_summary: Record<string, unknown>;
   status_before: string | null;

@@ -136,6 +136,9 @@ function executeQualityCheckMock(agentId: AgentId, input: MockToolInput, scenari
   const blockReasons: string[] = [];
   const warnings: string[] = [];
 
+  const now = new Date().toISOString();
+  const dataCutoff = input.data_cutoff || new Date().toISOString().split('T')[0];
+
   // Coverage check
   let coverageActual = 0.9995;
   if (scenario2 === 'scenario_b') {
@@ -152,10 +155,15 @@ function executeQualityCheckMock(agentId: AgentId, input: MockToolInput, scenari
     severity: 'BLOCK',
     evidence_ref: makeEvidence('coverage_check', { ratio: coverageActual }).evidence_id,
     description: '数据覆盖率必须 >= 99.9%',
+    unit: '%',
+    data_range: { start: dataCutoff, end: dataCutoff },
+    rule_version: 'v1.2.0',
+    checked_at: now,
+    source: 'quality_engine',
   });
   if (coverageStatus === 'BLOCK') {
     overallStatus = 'BLOCK';
-    blockReasons.push(`覆盖率 ${coverageActual} 低于阈值 0.999`);
+    blockReasons.push(`覆盖率 ${(coverageActual * 100).toFixed(2)}% 低于阈值 99.9%`);
   }
 
   // Freshness check
@@ -169,6 +177,11 @@ function executeQualityCheckMock(agentId: AgentId, input: MockToolInput, scenari
     severity: 'BLOCK',
     evidence_ref: makeEvidence('freshness_check', { hours: 2 }).evidence_id,
     description: '数据新鲜度必须在 24 小时内',
+    unit: '小时',
+    data_range: { start: dataCutoff, end: dataCutoff },
+    rule_version: 'v1.1.0',
+    checked_at: now,
+    source: 'quality_engine',
   });
 
   // Uniqueness check
@@ -182,6 +195,11 @@ function executeQualityCheckMock(agentId: AgentId, input: MockToolInput, scenari
     severity: 'BLOCK',
     evidence_ref: makeEvidence('uniqueness_check', { ratio: 1.0 }).evidence_id,
     description: '主键必须完全唯一',
+    unit: '比率',
+    data_range: { start: dataCutoff, end: dataCutoff },
+    rule_version: 'v1.0.0',
+    checked_at: now,
+    source: 'quality_engine',
   });
 
   // Null check
@@ -200,10 +218,15 @@ function executeQualityCheckMock(agentId: AgentId, input: MockToolInput, scenari
     severity: 'WARN',
     evidence_ref: makeEvidence('null_check', { ratio: nullRatio }).evidence_id,
     description: '关键字段空值率必须 <= 0.1%',
+    unit: '比率',
+    data_range: { start: dataCutoff, end: dataCutoff },
+    rule_version: 'v1.0.0',
+    checked_at: now,
+    source: 'quality_engine',
   });
   if (nullStatus === 'WARN') {
     if (overallStatus !== 'BLOCK') overallStatus = 'WARN';
-    warnings.push(`空值率 ${nullRatio} 超过阈值 0.001`);
+    warnings.push(`空值率 ${(nullRatio * 100).toFixed(3)}% 超过阈值 0.1%`);
   }
 
   // Dependency order check
@@ -217,6 +240,11 @@ function executeQualityCheckMock(agentId: AgentId, input: MockToolInput, scenari
     severity: 'BLOCK',
     evidence_ref: makeEvidence('dep_order_check', { violations: 0 }).evidence_id,
     description: '数据依赖顺序不允许违规',
+    unit: '次',
+    data_range: { start: dataCutoff, end: dataCutoff },
+    rule_version: 'v1.0.0',
+    checked_at: now,
+    source: 'quality_engine',
   });
 
   // Cutoff check
@@ -230,6 +258,11 @@ function executeQualityCheckMock(agentId: AgentId, input: MockToolInput, scenari
     severity: 'BLOCK',
     evidence_ref: makeEvidence('cutoff_check', { cutoff: input.data_cutoff, match: true }).evidence_id,
     description: '数据截止日必须与任务参数一致',
+    unit: '日期',
+    data_range: { start: dataCutoff, end: dataCutoff },
+    rule_version: 'v1.0.0',
+    checked_at: now,
+    source: 'quality_engine',
   });
 
   const gateResult: GateResult = {

@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ErrorState } from '@/components/dashboard/error-state';
 import { useRunContext } from '@/components/dashboard/run-context';
+import { Copy } from 'lucide-react';
 
 interface AuditEvent {
   event_id: string;
@@ -17,10 +18,13 @@ interface AuditEvent {
   action: string;
   run_id: string | null;
   task_id: string | null;
+  approval_id?: string | null;
+  evidence_id?: string | null;
   input_summary: Record<string, unknown>;
   output_summary: Record<string, unknown>;
   status_before: string | null;
   status_after: string | null;
+  gate_changes?: Array<{ gate: string; from: string; to: string }>;
   details: string;
 }
 
@@ -209,10 +213,36 @@ export default function AuditPage() {
                         </Badge>
                       </TableCell>
                       <TableCell className="font-mono text-xs">
-                        {event.run_id ? event.run_id.slice(0, 16) : '-'}
+                        {event.run_id ? (
+                          <div className="flex items-center gap-1 group">
+                            <span className="truncate max-w-[120px]" title={event.run_id}>{event.run_id}</span>
+                            <button
+                              onClick={() => navigator.clipboard.writeText(event.run_id!)}
+                              className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-gray-600"
+                              title="复制"
+                            >
+                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                              </svg>
+                            </button>
+                          </div>
+                        ) : '-'}
                       </TableCell>
                       <TableCell className="font-mono text-xs">
-                        {event.task_id ? event.task_id.slice(0, 20) : '-'}
+                        {event.task_id ? (
+                          <div className="flex items-center gap-1 group">
+                            <span className="truncate max-w-[140px]" title={event.task_id}>{event.task_id}</span>
+                            <button
+                              onClick={() => navigator.clipboard.writeText(event.task_id!)}
+                              className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-gray-600"
+                              title="复制"
+                            >
+                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                              </svg>
+                            </button>
+                          </div>
+                        ) : '-'}
                       </TableCell>
                       <TableCell className="text-xs">
                         {event.status_before && event.status_after ? (
@@ -223,8 +253,34 @@ export default function AuditPage() {
                           </span>
                         ) : '-'}
                       </TableCell>
-                      <TableCell className="text-xs text-gray-500 max-w-64 truncate" title={event.details}>
-                        {event.details}
+                      <TableCell className="text-xs text-gray-500 max-w-64">
+                        <div className="space-y-1">
+                          <div className="truncate" title={event.details}>{event.details}</div>
+                          {event.evidence_id && (
+                            <div className="flex items-center gap-1 text-gray-400">
+                              <span className="truncate">证据: {event.evidence_id}</span>
+                              <button
+                                onClick={() => navigator.clipboard.writeText(event.evidence_id!)}
+                                className="flex-shrink-0 hover:text-blue-600"
+                                title="复制证据ID"
+                              >
+                                <Copy className="w-3 h-3" />
+                              </button>
+                            </div>
+                          )}
+                          {event.approval_id && (
+                            <div className="flex items-center gap-1 text-gray-400">
+                              <span className="truncate">审批: {event.approval_id}</span>
+                              <button
+                                onClick={() => navigator.clipboard.writeText(event.approval_id!)}
+                                className="flex-shrink-0 hover:text-blue-600"
+                                title="复制审批ID"
+                              >
+                                <Copy className="w-3 h-3" />
+                              </button>
+                            </div>
+                          )}
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}

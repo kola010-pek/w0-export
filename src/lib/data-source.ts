@@ -21,8 +21,10 @@ export function isMockMode(): boolean {
  * Get current environment label based on data source mode.
  * Contract:
  * - Mock mode → simulation (never production)
- * - Real mode + DEV → staging
- * - Real mode + PROD → production
+ * - Real mode → staging (production not allowed in Phase 2.1)
+ * 
+ * Phase 2.1 restriction: Real mode only returns staging, never production.
+ * Production environment is reserved for future phases with full safety controls.
  */
 export function getEnvironment(): 'simulation' | 'staging' | 'production' {
   const isMock = isMockMode();
@@ -32,9 +34,8 @@ export function getEnvironment(): 'simulation' | 'staging' | 'production' {
     return 'simulation';
   }
   
-  // Real mode: check deployment environment
-  const env = process.env.COZE_PROJECT_ENV;
-  if (env === 'PROD') return 'production';
+  // Real mode: Phase 2.1 only allows staging
+  // Production is reserved for future phases
   return 'staging';
 }
 

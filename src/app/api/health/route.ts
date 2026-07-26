@@ -1,20 +1,24 @@
-// Phase 2: /api/health - Read-only health check endpoint
-// No write operations, no SQL, no model startup, no signal release
+// Phase 2.1: /api/health - Read-only health check with real SQLite support
+// Security: Read-only, no SQL input, no write operations
 
 import { NextResponse } from 'next/server';
 import {
   buildPhase2Response,
   isMockMode,
-  getEnvironment,
-  getDataCutoff,
 } from '@/lib/data-source';
+import {
+  getReadOnlyConnection,
+  checkDatabaseExists,
+  runQuickCheck,
+  checkRequiredTables,
+} from '@/lib/sqlite-adapter';
 
 interface HealthData {
   status: 'healthy' | 'degraded' | 'unhealthy';
   version: string;
   uptime_seconds: number;
   services: {
-    database: 'connected' | 'disconnected' | 'mock';
+    database: 'connected' | 'disconnected' | 'mock' | 'readonly';
     cache: 'connected' | 'disconnected' | 'mock';
     model_service: 'disabled' | 'connected' | 'mock';
   };
@@ -25,6 +29,13 @@ interface HealthData {
     sql_input_accepted: false;
     db_path_selectable: false;
   };
+  database_check?: {
+    file_exists: boolean;
+    readonly_connection: boolean;
+    quick_check: boolean;
+    required_tables: boolean;
+    table_details?: Array<{ name: string; exists: boolean }>;
+  };
 }
 
 // Mock health data
@@ -32,7 +43,7 @@ function getMockHealthData(): HealthData {
   return {
     status: 'healthy',
     version: '1.0.0',
-    uptime_seconds: Math.floor((Date.now() - Date.now() + 3600000) / 1000),
+    uptime_seconds: 3600,
     services: {
       database: 'mock',
       cache: 'mock',
@@ -48,19 +59,63 @@ function getMockHealthData(): HealthData {
   };
 }
 
-// Real health data (read-only, no write operations)
-async function getRealHealthData(): Promise<HealthData> {
-  // In real mode, this would connect to actual backend services
-  // For Phase 2, we still return mock data but mark it differently
-  // Real implementation would check actual service connectivity
-  return {
-    status: 'healthy',
+// Real health data with SQLite checks
+async function getRealHealthData(): Promise<{ data: HealthData; warnings: string[]; gateStatus: 'PASS' | 'WARN' | 'BLOCK' }> {
+  const warnings: string[] = [];
+  let gateStatus: 'PASS' | 'WARN' | 'BLOCK' = 'PASS';
+
+  // Check database file exists
+  const dbExists = checkDatabaseExists();
+  
+  // Check read-only connection
+  const { db, error: connError, isConnected } = getReadOnlyConnection();
+  
+  // Run quick_check
+  const quickCheck = runQuickCheck();
+  
+  // Check required tables
+  const tableCheck = checkRequiredTables();
+
+  const databaseCheck = {
+    file_exists: dbExists.exists,
+    readonly_connection: isConnected,
+    quick_check: quickCheck.ok,
+    required_tables: tableCheck.allExist,
+    table_details: tableCheck.tables,
+  };
+
+  // Evaluate status
+  let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy';
+  let dbServiceStatus: 'connected' | 'disconnected' | 'readonly' = 'readonly';
+
+  if (!dbExists.exists) {
+    status = 'unhealthy';
+    dbServiceStatus = 'disconnected';
+    gateStatus = 'BLOCK';
+    warnings.push('database_file_missing');
+  } else if (!isConnected) {
+    status = 'unhealthy';
+    dbServiceStatus = 'disconnected';
+    gateStatus = 'BLOCK';
+    warnings.push('database_connection_failed');
+  } else if (!quickCheck.ok) {
+    status = 'degraded';
+    gateStatus = 'WARN';
+    warnings.push('database_quick_check_failed');
+  } else if (!tableCheck.allExist) {
+    status = 'degraded';
+    gateStatus = 'BLOCK';
+    warnings.push('required_tables_missing');
+  }
+
+  const data: HealthData = {
+    status,
     version: '1.0.0',
     uptime_seconds: Math.floor(process.uptime()),
     services: {
-      database: 'mock', // Would be 'connected' or 'disconnected' in real mode
-      cache: 'mock',
-      model_service: 'disabled', // Always disabled per safety requirement
+      database: dbServiceStatus,
+      cache: 'mock', // Cache not implemented in Phase 2.1
+      model_service: 'disabled', // Always disabled per security requirement
     },
     safety_flags: {
       production_write_enabled: false,
@@ -69,38 +124,35 @@ async function getRealHealthData(): Promise<HealthData> {
       sql_input_accepted: false,
       db_path_selectable: false,
     },
+    database_check: databaseCheck,
   };
+
+  return { data, warnings, gateStatus };
 }
 
 export async function GET() {
   try {
     const isMock = isMockMode();
-    const data = isMock ? getMockHealthData() : await getRealHealthData();
-
-    // Evaluate overall gate status
+    
+    let data: HealthData;
+    let warnings: string[] = [];
     let gateStatus: 'PASS' | 'WARN' | 'BLOCK' = 'PASS';
-    const warnings: string[] = [];
 
-    // Check if any service is disconnected
-    if (data.services.database === 'disconnected') {
-      gateStatus = 'BLOCK';
-    } else if (data.services.database === 'mock' && !isMock) {
-      warnings.push('database_using_mock_in_real_mode');
-      if (gateStatus === 'PASS') gateStatus = 'WARN';
+    if (isMock) {
+      data = getMockHealthData();
+    } else {
+      const result = await getRealHealthData();
+      data = result.data;
+      warnings = result.warnings;
+      gateStatus = result.gateStatus;
     }
 
-    if (data.services.cache === 'disconnected') {
-      warnings.push('cache_disconnected');
-      if (gateStatus === 'PASS') gateStatus = 'WARN';
-    }
-
-    // Model service must always be disabled
+    // Additional safety checks
     if (data.services.model_service !== 'disabled') {
       gateStatus = 'BLOCK';
       warnings.push('model_service_should_be_disabled');
     }
 
-    // Safety flags must all be false
     const safetyFlags = Object.values(data.safety_flags);
     if (safetyFlags.some((flag) => flag !== false)) {
       gateStatus = 'BLOCK';

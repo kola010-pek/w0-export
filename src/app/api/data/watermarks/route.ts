@@ -1,22 +1,25 @@
-// Phase 2: /api/data/watermarks - Read-only data watermark endpoint
-// Returns data freshness and completeness information
-// No write operations, no SQL input, no database path selection
+// Phase 2.1: /api/data/watermarks - Read-only data watermark with real SQLite support
+// Security: Read-only, no SQL input, no write operations
 
 import { NextRequest, NextResponse } from 'next/server';
 import {
   buildPhase2Response,
   isMockMode,
-  evaluateDataFreshness,
 } from '@/lib/data-source';
+import {
+  getReadOnlyConnection,
+  getWatermark,
+} from '@/lib/sqlite-adapter';
 
 interface Watermark {
   dataset: string;
-  latest_date: string;
+  latest_date: string | null;
   record_count: number;
-  last_updated: string;
+  last_updated: string | null;
   status: 'fresh' | 'stale' | 'expired' | 'missing';
-  source_table?: string;
-  schema_version?: string;
+  source_table: string;
+  schema_version: string;
+  error?: string;
 }
 
 interface WatermarksData {
@@ -30,50 +33,36 @@ interface WatermarksData {
   };
 }
 
+// Required datasets
+const REQUIRED_DATASETS = ['daily_kline', 'adjustment_factors', 'factor_data', 'market_factors'];
+
+// Evaluate freshness status based on last_updated time
+function evaluateFreshnessStatus(lastUpdated: string | null): 'fresh' | 'stale' | 'expired' | 'missing' {
+  if (!lastUpdated) return 'missing';
+  
+  const lastUpdatedDate = new Date(lastUpdated);
+  const now = new Date();
+  const ageHours = (now.getTime() - lastUpdatedDate.getTime()) / (1000 * 60 * 60);
+
+  if (ageHours > 48) return 'expired';
+  if (ageHours > 24) return 'stale';
+  return 'fresh';
+}
+
 // Mock watermark data
 function getMockWatermarksData(): WatermarksData {
   const now = new Date();
-  const today = now.toISOString().split('T')[0];
   const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
-  const watermarks: Watermark[] = [
-    {
-      dataset: 'daily_kline',
-      latest_date: yesterday,
-      record_count: 5234,
-      last_updated: new Date(now.getTime() - 2 * 60 * 60 * 1000).toISOString(),
-      status: 'fresh',
-      source_table: 'mock_daily_kline',
-      schema_version: 'v1.0',
-    },
-    {
-      dataset: 'adjustment_factors',
-      latest_date: yesterday,
-      record_count: 1200,
-      last_updated: new Date(now.getTime() - 3 * 60 * 60 * 1000).toISOString(),
-      status: 'fresh',
-      source_table: 'mock_adjustment_factors',
-      schema_version: 'v1.0',
-    },
-    {
-      dataset: 'factor_data',
-      latest_date: yesterday,
-      record_count: 8500,
-      last_updated: new Date(now.getTime() - 4 * 60 * 60 * 1000).toISOString(),
-      status: 'fresh',
-      source_table: 'mock_factor_data',
-      schema_version: 'v1.0',
-    },
-    {
-      dataset: 'market_factors',
-      latest_date: yesterday,
-      record_count: 3200,
-      last_updated: new Date(now.getTime() - 5 * 60 * 60 * 1000).toISOString(),
-      status: 'fresh',
-      source_table: 'mock_market_factors',
-      schema_version: 'v1.0',
-    },
-  ];
+  const watermarks: Watermark[] = REQUIRED_DATASETS.map((dataset, index) => ({
+    dataset,
+    latest_date: yesterday,
+    record_count: 1000 + index * 500,
+    last_updated: new Date(now.getTime() - (index + 1) * 60 * 60 * 1000).toISOString(),
+    status: 'fresh' as const,
+    source_table: `mock_${dataset}`,
+    schema_version: 'v1.0',
+  }));
 
   return {
     watermarks,
@@ -87,16 +76,107 @@ function getMockWatermarksData(): WatermarksData {
   };
 }
 
-// Real watermark data (read-only, no write operations)
-async function getRealWatermarksData(): Promise<WatermarksData> {
-  // In real mode, this would query actual database watermarks (read-only)
-  // For Phase 2, we still return mock data but mark it differently
-  // Real implementation would:
-  // 1. Query database for latest data dates per dataset
-  // 2. Check record counts
-  // 3. Evaluate freshness based on last_updated timestamps
-  // 4. Return actual watermark information
-  return getMockWatermarksData();
+// Real watermark data from SQLite
+async function getRealWatermarksData(): Promise<{ data: WatermarksData; warnings: string[]; gateStatus: 'PASS' | 'WARN' | 'BLOCK' }> {
+  const warnings: string[] = [];
+  let gateStatus: 'PASS' | 'WARN' | 'BLOCK' = 'PASS';
+
+  const { db, error: connError, isConnected } = getReadOnlyConnection();
+  
+  if (!isConnected || !db) {
+    // Database connection failed - BLOCK
+    const watermarks: Watermark[] = REQUIRED_DATASETS.map(dataset => ({
+      dataset,
+      latest_date: null,
+      record_count: 0,
+      last_updated: null,
+      status: 'missing' as const,
+      source_table: dataset,
+      schema_version: 'v1.0',
+      error: connError?.message || 'Database connection failed',
+    }));
+
+    return {
+      data: {
+        watermarks,
+        summary: {
+          total_datasets: watermarks.length,
+          fresh_count: 0,
+          stale_count: 0,
+          expired_count: 0,
+          missing_count: watermarks.length,
+        },
+      },
+      warnings: ['database_connection_failed'],
+      gateStatus: 'BLOCK',
+    };
+  }
+
+  // Get watermark for each dataset
+  const watermarks: Watermark[] = [];
+  
+  for (const dataset of REQUIRED_DATASETS) {
+    const result = getWatermark(dataset);
+    
+    if (result.error) {
+      watermarks.push({
+        dataset,
+        latest_date: null,
+        record_count: 0,
+        last_updated: null,
+        status: 'missing',
+        source_table: dataset,
+        schema_version: 'v1.0',
+        error: result.error,
+      });
+      warnings.push(`${dataset}_error: ${result.error}`);
+      gateStatus = 'BLOCK';
+    } else {
+      const status = evaluateFreshnessStatus(result.lastUpdated);
+      
+      watermarks.push({
+        dataset,
+        latest_date: result.latestDate,
+        record_count: result.recordCount,
+        last_updated: result.lastUpdated,
+        status,
+        source_table: dataset,
+        schema_version: 'v1.0',
+      });
+
+      // Check for stale/expired data
+      if (status === 'expired') {
+        gateStatus = 'BLOCK';
+        warnings.push(`${dataset}_expired`);
+      } else if (status === 'stale') {
+        if (gateStatus !== 'BLOCK') {
+          gateStatus = 'WARN';
+        }
+        warnings.push(`${dataset}_stale`);
+      }
+
+      // Check for empty table
+      if (result.recordCount === 0) {
+        gateStatus = 'BLOCK';
+        warnings.push(`${dataset}_empty`);
+      }
+    }
+  }
+
+  return {
+    data: {
+      watermarks,
+      summary: {
+        total_datasets: watermarks.length,
+        fresh_count: watermarks.filter((w) => w.status === 'fresh').length,
+        stale_count: watermarks.filter((w) => w.status === 'stale').length,
+        expired_count: watermarks.filter((w) => w.status === 'expired').length,
+        missing_count: watermarks.filter((w) => w.status === 'missing').length,
+      },
+    },
+    warnings,
+    gateStatus,
+  };
 }
 
 export async function GET(request: NextRequest) {
@@ -106,11 +186,16 @@ export async function GET(request: NextRequest) {
     const datasetFilter = searchParams.get('dataset');
 
     let data: WatermarksData;
+    let warnings: string[] = [];
+    let gateStatus: 'PASS' | 'WARN' | 'BLOCK' = 'PASS';
 
     if (isMock) {
       data = getMockWatermarksData();
     } else {
-      data = await getRealWatermarksData();
+      const result = await getRealWatermarksData();
+      data = result.data;
+      warnings = result.warnings;
+      gateStatus = result.gateStatus;
     }
 
     // Filter by dataset if specified
@@ -128,28 +213,12 @@ export async function GET(request: NextRequest) {
       };
     }
 
-    // Evaluate overall gate status
-    let gateStatus: 'PASS' | 'WARN' | 'BLOCK' = 'PASS';
-    const warnings: string[] = [];
-
     // Check for missing data
     if (data.summary.missing_count > 0) {
       gateStatus = 'BLOCK';
-      warnings.push(`missing_data: ${data.summary.missing_count} datasets`);
-    }
-
-    // Check for expired data
-    if (data.summary.expired_count > 0) {
-      gateStatus = 'BLOCK';
-      warnings.push(`expired_data: ${data.summary.expired_count} datasets`);
-    }
-
-    // Check for stale data
-    if (data.summary.stale_count > 0) {
-      if (gateStatus !== 'BLOCK') {
-        gateStatus = 'WARN';
+      if (!warnings.includes('missing_data')) {
+        warnings.push(`missing_data: ${data.summary.missing_count} datasets`);
       }
-      warnings.push(`stale_data: ${data.summary.stale_count} datasets`);
     }
 
     // Evidence missing check

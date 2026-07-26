@@ -1,6 +1,5 @@
-// Phase 2: /api/quality/gates - Read-only quality gates endpoint
-// Returns quality gate status and rule details
-// No write operations, no SQL input, no model startup, no signal release
+// Phase 2.1: /api/quality/gates - Read-only quality gates with real SQLite support
+// Security: Read-only, no SQL input, no write operations
 
 import { NextRequest, NextResponse } from 'next/server';
 import {
@@ -8,6 +7,12 @@ import {
   isMockMode,
 } from '@/lib/data-source';
 import type { GateRule, RuleStatus } from '@/lib/types';
+import {
+  getReadOnlyConnection,
+  checkRequiredTables,
+  checkDependencyOrder,
+  getWatermark,
+} from '@/lib/sqlite-adapter';
 
 interface QualityGate {
   gate_id: string;
@@ -182,15 +187,300 @@ function getMockQualityGatesData(): QualityGatesData {
   };
 }
 
-// Real quality gates data (read-only, no write operations)
-async function getRealQualityGatesData(runId?: string): Promise<QualityGatesData> {
-  // In real mode, this would query actual quality gate results (read-only)
-  // For Phase 2, we still return mock data but mark it differently
-  // Real implementation would:
-  // 1. Query database for gate evaluation results
-  // 2. Check rule execution status
-  // 3. Return actual gate information
-  return getMockQualityGatesData();
+// Real quality gates data from SQLite
+async function getRealQualityGatesData(): Promise<{ data: QualityGatesData; warnings: string[]; gateStatus: 'PASS' | 'WARN' | 'BLOCK' }> {
+  const now = new Date().toISOString();
+  const warnings: string[] = [];
+  let gateStatus: 'PASS' | 'WARN' | 'BLOCK' = 'PASS';
+
+  const { db, error: connError, isConnected } = getReadOnlyConnection();
+  
+  if (!isConnected || !db) {
+    // Database connection failed - all gates BLOCK
+    const gates: QualityGate[] = [
+      {
+        gate_id: 'gate_connection',
+        gate_type: 'data_quality',
+        status: 'BLOCK',
+        rules: [],
+        checked_at: now,
+        data_cutoff: '',
+        block_reasons: ['database_connection_failed'],
+        warnings: [connError?.message || 'Cannot connect to database'],
+      },
+    ];
+
+    return {
+      data: {
+        gates,
+        summary: { total_gates: 1, pass_count: 0, warn_count: 0, block_count: 1, not_executed_count: 0 },
+      },
+      warnings: ['database_connection_failed'],
+      gateStatus: 'BLOCK',
+    };
+  }
+
+  const gates: QualityGate[] = [];
+  const dataCutoff = new Date().toISOString().split('T')[0];
+
+  // 1. Coverage check - check if all required tables have data
+  const tableCheck = checkRequiredTables();
+  const totalRequired = 4;
+  const existingTables = tableCheck.tables.filter(t => t.exists).length;
+  const coverageRatio = existingTables / totalRequired;
+  const coverageStatus = coverageRatio >= 0.999 ? 'PASS' : 'BLOCK';
+  
+  gates.push({
+    gate_id: 'gate_coverage',
+    gate_type: 'data_quality',
+    status: coverageStatus as 'PASS' | 'BLOCK',
+    rules: [{
+      rule_id: 'coverage_check',
+      display_name: '表覆盖率',
+      status: coverageStatus as RuleStatus,
+      actual: coverageRatio,
+      threshold: 0.999,
+      operator: '>=',
+      severity: 'BLOCK',
+      evidence_ref: `ev_coverage_real_${Date.now()}`,
+      description: '必要表覆盖率必须 >= 99.9%',
+      unit: 'ratio',
+      data_range: { start: dataCutoff, end: dataCutoff },
+      rule_version: 'v1.2.0',
+      checked_at: now,
+      source: 'sqlite_adapter',
+    }],
+    checked_at: now,
+    data_cutoff: dataCutoff,
+    block_reasons: coverageStatus === 'BLOCK' ? [`coverage ${coverageRatio} < 0.999`] : [],
+    warnings: [],
+  });
+
+  if (coverageStatus === 'BLOCK') {
+    gateStatus = 'BLOCK';
+    warnings.push('coverage_check_failed');
+  }
+
+  // 2. Freshness check - check latest data date
+  const klineWatermark = getWatermark('daily_kline');
+  let freshnessHours = 999;
+  let freshnessStatus: 'PASS' | 'WARN' | 'BLOCK' = 'BLOCK';
+  
+  if (klineWatermark.lastUpdated) {
+    const lastUpdated = new Date(klineWatermark.lastUpdated);
+    freshnessHours = (Date.now() - lastUpdated.getTime()) / (1000 * 60 * 60);
+    
+    if (freshnessHours <= 24) {
+      freshnessStatus = 'PASS';
+    } else if (freshnessHours <= 48) {
+      freshnessStatus = 'WARN';
+      if (gateStatus !== 'BLOCK') gateStatus = 'WARN';
+    } else {
+      freshnessStatus = 'BLOCK';
+      gateStatus = 'BLOCK';
+    }
+  }
+
+  gates.push({
+    gate_id: 'gate_freshness',
+    gate_type: 'freshness',
+    status: freshnessStatus,
+    rules: [{
+      rule_id: 'freshness_check',
+      display_name: '数据新鲜度',
+      status: freshnessStatus as RuleStatus,
+      actual: freshnessHours,
+      threshold: 24,
+      operator: '<=',
+      severity: 'BLOCK',
+      evidence_ref: `ev_freshness_real_${Date.now()}`,
+      description: '数据新鲜度必须在 24 小时内',
+      unit: 'hours',
+      checked_at: now,
+      source: 'sqlite_adapter',
+    }],
+    checked_at: now,
+    data_cutoff: klineWatermark.latestDate || dataCutoff,
+    block_reasons: freshnessStatus === 'BLOCK' ? [`freshness ${freshnessHours}h > 48h`] : [],
+    warnings: freshnessStatus === 'WARN' ? [`data_stale_${freshnessHours}h`] : [],
+  });
+
+  // 3. Uniqueness check - check primary key uniqueness
+  let uniquenessRatio = 1.0;
+  let uniquenessStatus: 'PASS' | 'BLOCK' = 'PASS';
+  
+  try {
+    const totalRows = db.prepare('SELECT COUNT(*) as count FROM daily_kline').get() as { count: number };
+    const distinctRows = db.prepare('SELECT COUNT(DISTINCT symbol || trade_date) as count FROM daily_kline').get() as { count: number };
+    
+    if (totalRows.count > 0) {
+      uniquenessRatio = distinctRows.count / totalRows.count;
+      if (uniquenessRatio < 1.0) {
+        uniquenessStatus = 'BLOCK';
+        gateStatus = 'BLOCK';
+      }
+    }
+  } catch {
+    uniquenessStatus = 'BLOCK';
+    gateStatus = 'BLOCK';
+  }
+
+  gates.push({
+    gate_id: 'gate_uniqueness',
+    gate_type: 'data_quality',
+    status: uniquenessStatus,
+    rules: [{
+      rule_id: 'uniqueness_check',
+      display_name: '主键唯一性',
+      status: uniquenessStatus as RuleStatus,
+      actual: uniquenessRatio,
+      threshold: 1.0,
+      operator: '==',
+      severity: 'BLOCK',
+      evidence_ref: `ev_uniqueness_real_${Date.now()}`,
+      description: '主键必须 100% 唯一',
+      unit: 'ratio',
+      checked_at: now,
+      source: 'sqlite_adapter',
+    }],
+    checked_at: now,
+    data_cutoff: dataCutoff,
+    block_reasons: uniquenessStatus === 'BLOCK' ? [`uniqueness ${uniquenessRatio} < 1.0`] : [],
+    warnings: [],
+  });
+
+  // 4. Null rate check
+  let nullRate = 0;
+  let nullRateStatus: 'PASS' | 'WARN' | 'BLOCK' = 'PASS';
+  
+  try {
+    const totalRows = db.prepare('SELECT COUNT(*) as count FROM factor_data').get() as { count: number };
+    const nullRows = db.prepare('SELECT COUNT(*) as count FROM factor_data WHERE factor_value IS NULL').get() as { count: number };
+    
+    if (totalRows.count > 0) {
+      nullRate = nullRows.count / totalRows.count;
+      if (nullRate > 0.01) {
+        nullRateStatus = 'WARN';
+        if (gateStatus !== 'BLOCK') gateStatus = 'WARN';
+      }
+    }
+  } catch {
+    nullRateStatus = 'BLOCK';
+    gateStatus = 'BLOCK';
+  }
+
+  gates.push({
+    gate_id: 'gate_null_rate',
+    gate_type: 'data_quality',
+    status: nullRateStatus,
+    rules: [{
+      rule_id: 'null_rate_check',
+      display_name: '空值率',
+      status: nullRateStatus as RuleStatus,
+      actual: nullRate,
+      threshold: 0.01,
+      operator: '<=',
+      severity: 'WARN',
+      evidence_ref: `ev_null_rate_real_${Date.now()}`,
+      description: '关键字段空值率必须 <= 1%',
+      unit: 'ratio',
+      checked_at: now,
+      source: 'sqlite_adapter',
+    }],
+    checked_at: now,
+    data_cutoff: dataCutoff,
+    block_reasons: [],
+    warnings: nullRateStatus === 'WARN' ? [`null_rate_${(nullRate * 100).toFixed(2)}%`] : [],
+  });
+
+  // 5. Dependency order check
+  const depCheck = checkDependencyOrder();
+  const depStatus = depCheck.ok ? 'PASS' : 'BLOCK';
+  
+  gates.push({
+    gate_id: 'gate_dependency',
+    gate_type: 'dependency',
+    status: depStatus as 'PASS' | 'BLOCK',
+    rules: [{
+      rule_id: 'dependency_order',
+      display_name: '依赖顺序',
+      status: depStatus as RuleStatus,
+      actual: depCheck.ok ? 'correct' : 'violated',
+      threshold: 'correct',
+      operator: '==',
+      severity: 'BLOCK',
+      evidence_ref: `ev_dependency_real_${Date.now()}`,
+      description: '上游节点必须全部完成',
+      checked_at: now,
+      source: 'sqlite_adapter',
+    }],
+    checked_at: now,
+    data_cutoff: dataCutoff,
+    block_reasons: depStatus === 'BLOCK' ? depCheck.violations : [],
+    warnings: [],
+  });
+
+  if (depStatus === 'BLOCK') {
+    gateStatus = 'BLOCK';
+    warnings.push('dependency_order_violated');
+  }
+
+  // 6. Cutoff consistency check
+  let cutoffStatus: 'PASS' | 'BLOCK' = 'PASS';
+  let cutoffActual = dataCutoff;
+  
+  // Check if all tables have consistent cutoff dates
+  const dates = new Set<string>();
+  for (const table of ['daily_kline', 'adjustment_factors', 'factor_data', 'market_factors']) {
+    const wm = getWatermark(table);
+    if (wm.latestDate) {
+      dates.add(wm.latestDate);
+    }
+  }
+  
+  if (dates.size > 1) {
+    cutoffStatus = 'BLOCK';
+    gateStatus = 'BLOCK';
+    cutoffActual = 'inconsistent';
+  }
+
+  gates.push({
+    gate_id: 'gate_cutoff',
+    gate_type: 'cutoff',
+    status: cutoffStatus,
+    rules: [{
+      rule_id: 'cutoff_check',
+      display_name: '数据截止日一致性',
+      status: cutoffStatus as RuleStatus,
+      actual: cutoffActual,
+      threshold: dataCutoff,
+      operator: '==',
+      severity: 'BLOCK',
+      evidence_ref: `ev_cutoff_real_${Date.now()}`,
+      description: '数据截止日必须一致',
+      checked_at: now,
+      source: 'sqlite_adapter',
+    }],
+    checked_at: now,
+    data_cutoff: dataCutoff,
+    block_reasons: cutoffStatus === 'BLOCK' ? ['cutoff_inconsistent'] : [],
+    warnings: [],
+  });
+
+  return {
+    data: {
+      gates,
+      summary: {
+        total_gates: gates.length,
+        pass_count: gates.filter((g) => g.status === 'PASS').length,
+        warn_count: gates.filter((g) => g.status === 'WARN').length,
+        block_count: gates.filter((g) => g.status === 'BLOCK').length,
+        not_executed_count: gates.filter((g) => g.status === 'NOT_EXECUTED').length,
+      },
+    },
+    warnings,
+    gateStatus,
+  };
 }
 
 export async function GET(request: NextRequest) {
@@ -200,37 +490,16 @@ export async function GET(request: NextRequest) {
     const runId = searchParams.get('run_id');
 
     let data: QualityGatesData;
+    let warnings: string[] = [];
+    let gateStatus: 'PASS' | 'WARN' | 'BLOCK' = 'PASS';
 
     if (isMock) {
       data = getMockQualityGatesData();
     } else {
-      data = await getRealQualityGatesData(runId || undefined);
-    }
-
-    // Evaluate overall gate status
-    let gateStatus: 'PASS' | 'WARN' | 'BLOCK' = 'PASS';
-    const warnings: string[] = [];
-
-    // Check for blocked gates
-    if (data.summary.block_count > 0) {
-      gateStatus = 'BLOCK';
-      warnings.push(`blocked_gates: ${data.summary.block_count}`);
-    }
-
-    // Check for warned gates
-    if (data.summary.warn_count > 0) {
-      if (gateStatus !== 'BLOCK') {
-        gateStatus = 'WARN';
-      }
-      warnings.push(`warned_gates: ${data.summary.warn_count}`);
-    }
-
-    // Check for not executed gates
-    if (data.summary.not_executed_count > 0) {
-      if (gateStatus !== 'BLOCK') {
-        gateStatus = 'WARN';
-      }
-      warnings.push(`not_executed_gates: ${data.summary.not_executed_count}`);
+      const result = await getRealQualityGatesData();
+      data = result.data;
+      warnings = result.warnings;
+      gateStatus = result.gateStatus;
     }
 
     // Evidence missing check

@@ -299,6 +299,37 @@ export default function Phase2Page() {
         </p>
       </div>
 
+      {/* Data Source Indicator - Prominent */}
+      <div className={`rounded-lg p-4 border-2 ${
+        healthData.is_mock 
+          ? 'bg-blue-900/30 border-blue-600/50' 
+          : 'bg-green-900/30 border-green-600/50'
+      }`}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className={`text-3xl ${healthData.is_mock ? 'text-blue-400' : 'text-green-400'}`}>
+              {healthData.is_mock ? '◉' : '●'}
+            </span>
+            <div>
+              <h2 className={`text-lg font-bold ${healthData.is_mock ? 'text-blue-300' : 'text-green-300'}`}>
+                当前数据源：{healthData.is_mock ? 'Mock 模拟数据' : 'Real Staging 真实数据'}
+              </h2>
+              <p className="text-sm text-slate-400">
+                环境：{healthData.environment} · 证据ID：{healthData.evidence_id}
+              </p>
+            </div>
+          </div>
+          <div className={`px-4 py-2 rounded-lg ${
+            healthData.is_mock 
+              ? 'bg-blue-800/50 text-blue-200' 
+              : 'bg-green-800/50 text-green-200'
+          }`}>
+            <div className="text-xs text-slate-400">Schema Version</div>
+            <div className="text-lg font-mono font-bold">v{healthData.schema_version}</div>
+          </div>
+        </div>
+      </div>
+
       {/* Safety Banner */}
       <div className="bg-amber-900/30 border border-amber-700/50 rounded-lg p-4">
         <div className="flex items-start gap-3">

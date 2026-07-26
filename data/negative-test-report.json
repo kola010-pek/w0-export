@@ -1,72 +1,79 @@
 [
   {
     "test_id": "NEG_001_DB_UNREACHABLE",
-    "executed_at": "2026-07-26T04:46:32.096Z",
+    "executed_at": "2026-07-26T05:00:20.556Z",
     "input_fixture": "database_path_not_exist",
     "expected_status": "BLOCK",
     "actual_status": "BLOCK",
     "assertion_result": "PASS",
-    "evidence_id": "evt_test_1785041192126",
+    "injected_evidence_id": null,
+    "test_evidence_id": "evt_test_1785042020609",
     "details": "file_exists=false, readonly_connection=false"
   },
   {
     "test_id": "NEG_002_EVIDENCE_MISSING",
-    "executed_at": "2026-07-26T04:46:32.126Z",
+    "executed_at": "2026-07-26T05:00:20.609Z",
     "input_fixture": "evidence_id_missing_in_response",
     "expected_status": "BLOCK",
     "actual_status": "BLOCK",
     "assertion_result": "PASS",
-    "evidence_id": "missing",
+    "injected_evidence_id": null,
+    "test_evidence_id": "evt_test_1785042020609",
     "details": "Evidence ID missing - should be BLOCK when missing"
   },
   {
     "test_id": "NEG_003_DATA_STALE",
-    "executed_at": "2026-07-26T04:46:32.126Z",
+    "executed_at": "2026-07-26T05:00:20.609Z",
     "input_fixture": "data_28_hours_old",
     "expected_status": "WARN",
     "actual_status": "WARN",
     "assertion_result": "PASS",
-    "evidence_id": "evt_test_1785041192139",
+    "injected_evidence_id": "evt_watermark_2026-07-25",
+    "test_evidence_id": "evt_test_1785042020630",
     "details": "Aged data detected: true, staleDate: 2026-07-25"
   },
   {
     "test_id": "NEG_004_DATA_EXPIRED",
-    "executed_at": "2026-07-26T04:46:32.140Z",
+    "executed_at": "2026-07-26T05:00:20.631Z",
     "input_fixture": "data_72_hours_old",
     "expected_status": "BLOCK",
     "actual_status": "BLOCK",
     "assertion_result": "PASS",
-    "evidence_id": "evt_test_1785041192143",
+    "injected_evidence_id": "evt_watermark_2026-07-23",
+    "test_evidence_id": "evt_test_1785042020634",
     "details": "Expired data detected: true"
   },
   {
     "test_id": "NEG_005_FORMAT_ABNORMAL",
-    "executed_at": "2026-07-26T04:46:32.143Z",
+    "executed_at": "2026-07-26T05:00:20.634Z",
     "input_fixture": "missing_required_fields",
     "expected_status": "BLOCK",
     "actual_status": "BLOCK",
     "assertion_result": "PASS",
-    "evidence_id": "test_evidence",
+    "injected_evidence_id": "test_evidence",
+    "test_evidence_id": "evt_test_1785042020634",
     "details": "Missing fields: is_mock, generated_at, schema_version"
   },
   {
     "test_id": "NEG_006_DEPENDENCY_MISSING",
-    "executed_at": "2026-07-26T04:46:32.143Z",
+    "executed_at": "2026-07-26T05:00:20.634Z",
     "input_fixture": "missing_required_table",
     "expected_status": "BLOCK",
     "actual_status": "BLOCK",
     "assertion_result": "PASS",
-    "evidence_id": "evt_test_1785041192147",
+    "injected_evidence_id": null,
+    "test_evidence_id": "evt_test_1785042020638",
     "details": "required_tables=false, missing: market_factors"
   },
   {
     "test_id": "NEG_007_METADATA_CONFLICT",
-    "executed_at": "2026-07-26T04:46:32.147Z",
+    "executed_at": "2026-07-26T05:00:20.638Z",
     "input_fixture": "environment_production_with_is_mock_true",
     "expected_status": "BLOCK",
     "actual_status": "BLOCK",
     "assertion_result": "PASS",
-    "evidence_id": "test_evidence",
+    "injected_evidence_id": "test_evidence",
+    "test_evidence_id": "evt_test_1785042020638",
     "details": "Conflict detected: environment=production, is_mock=true, source=mock_health_service"
   }
 ]

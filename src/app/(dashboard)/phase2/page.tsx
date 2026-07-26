@@ -11,7 +11,9 @@ interface TestReportItem {
   expected_status: string;
   actual_status: string;
   assertion_result: string;
-  evidence_id: string;
+  evidence_id?: string;
+  injected_evidence_id?: string | null;
+  test_evidence_id?: string;
   details: string;
 }
 
@@ -596,7 +598,7 @@ export default function Phase2Page() {
                 description={test.details}
                 expectedStatus={test.expected_status}
                 testResult={test.assertion_result}
-                details={`${test.input_fixture} · 期望: ${test.expected_status} · 实际: ${test.actual_status} · 证据: ${test.evidence_id}`}
+                details={`${test.input_fixture} · 期望: ${test.expected_status} · 实际: ${test.actual_status} · 证据: ${test.test_evidence_id || test.evidence_id}`}
               />
             ))}
           </div>

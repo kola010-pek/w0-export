@@ -35,6 +35,7 @@ async function testDatabaseUnreachable(): Promise<TestResult> {
     const adapter = createSQLiteAdapter('/nonexistent/path/database.db');
     const health = await adapter.checkHealth();
     
+    const testEvidenceId = `evt_test_${Date.now()}`;
     return {
       test_id: testId,
       executed_at: executedAt,
@@ -42,10 +43,12 @@ async function testDatabaseUnreachable(): Promise<TestResult> {
       expected_status: 'BLOCK',
       actual_status: health.file_exists ? 'PASS' : 'BLOCK',
       assertion_result: health.file_exists ? 'FAIL' : 'PASS',
-      evidence_id: `evt_test_${Date.now()}`,
+      injected_evidence_id: null, // 数据库不可达，无证据
+      test_evidence_id: testEvidenceId,
       details: `file_exists=${health.file_exists}, readonly_connection=${health.readonly_connection}`
     };
   } catch (error) {
+    const testEvidenceId = `evt_test_${Date.now()}`;
     return {
       test_id: testId,
       executed_at: executedAt,
@@ -53,7 +56,8 @@ async function testDatabaseUnreachable(): Promise<TestResult> {
       expected_status: 'BLOCK',
       actual_status: 'BLOCK',
       assertion_result: 'PASS',
-      evidence_id: `evt_test_${Date.now()}`,
+      injected_evidence_id: null,
+      test_evidence_id: testEvidenceId,
       details: `Error caught: ${error}`
     };
   }
@@ -124,6 +128,7 @@ async function testDataStale(): Promise<TestResult> {
     
     fs.unlinkSync(testDbPath);
     
+    const testEvidenceId = `evt_test_${Date.now()}`;
     return {
       test_id: testId,
       executed_at: executedAt,
@@ -131,11 +136,13 @@ async function testDataStale(): Promise<TestResult> {
       expected_status: 'WARN',
       actual_status: hasAgedData ? 'WARN' : 'PASS',
       assertion_result: hasAgedData ? 'PASS' : 'FAIL',
-      evidence_id: `evt_test_${Date.now()}`,
+      injected_evidence_id: `evt_watermark_${staleDate}`, // 被测输入中的证据
+      test_evidence_id: testEvidenceId,
       details: `Aged data detected: ${hasAgedData}, staleDate: ${staleDate}`
     };
   } catch (error) {
     if (fs.existsSync(testDbPath)) fs.unlinkSync(testDbPath);
+    const testEvidenceId = `evt_test_${Date.now()}`;
     return {
       test_id: testId,
       executed_at: executedAt,
@@ -143,7 +150,8 @@ async function testDataStale(): Promise<TestResult> {
       expected_status: 'WARN',
       actual_status: 'BLOCK',
       assertion_result: 'FAIL',
-      evidence_id: `evt_test_${Date.now()}`,
+      injected_evidence_id: null,
+      test_evidence_id: testEvidenceId,
       details: `Error: ${error}`
     };
   }
@@ -179,6 +187,7 @@ async function testDataExpired(): Promise<TestResult> {
     
     fs.unlinkSync(testDbPath);
     
+    const testEvidenceId = `evt_test_${Date.now()}`;
     return {
       test_id: testId,
       executed_at: executedAt,
@@ -186,11 +195,13 @@ async function testDataExpired(): Promise<TestResult> {
       expected_status: 'BLOCK',
       actual_status: hasExpiredData ? 'BLOCK' : 'PASS',
       assertion_result: hasExpiredData ? 'PASS' : 'FAIL',
-      evidence_id: `evt_test_${Date.now()}`,
+      injected_evidence_id: `evt_watermark_${expiredDate}`,
+      test_evidence_id: testEvidenceId,
       details: `Expired data detected: ${hasExpiredData}`
     };
   } catch (error) {
     if (fs.existsSync(testDbPath)) fs.unlinkSync(testDbPath);
+    const testEvidenceId = `evt_test_${Date.now()}`;
     return {
       test_id: testId,
       executed_at: executedAt,
@@ -198,7 +209,8 @@ async function testDataExpired(): Promise<TestResult> {
       expected_status: 'BLOCK',
       actual_status: 'BLOCK',
       assertion_result: 'FAIL',
-      evidence_id: `evt_test_${Date.now()}`,
+      injected_evidence_id: null,
+      test_evidence_id: testEvidenceId,
       details: `Error: ${error}`
     };
   }
@@ -224,6 +236,7 @@ async function testFormatAbnormal(): Promise<TestResult> {
   const requiredFields = ['environment', 'is_mock', 'data_cutoff', 'generated_at', 'source', 'evidence_id', 'gate_status', 'schema_version'];
   const missingFields = requiredFields.filter(f => !(f in malformedResponse));
   
+  const testEvidenceId = `evt_test_${Date.now()}`;
   return {
     test_id: testId,
     executed_at: executedAt,
@@ -231,7 +244,8 @@ async function testFormatAbnormal(): Promise<TestResult> {
     expected_status: 'BLOCK',
     actual_status: missingFields.length === 0 ? 'PASS' : 'BLOCK',
     assertion_result: missingFields.length === 0 ? 'FAIL' : 'PASS',
-    evidence_id: malformedResponse.evidence_id || 'missing',
+    injected_evidence_id: malformedResponse.evidence_id || null, // 被测输入中的证据（可能缺失）
+    test_evidence_id: testEvidenceId,
     details: missingFields.length === 0 ? 'All fields present' : `Missing fields: ${missingFields.join(', ')}`
   };
 }
@@ -272,6 +286,7 @@ async function testDependencyMissing(): Promise<TestResult> {
     
     fs.unlinkSync(testDbPath);
     
+    const testEvidenceId = `evt_test_${Date.now()}`;
     return {
       test_id: testId,
       executed_at: executedAt,
@@ -279,11 +294,13 @@ async function testDependencyMissing(): Promise<TestResult> {
       expected_status: 'BLOCK',
       actual_status: health.required_tables ? 'PASS' : 'BLOCK',
       assertion_result: health.required_tables ? 'FAIL' : 'PASS',
-      evidence_id: `evt_test_${Date.now()}`,
+      injected_evidence_id: null, // 表缺失，无证据
+      test_evidence_id: testEvidenceId,
       details: `required_tables=${health.required_tables}, missing: market_factors`
     };
   } catch (error) {
     if (fs.existsSync(testDbPath)) fs.unlinkSync(testDbPath);
+    const testEvidenceId = `evt_test_${Date.now()}`;
     return {
       test_id: testId,
       executed_at: executedAt,
@@ -291,7 +308,8 @@ async function testDependencyMissing(): Promise<TestResult> {
       expected_status: 'BLOCK',
       actual_status: 'BLOCK',
       assertion_result: 'PASS',
-      evidence_id: `evt_test_${Date.now()}`,
+      injected_evidence_id: null,
+      test_evidence_id: testEvidenceId,
       details: `Error: ${error}`
     };
   }
@@ -319,6 +337,7 @@ async function testMetadataConflict(): Promise<TestResult> {
     (conflictingMetadata.environment === 'production' && conflictingMetadata.is_mock) ||
     (typeof conflictingMetadata.source === 'string' && conflictingMetadata.source.startsWith('mock_') && conflictingMetadata.environment !== 'simulation');
   
+  const testEvidenceId = `evt_test_${Date.now()}`;
   return {
     test_id: testId,
     executed_at: executedAt,
@@ -326,7 +345,8 @@ async function testMetadataConflict(): Promise<TestResult> {
     expected_status: 'BLOCK',
     actual_status: hasConflict ? 'BLOCK' : 'PASS',
     assertion_result: hasConflict ? 'PASS' : 'FAIL',
-    evidence_id: conflictingMetadata.evidence_id,
+    injected_evidence_id: conflictingMetadata.evidence_id, // 被测输入中的证据
+    test_evidence_id: testEvidenceId,
     details: `Conflict detected: environment=${conflictingMetadata.environment}, is_mock=${conflictingMetadata.is_mock}, source=${conflictingMetadata.source}`
   };
 }

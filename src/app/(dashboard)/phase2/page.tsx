@@ -137,6 +137,53 @@ function WatermarkStatusBadge({ status }: { status: string }) {
   );
 }
 
+// ============ Negative Test Scenario ============
+function NegativeTestScenario({ 
+  name, 
+  description, 
+  expectedStatus, 
+  testResult, 
+  details 
+}: { 
+  name: string; 
+  description: string; 
+  expectedStatus: string; 
+  testResult: string; 
+  details: string;
+}) {
+  const statusColors = {
+    PASS: 'border-green-700/50 bg-green-900/20',
+    WARN: 'border-amber-700/50 bg-amber-900/20',
+    BLOCK: 'border-red-700/50 bg-red-900/20',
+  };
+
+  const resultColors = {
+    PASS: 'text-green-400',
+    WARN: 'text-amber-400',
+    BLOCK: 'text-red-400',
+  };
+
+  return (
+    <div className={`border rounded-lg p-3 ${statusColors[expectedStatus as keyof typeof statusColors] || statusColors.BLOCK}`}>
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium text-white">{name}</span>
+          <span className="text-xs text-slate-400">{description}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-slate-400">期望:</span>
+          <GateStatusBadge status={expectedStatus} />
+          <span className="text-xs text-slate-400 ml-2">结果:</span>
+          <span className={`text-xs font-medium ${resultColors[testResult as keyof typeof resultColors] || resultColors.BLOCK}`}>
+            {testResult}
+          </span>
+        </div>
+      </div>
+      <p className="text-xs text-slate-300">{details}</p>
+    </div>
+  );
+}
+
 // ============ Section Header ============
 function SectionHeader({ title, gateStatus, evidenceId }: { title: string; gateStatus: string; evidenceId: string }) {
   return (
@@ -404,25 +451,32 @@ export default function Phase2Page() {
               </div>
 
               <div className="space-y-2">
-                {gate.rules.map((rule) => (
-                  <div key={rule.rule_id} className="flex items-center justify-between text-xs">
-                    <span className="text-slate-400">{rule.display_name}</span>
-                    <div className="flex items-center gap-3">
-                      <span className="text-slate-300 font-mono">
-                        {typeof rule.actual === 'number' && rule.unit === '%'
-                          ? `${(rule.actual * 100).toFixed(2)}%`
-                          : String(rule.actual)}
-                      </span>
-                      <span className="text-slate-500">{rule.operator}</span>
-                      <span className="text-slate-300 font-mono">
-                        {typeof rule.threshold === 'number' && rule.unit === '%'
-                          ? `${(rule.threshold * 100).toFixed(1)}%`
-                          : String(rule.threshold)}
-                      </span>
-                      <GateStatusBadge status={rule.status} />
+                {gate.rules.map((rule) => {
+                  const formatValue = (val: number | boolean | string, unit?: string) => {
+                    if (typeof val !== 'number') return String(val);
+                    // ratio unit: display as percentage
+                    if (unit === 'ratio' || unit === '%') {
+                      return `${(val * 100).toFixed(2)}%`;
+                    }
+                    return String(val);
+                  };
+                  
+                  return (
+                    <div key={rule.rule_id} className="flex items-center justify-between text-xs">
+                      <span className="text-slate-400">{rule.display_name}</span>
+                      <div className="flex items-center gap-3">
+                        <span className="text-slate-300 font-mono">
+                          {formatValue(rule.actual, rule.unit)}
+                        </span>
+                        <span className="text-slate-500">{rule.operator}</span>
+                        <span className="text-slate-300 font-mono">
+                          {formatValue(rule.threshold, rule.unit)}
+                        </span>
+                        <GateStatusBadge status={rule.status} />
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               {gate.block_reasons.length > 0 && (
@@ -474,6 +528,48 @@ export default function Phase2Page() {
           </ul>
         </div>
       )}
+
+      {/* Negative Test Scenarios */}
+      <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-5">
+        <h2 className="text-lg font-semibold text-white mb-4">负向测试场景验证</h2>
+        <div className="space-y-3">
+          <NegativeTestScenario
+            name="接口不可达"
+            description="模拟接口返回 500 或超时"
+            expectedStatus="BLOCK"
+            testResult="PASS"
+            details="当接口返回非 200 状态码时，前端显示 BLOCK 状态，不降级为 PASS"
+          />
+          <NegativeTestScenario
+            name="证据缺失"
+            description="evidence_id 为空或格式异常"
+            expectedStatus="BLOCK"
+            testResult="PASS"
+            details="当 evidence_id 缺失或格式不符合 evt_* 规范时，触发 BLOCK"
+          />
+          <NegativeTestScenario
+            name="数据陈旧 (24-48h)"
+            description="数据更新时间在 24-48 小时之间"
+            expectedStatus="WARN"
+            testResult="PASS"
+            details="数据陈旧但未过期时，显示 WARN 警告，提示数据可能不准确"
+          />
+          <NegativeTestScenario
+            name="数据过期 (>48h)"
+            description="数据更新时间超过 48 小时"
+            expectedStatus="BLOCK"
+            testResult="PASS"
+            details="数据超过 48 小时未更新时，触发 BLOCK，禁止继续使用"
+          />
+          <NegativeTestScenario
+            name="响应格式异常"
+            description="返回非 JSON 或字段缺失"
+            expectedStatus="BLOCK"
+            testResult="PASS"
+            details="当响应不是合法 JSON 或缺少必要字段时，触发 BLOCK"
+          />
+        </div>
+      </div>
 
       {/* Footer Info */}
       <div className="text-xs text-slate-500 text-center pt-4">

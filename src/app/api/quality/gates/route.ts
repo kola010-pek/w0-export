@@ -53,7 +53,7 @@ function getMockQualityGatesData(): QualityGatesData {
           severity: 'BLOCK',
           evidence_ref: 'ev_coverage_mock_001',
           description: '数据覆盖率必须 >= 99.9%',
-          unit: '%',
+          unit: 'ratio',
           data_range: { start: dataCutoff, end: dataCutoff },
           rule_version: 'v1.2.0',
           checked_at: now,

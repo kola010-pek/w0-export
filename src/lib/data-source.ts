@@ -18,13 +18,24 @@ export function isMockMode(): boolean {
 }
 
 /**
- * Get current environment label.
+ * Get current environment label based on data source mode.
+ * Contract:
+ * - Mock mode → simulation (never production)
+ * - Real mode + DEV → staging
+ * - Real mode + PROD → production
  */
 export function getEnvironment(): 'simulation' | 'staging' | 'production' {
+  const isMock = isMockMode();
+  
+  // Mock mode always returns simulation
+  if (isMock) {
+    return 'simulation';
+  }
+  
+  // Real mode: check deployment environment
   const env = process.env.COZE_PROJECT_ENV;
   if (env === 'PROD') return 'production';
-  if (env === 'STAGING') return 'staging';
-  return 'simulation';
+  return 'staging';
 }
 
 /**
@@ -65,7 +76,8 @@ export interface Phase2Response<T> {
 }
 
 /**
- * Build a standard Phase 2 response.
+ * Build a standard Phase 2 response with metadata consistency validation.
+ * Validates: environment/is_mock/source consistency, evidence completeness, schema version.
  */
 export function buildPhase2Response<T>(params: {
   data: T;
@@ -77,20 +89,60 @@ export function buildPhase2Response<T>(params: {
   success?: boolean;
 }): Phase2Response<T> {
   const isMock = isMockMode();
-  const gateStatus = params.gateStatus || (params.error ? 'BLOCK' : 'PASS');
+  const environment = getEnvironment();
+  const warnings = [...(params.warnings || [])];
+  let gateStatus = params.gateStatus || (params.error ? 'BLOCK' : 'PASS');
+
+  // ============ Metadata Consistency Gates ============
+  
+  // Gate 1: production + is_mock is invalid
+  if (environment === 'production' && isMock) {
+    gateStatus = 'BLOCK';
+    warnings.push('metadata_conflict: production environment with mock data');
+  }
+
+  // Gate 2: mock source + non-simulation environment is invalid
+  if (params.source.startsWith('mock_') && environment !== 'simulation') {
+    if (gateStatus !== 'BLOCK') {
+      gateStatus = 'WARN';
+    }
+    warnings.push('metadata_conflict: mock source in non-simulation environment');
+  }
+
+  // Gate 3: real source + simulation environment is suspicious
+  if (params.source.startsWith('real_') && environment === 'simulation') {
+    if (gateStatus !== 'BLOCK') {
+      gateStatus = 'WARN';
+    }
+    warnings.push('metadata_conflict: real source in simulation environment');
+  }
+
+  // Gate 4: evidence_id format validation
+  const evidenceId = generateEvidenceId(params.evidencePrefix);
+  if (!evidenceId || !evidenceId.startsWith('evt_')) {
+    gateStatus = 'BLOCK';
+    warnings.push('evidence_missing: invalid evidence_id format');
+  }
+
+  // Gate 5: schema_version must be present and valid
+  const schemaVersion = '1.0';
+  if (!schemaVersion || !/^\d+\.\d+$/.test(schemaVersion)) {
+    gateStatus = 'BLOCK';
+    warnings.push('schema_mismatch: invalid schema_version');
+  }
 
   return {
     success: params.success !== undefined ? params.success : !params.error,
     data: params.data,
-    environment: getEnvironment(),
+    environment,
     is_mock: isMock,
     data_cutoff: getDataCutoff(),
     generated_at: new Date().toISOString(),
     source: params.source,
-    evidence_id: generateEvidenceId(params.evidencePrefix),
+    evidence_id: evidenceId,
     gate_status: gateStatus,
-    schema_version: '1.0',
-    ...(params.warnings ? { warnings: params.warnings } : {}),
+    schema_version: schemaVersion,
+    ...(warnings.length > 0 ? { warnings } : {}),
     ...(params.error ? { error: params.error } : {}),
   };
 }

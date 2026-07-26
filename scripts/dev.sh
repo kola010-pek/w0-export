@@ -29,6 +29,16 @@ kill_port_if_listening() {
 
 echo "Clearing port ${DEPLOY_RUN_PORT} before start."
 kill_port_if_listening
+
+# Load environment configuration from .env.local
+if [ -f "${COZE_WORKSPACE_PATH}/.env.local" ]; then
+    set -a
+    source "${COZE_WORKSPACE_PATH}/.env.local"
+    set +a
+fi
+
 echo "Starting HTTP service on port ${DEPLOY_RUN_PORT} for dev..."
+echo "DATA_SOURCE_MODE=${DATA_SOURCE_MODE:-mock}"
+echo "SQLITE_DB_PATH=${SQLITE_DB_PATH:-not set}"
 
 PORT=${DEPLOY_RUN_PORT} pnpm tsx watch src/server.ts

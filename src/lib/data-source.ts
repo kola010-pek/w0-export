@@ -18,6 +18,15 @@ export function isMockMode(): boolean {
 }
 
 /**
+ * Check if the current database is a real financial database.
+ * Returns false for sample/staging databases.
+ * This is determined by checking if the SQLITE_IS_REAL_FINANCIAL_DB env var is set to 'true'.
+ */
+export function isRealFinancialDatabase(): boolean {
+  return process.env.SQLITE_IS_REAL_FINANCIAL_DB === 'true';
+}
+
+/**
  * Get current environment label based on data source mode.
  * Contract:
  * - Mock mode → simulation (never production)
@@ -107,6 +116,11 @@ export interface Phase2Response<T> {
   schema_version: string;
   error?: string;
   warnings?: string[];
+  // Final status summary fields
+  service_health?: 'PASS' | 'WARN' | 'BLOCK';
+  quality_gate_status?: 'PASS' | 'WARN' | 'BLOCK';
+  readiness?: 'PASS' | 'WARN' | 'BLOCK';
+  release_eligibility?: 'PASS' | 'BLOCK';
 }
 
 /**
@@ -121,6 +135,12 @@ export function buildPhase2Response<T>(params: {
   warnings?: string[];
   error?: string;
   success?: boolean;
+  extra?: {
+    service_health?: 'PASS' | 'WARN' | 'BLOCK';
+    quality_gate_status?: 'PASS' | 'WARN' | 'BLOCK';
+    readiness?: 'PASS' | 'WARN' | 'BLOCK';
+    release_eligibility?: 'PASS' | 'BLOCK';
+  };
 }): Phase2Response<T> {
   const isMock = isMockMode();
   const environment = getEnvironment();
@@ -178,6 +198,10 @@ export function buildPhase2Response<T>(params: {
     schema_version: schemaVersion,
     ...(warnings.length > 0 ? { warnings } : {}),
     ...(params.error ? { error: params.error } : {}),
+    ...(params.extra?.service_health ? { service_health: params.extra.service_health } : {}),
+    ...(params.extra?.quality_gate_status ? { quality_gate_status: params.extra.quality_gate_status } : {}),
+    ...(params.extra?.readiness ? { readiness: params.extra.readiness } : {}),
+    ...(params.extra?.release_eligibility ? { release_eligibility: params.extra.release_eligibility } : {}),
   };
 }
 

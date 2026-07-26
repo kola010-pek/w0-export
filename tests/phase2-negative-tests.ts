@@ -14,7 +14,9 @@ interface TestResult {
   expected_status: 'PASS' | 'WARN' | 'BLOCK';
   actual_status: 'PASS' | 'WARN' | 'BLOCK';
   assertion_result: 'PASS' | 'FAIL';
-  evidence_id: string;
+  evidence_id?: string;
+  injected_evidence_id?: string | null;
+  test_evidence_id?: string;
   details?: string;
 }
 
@@ -76,6 +78,7 @@ async function testEvidenceMissing(): Promise<TestResult> {
   
   // 验证缺失 evidence_id 时的行为
   const hasEvidence = !!malformedResponse.evidence_id && malformedResponse.evidence_id.length > 0;
+  const testEvidenceId = `evt_test_${Date.now()}`;
   
   return {
     test_id: testId,
@@ -84,7 +87,8 @@ async function testEvidenceMissing(): Promise<TestResult> {
     expected_status: 'BLOCK',
     actual_status: hasEvidence ? 'PASS' : 'BLOCK',
     assertion_result: hasEvidence ? 'FAIL' : 'PASS',
-    evidence_id: malformedResponse.evidence_id || 'missing',
+    injected_evidence_id: null, // 被测输入缺少 evidence_id
+    test_evidence_id: testEvidenceId, // 测试报告自身的证据 ID
     details: `Evidence ID ${hasEvidence ? 'present' : 'missing'} - should be BLOCK when missing`
   };
 }

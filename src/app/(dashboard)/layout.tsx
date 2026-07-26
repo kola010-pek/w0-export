@@ -12,6 +12,7 @@ const NAV_ITEMS = [
   { href: '/models', label: '模型与信号', icon: '⚛' },
   { href: '/approvals', label: '审批中心', icon: '✉' },
   { href: '/audit', label: '审计日志', icon: '☰' },
+  { href: '/phase2', label: 'Phase 2 联调', icon: '◉' },
 ];
 
 function CurrentRunBadge() {
@@ -72,7 +73,7 @@ function SidebarContent() {
         })}
       </nav>
       <div className="p-3 border-t border-slate-700 text-xs text-slate-500">
-        v0.1.0 · Phase 1 (Mock)
+        v0.2.0 · Phase 2 (Read-Only)
       </div>
     </aside>
   );

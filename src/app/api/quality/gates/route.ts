@@ -221,7 +221,37 @@ async function getRealQualityGatesData(): Promise<{ data: QualityGatesData; warn
   }
 
   const gates: QualityGate[] = [];
-  const dataCutoff = new Date().toISOString().split('T')[0];
+  
+  // Get real data_cutoff from the latest trade date in the database
+  let dataCutoff = new Date().toISOString().split('T')[0];
+  try {
+    const Database = require('better-sqlite3');
+    const dbPath = process.env.SQLITE_DB_PATH || './data/staging.db';
+    const db = new Database(dbPath, { readonly: true, fileMustExist: true });
+    
+    // Get the latest trade date across all required tables
+    const tables = ['daily_kline', 'adjustment_factors', 'factor_data', 'market_factors'];
+    const latestDates: string[] = [];
+    
+    for (const table of tables) {
+      const tableCheck = db.prepare(`SELECT name FROM sqlite_master WHERE type='table' AND name=?`).get(table);
+      if (tableCheck) {
+        const latestRow = db.prepare(`SELECT trade_date as latest_date FROM ${table} ORDER BY trade_date DESC LIMIT 1`).get() as any;
+        if (latestRow?.latest_date) {
+          latestDates.push(latestRow.latest_date);
+        }
+      }
+    }
+    
+    db.close();
+    
+    if (latestDates.length > 0) {
+      latestDates.sort().reverse();
+      dataCutoff = latestDates[0];
+    }
+  } catch (error) {
+    // Fall back to system date if database is not accessible
+  }
 
   // 1. Coverage check - check if all required tables have data
   const tableCheck = checkRequiredTables();

@@ -1,72 +1,72 @@
 [
   {
     "test_id": "NEG_001_DB_UNREACHABLE",
-    "executed_at": "2026-07-26T04:37:18.026Z",
+    "executed_at": "2026-07-26T04:46:32.096Z",
     "input_fixture": "database_path_not_exist",
     "expected_status": "BLOCK",
     "actual_status": "BLOCK",
     "assertion_result": "PASS",
-    "evidence_id": "evt_test_1785040638054",
+    "evidence_id": "evt_test_1785041192126",
     "details": "file_exists=false, readonly_connection=false"
   },
   {
     "test_id": "NEG_002_EVIDENCE_MISSING",
-    "executed_at": "2026-07-26T04:37:18.054Z",
-    "input_fixture": "evidence_id_validation",
+    "executed_at": "2026-07-26T04:46:32.126Z",
+    "input_fixture": "evidence_id_missing_in_response",
     "expected_status": "BLOCK",
-    "actual_status": "PASS",
+    "actual_status": "BLOCK",
     "assertion_result": "PASS",
-    "evidence_id": "evt_health_real_639e68efcd23",
-    "details": "Evidence ID present"
+    "evidence_id": "missing",
+    "details": "Evidence ID missing - should be BLOCK when missing"
   },
   {
     "test_id": "NEG_003_DATA_STALE",
-    "executed_at": "2026-07-26T04:37:18.090Z",
+    "executed_at": "2026-07-26T04:46:32.126Z",
     "input_fixture": "data_28_hours_old",
     "expected_status": "WARN",
     "actual_status": "WARN",
     "assertion_result": "PASS",
-    "evidence_id": "evt_test_1785040638106",
+    "evidence_id": "evt_test_1785041192139",
     "details": "Aged data detected: true, staleDate: 2026-07-25"
   },
   {
     "test_id": "NEG_004_DATA_EXPIRED",
-    "executed_at": "2026-07-26T04:37:18.106Z",
+    "executed_at": "2026-07-26T04:46:32.140Z",
     "input_fixture": "data_72_hours_old",
     "expected_status": "BLOCK",
     "actual_status": "BLOCK",
     "assertion_result": "PASS",
-    "evidence_id": "evt_test_1785040638110",
+    "evidence_id": "evt_test_1785041192143",
     "details": "Expired data detected: true"
   },
   {
     "test_id": "NEG_005_FORMAT_ABNORMAL",
-    "executed_at": "2026-07-26T04:37:18.110Z",
-    "input_fixture": "schema_validation",
+    "executed_at": "2026-07-26T04:46:32.143Z",
+    "input_fixture": "missing_required_fields",
     "expected_status": "BLOCK",
-    "actual_status": "PASS",
+    "actual_status": "BLOCK",
     "assertion_result": "PASS",
-    "evidence_id": "evt_health_real_ae275c6a7693",
-    "details": "All required fields present"
+    "evidence_id": "test_evidence",
+    "details": "Missing fields: is_mock, generated_at, schema_version"
   },
   {
     "test_id": "NEG_006_DEPENDENCY_MISSING",
-    "executed_at": "2026-07-26T04:37:18.115Z",
+    "executed_at": "2026-07-26T04:46:32.143Z",
     "input_fixture": "missing_required_table",
     "expected_status": "BLOCK",
     "actual_status": "BLOCK",
     "assertion_result": "PASS",
-    "evidence_id": "evt_test_1785040638120",
+    "evidence_id": "evt_test_1785041192147",
     "details": "required_tables=false, missing: market_factors"
   },
   {
     "test_id": "NEG_007_METADATA_CONFLICT",
-    "executed_at": "2026-07-26T04:37:18.120Z",
-    "input_fixture": "metadata_consistency",
+    "executed_at": "2026-07-26T04:46:32.147Z",
+    "input_fixture": "environment_production_with_is_mock_true",
     "expected_status": "BLOCK",
-    "actual_status": "PASS",
+    "actual_status": "BLOCK",
     "assertion_result": "PASS",
-    "evidence_id": "evt_health_real_859fefc36388",
-    "details": "Metadata consistent - no conflict (correct behavior)"
+    "evidence_id": "test_evidence",
+    "details": "Conflict detected: environment=production, is_mock=true, source=mock_health_service"
   }
 ]

@@ -334,7 +334,7 @@ export default function Phase2Page() {
             </span>
             <div>
               <h2 className={`text-lg font-bold ${healthData.is_mock ? 'text-blue-300' : 'text-green-300'}`}>
-                当前数据源：{healthData.is_mock ? 'Mock 模拟数据' : 'Real Staging 真实数据'}
+                当前数据源：{healthData.is_mock ? 'Mock 模拟数据' : 'Sample Staging 示例数据（非真实金融数据库）'}
               </h2>
               <p className="text-sm text-slate-400">
                 环境：{healthData.environment} · 证据ID：{healthData.evidence_id}

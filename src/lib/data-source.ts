@@ -42,9 +42,42 @@ export function getEnvironment(): 'simulation' | 'staging' | 'production' {
 /**
  * Generate a data cutoff date.
  * Mock mode: today's date.
- * Real mode: provided by backend.
+ * Real mode: latest trade date from database.
  */
 export function getDataCutoff(): string {
+  const mode = getDataSourceMode();
+  
+  if (mode === 'real') {
+    try {
+      // Try to get the latest trade date from the database
+      const Database = require('better-sqlite3');
+      const dbPath = process.env.SQLITE_DB_PATH || './data/staging.db';
+      const db = new Database(dbPath, { readonly: true, fileMustExist: true });
+      
+      const tables = ['daily_kline', 'adjustment_factors', 'factor_data', 'market_factors'];
+      const latestDates: string[] = [];
+      
+      for (const table of tables) {
+        const tableCheck = db.prepare(`SELECT name FROM sqlite_master WHERE type='table' AND name=?`).get(table);
+        if (tableCheck) {
+          const latestRow = db.prepare(`SELECT trade_date as latest_date FROM ${table} ORDER BY trade_date DESC LIMIT 1`).get() as any;
+          if (latestRow?.latest_date) {
+            latestDates.push(latestRow.latest_date);
+          }
+        }
+      }
+      
+      db.close();
+      
+      if (latestDates.length > 0) {
+        latestDates.sort().reverse();
+        return latestDates[0];
+      }
+    } catch (error) {
+      // Fall back to system date if database is not accessible
+    }
+  }
+  
   return new Date().toISOString().split('T')[0];
 }
 

@@ -40,6 +40,7 @@ export type TaskStatus =
   | 'PENDING'
   | 'RUNNING'
   | 'SUCCEEDED'
+  | 'MOCK_SUCCEEDED'  // Mock execution succeeded (simulation only)
   | 'FAILED'
   | 'BLOCKED'
   | 'SKIPPED_BY_GATE'
@@ -136,7 +137,7 @@ export interface Approval {
   approval_id: string;
   run_id: string;
   task_id: string;
-  approval_type: 'risk_review' | 'human_release' | 'human_review';
+  approval_type: 'risk_review' | 'human_release' | 'human_review' | 'mock_auto_approval';
   status: ApprovalStatus;
   model_version: string;
   input_snapshot_id: string;
@@ -206,6 +207,7 @@ export interface Run {
   approvals: Record<string, Approval>;
   current_node: string | null;
   block_reason: string | null;
+  mock_mode?: boolean;  // Indicates this is a simulation/mock run
 }
 
 // ============ DAG Types ============

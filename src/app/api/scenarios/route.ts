@@ -25,6 +25,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const scenario = SCENARIOS.find(s => s.id === scenario_id);
     const result = runScenario(scenario_id as ScenarioId);
     return NextResponse.json({
       success: result.success,
@@ -32,6 +33,7 @@ export async function POST(request: NextRequest) {
         run_id: result.run?.run_id,
         status: result.run?.status,
         scenario: scenario_id,
+        scenario_display_name: scenario?.name || scenario_id,
         steps: result.steps,
         message: result.message,
       },

@@ -15,8 +15,8 @@ export interface ScenarioDef {
 export const SCENARIOS: ScenarioDef[] = [
   {
     id: 'scenario_a',
-    name: '场景 A: 全部通过',
-    description: '数据更新成功 → 质量门禁 PASS → 候选信号生成 → 风控批准 → 人工批准 → 发布成功',
+    name: '正常通过场景',
+    description: '全部门禁通过 → 模拟自动审批 → Mock 发布成功 → 发布后观察（内部编码: scenario_a）',
     expected_flow: [
       'daily_kline', 'adjustment_factors', 'factor_data', 'market_factors',
       'product_quality_gate', 'candidate_signal', 'risk_approval',
@@ -25,8 +25,8 @@ export const SCENARIOS: ScenarioDef[] = [
   },
   {
     id: 'scenario_b',
-    name: '场景 B: 核心数据阻断',
-    description: '复权因子缺口超过阈值 → 数据质量 BLOCK → 模型生产及下游全部 SKIPPED_BY_GATE',
+    name: '数据门禁阻断场景',
+    description: '复权因子缺口超过阈值 → 质量门禁 BLOCK → 下游节点全部 SKIPPED_BY_GATE（内部编码: scenario_b）',
     expected_flow: [
       'daily_kline', 'adjustment_factors', 'factor_data', 'market_factors',
       'product_quality_gate(BLOCK)'
@@ -34,8 +34,8 @@ export const SCENARIOS: ScenarioDef[] = [
   },
   {
     id: 'scenario_c',
-    name: '场景 C: 模型警告',
-    description: '数据核心门禁 PASS → 模型门禁 WARN → 流程停在人工审批',
+    name: '人工审批场景',
+    description: '数据门禁 PASS → 模型门禁 WARN → 流程停在人工审批，等待负责人审批或拒绝（内部编码: scenario_c）',
     expected_flow: [
       'daily_kline', 'adjustment_factors', 'factor_data', 'market_factors',
       'product_quality_gate(PASS)', 'candidate_signal(WARN)', 'WAITING_APPROVAL'
@@ -105,14 +105,17 @@ export function runScenario(scenarioId: ScenarioId): {
     }
 
     if (currentRun.status === 'WAITING_APPROVAL') {
-      // For scenario_a, auto-approve to demonstrate full COMPLETED flow
+      // For scenario_a, use mock_auto_approval (NOT human_release) to demonstrate full COMPLETED flow
+      // human_release requires real human approval, mock_auto_approval is simulation-only
       if (scenarioId === 'scenario_a') {
         const pendingApprovals = Object.values(currentRun.approvals).filter(a => a.status === 'PENDING');
         for (const appr of pendingApprovals) {
+          // Change approval type to mock_auto_approval to distinguish from real human approval
+          appr.approval_type = 'mock_auto_approval';
           appr.status = 'APPROVED';
-          appr.approver = 'auto-risk-reviewer';
+          appr.approver = 'mock-simulation-system';
           appr.decided_at = new Date().toISOString();
-          appr.opinion = 'Scenario A auto-approval: all metrics within acceptable range';
+          appr.opinion = '[仅模拟] 场景 A 自动审批：所有指标在可接受范围内。此审批仅用于演示，不代表真实审批。';
 
           // Update corresponding task
           const task = currentRun.tasks[appr.task_id];

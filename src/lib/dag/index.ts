@@ -74,6 +74,7 @@ export function createRun(
     approvals: {},
     current_node: null,
     block_reason: null,
+    mock_mode: true,  // All runs in current environment are mock/simulation
   };
 
   saveRun(run);

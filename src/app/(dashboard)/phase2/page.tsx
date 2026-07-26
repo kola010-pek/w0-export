@@ -23,7 +23,7 @@ interface HealthData {
   version: string;
   uptime_seconds: number;
   services: {
-    database: 'connected' | 'disconnected' | 'mock';
+    database: 'connected' | 'disconnected' | 'mock' | 'readonly';
     cache: 'connected' | 'disconnected' | 'mock';
     model_service: 'disabled' | 'connected' | 'mock';
   };
@@ -93,6 +93,77 @@ interface QualityGatesData {
     block_count: number;
     not_executed_count: number;
   };
+}
+
+// Phase 2.2 Preflight types
+interface SchemaProbeTable {
+  logical_name: string;
+  detected_table_name: string;
+  exists: boolean;
+  row_count: number;
+  detected_date_column: string | null;
+  detected_code_column: string | null;
+  detected_business_key: string | null;
+  earliest_date: string | null;
+  latest_date: string | null;
+  required_columns_present: boolean;
+  missing_columns: string[];
+  schema_status: 'ok' | 'incomplete' | 'missing' | 'unrecognized';
+  evidence_id: string;
+}
+
+interface PreflightData {
+  configuration: {
+    data_source_mode: string;
+    data_source_kind: string;
+    real_db_path_configured: boolean;
+  };
+  connection: {
+    status: 'not_configured' | 'connected' | 'failed';
+    readonly_connection: boolean;
+    query_only: boolean;
+    quick_check: boolean;
+    write_rejection_verified: boolean;
+    write_rejection_methods: string[];
+  };
+  identity: {
+    database_fingerprint: string;
+    database_size_bytes: number;
+    database_last_modified: string;
+    database_path_exposed: false;
+  } | null;
+  schema_probe: {
+    probed: boolean;
+    tables: SchemaProbeTable[];
+    summary: {
+      total_candidates: number;
+      detected_count: number;
+      missing_count: number;
+      incomplete_count: number;
+      all_required_present: boolean;
+    };
+  };
+  safety: {
+    production_write_enabled: false;
+    production_model_enabled: false;
+    production_release_enabled: false;
+    sql_input_accepted: false;
+    db_path_selectable: false;
+    auto_migration_disabled: false;
+    auto_fill_disabled: false;
+  };
+}
+
+// Phase 2.2 negative test result
+interface RealNegativeTestResult {
+  test_id: string;
+  test_run_id: string;
+  test_evidence_id: string;
+  expected_status: string;
+  actual_status: string;
+  assertion_result: string;
+  block_reasons: string[];
+  details: string;
 }
 
 // ============ Gate Status Badge ============
@@ -216,7 +287,9 @@ export default function Phase2Page() {
   const [healthData, setHealthData] = useState<Phase2Response<HealthData> | null>(null);
   const [watermarksData, setWatermarksData] = useState<Phase2Response<WatermarksData> | null>(null);
   const [qualityData, setQualityData] = useState<Phase2Response<QualityGatesData> | null>(null);
+  const [preflightData, setPreflightData] = useState<Phase2Response<PreflightData> | null>(null);
   const [testReport, setTestReport] = useState<TestReportItem[]>([]);
+  const [realTestReport, setRealTestReport] = useState<RealNegativeTestResult[]>([]);
   const [testRunId, setTestRunId] = useState<string | null>(null);
   const [testSummary, setTestSummary] = useState<{
     total_tests: number;
@@ -233,14 +306,16 @@ export default function Phase2Page() {
         setLoading(true);
         setError(null);
 
-        const [healthRes, watermarksRes, qualityRes, testReportRes] = await Promise.all([
+        const [healthRes, watermarksRes, qualityRes, testReportRes, preflightRes, realTestRes] = await Promise.all([
           fetch('/api/health'),
           fetch('/api/data/watermarks'),
           fetch('/api/quality/gates'),
           fetch('/api/test-report'),
+          fetch('/api/phase2/real-db-preflight'),
+          fetch('/api/phase2/real-negative-test-report'),
         ]);
 
-        // Check if any response is not OK - must BLOCK, never degrade
+        // Check if any core response is not OK - must BLOCK, never degrade
         if (!healthRes.ok || !watermarksRes.ok || !qualityRes.ok) {
           setError('一个或多个接口不可达');
           setLoading(false);
@@ -261,6 +336,20 @@ export default function Phase2Page() {
         setHealthData(health);
         setWatermarksData(watermarks);
         setQualityData(quality);
+
+        // Parse preflight data (optional - don't fail if not available)
+        if (preflightRes.ok) {
+          const preflight = await preflightRes.json();
+          setPreflightData(preflight);
+        }
+
+        // Parse real negative test report (optional)
+        if (realTestRes.ok) {
+          const realTestJson = await realTestRes.json();
+          if (realTestJson.success && Array.isArray(realTestJson.data?.results)) {
+            setRealTestReport(realTestJson.data.results);
+          }
+        }
 
         // Parse test report (optional - don't fail if not available)
         if (testReportRes.ok) {
@@ -661,6 +750,191 @@ export default function Phase2Page() {
             ))}
           </div>
         )}
+      </div>
+
+      {/* ============ Phase 2.2 Real Database Read-Only Access ============ */}
+      <div className="bg-slate-800/50 border border-purple-700/50 rounded-lg p-5">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <h2 className="text-lg font-semibold text-white">Phase 2.2 真实数据库只读接入</h2>
+            <span className="text-xs bg-purple-900/50 text-purple-300 px-2 py-0.5 rounded border border-purple-700/50">
+              前置能力
+            </span>
+          </div>
+          <div className="flex items-center gap-3">
+            <GateStatusBadge status={preflightData?.gate_status || 'BLOCK'} />
+            {preflightData?.evidence_id && (
+              <span className="text-xs text-slate-500 font-mono">{preflightData.evidence_id}</span>
+            )}
+          </div>
+        </div>
+
+        {/* Status Banner */}
+        <div className="bg-red-900/20 border border-red-700/30 rounded-lg p-4 mb-4">
+          <div className="flex items-start gap-3">
+            <span className="text-red-400 text-xl">✗</span>
+            <div className="flex-1">
+              <h3 className="text-sm font-semibold text-red-300 mb-2">
+                状态：BLOCK — 真实数据库路径尚未由负责人配置
+              </h3>
+              <ul className="text-xs text-red-200/80 space-y-1">
+                <li>• 未连接真实数据库</li>
+                <li>• 未执行真实数据质量验收</li>
+                <li>• fallback_used = false（不会自动回退到 Sample 或 Mock）</li>
+                <li>• release_eligibility = BLOCK</li>
+                <li>• 等待负责人提供并确认真实数据库绝对路径</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {/* Configuration Status */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div className="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30">
+            <h4 className="text-xs font-medium text-slate-400 mb-2">数据源配置</h4>
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-slate-500">data_source_mode</span>
+                <span className="text-xs font-mono text-purple-300">
+                  {preflightData?.data.configuration.data_source_mode || 'real_readonly'}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-slate-500">data_source_kind</span>
+                <span className="text-xs font-mono text-purple-300">
+                  {preflightData?.data.configuration.data_source_kind || 'production_database_readonly'}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-slate-500">real_db_path_configured</span>
+                <span className={`text-xs font-mono ${preflightData?.data.configuration.real_db_path_configured ? 'text-green-400' : 'text-red-400'}`}>
+                  {String(preflightData?.data.configuration.real_db_path_configured ?? false)}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30">
+            <h4 className="text-xs font-medium text-slate-400 mb-2">连接状态</h4>
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-slate-500">connection_status</span>
+                <span className="text-xs font-mono text-red-400">
+                  {preflightData?.data.connection.status || 'not_configured'}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-slate-500">readonly_connection</span>
+                <span className="text-xs font-mono text-slate-500">
+                  {String(preflightData?.data.connection.readonly_connection ?? false)}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-slate-500">query_only</span>
+                <span className="text-xs font-mono text-slate-500">
+                  {String(preflightData?.data.connection.query_only ?? false)}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-slate-500">database_path_exposed</span>
+                <span className="text-xs font-mono text-green-400">false</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Safety Flags */}
+        <div className="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30 mb-4">
+          <h4 className="text-xs font-medium text-slate-400 mb-2">安全状态（全部禁用）</h4>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            {[
+              { key: '数据库写入', value: false },
+              { key: '自动补数', value: false },
+              { key: 'Schema 修改', value: false },
+              { key: '正式模型运行', value: false },
+              { key: '模型晋升', value: false },
+              { key: '信号发布', value: false },
+              { key: '自动审批', value: false },
+              { key: 'SQL 输入', value: false },
+            ].map((flag) => (
+              <div key={flag.key} className="flex items-center justify-between text-xs">
+                <span className="text-slate-500">{flag.key}</span>
+                <span className="text-green-400 font-mono">禁用</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Schema Probe Summary */}
+        {preflightData?.data.schema_probe.probed && (
+          <div className="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30 mb-4">
+            <h4 className="text-xs font-medium text-slate-400 mb-2">Schema 探测结果</h4>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className="border-b border-slate-600/30">
+                    <th className="text-left py-1.5 px-2 text-slate-500">逻辑表名</th>
+                    <th className="text-left py-1.5 px-2 text-slate-500">检测表名</th>
+                    <th className="text-left py-1.5 px-2 text-slate-500">存在</th>
+                    <th className="text-left py-1.5 px-2 text-slate-500">行数</th>
+                    <th className="text-left py-1.5 px-2 text-slate-500">日期列</th>
+                    <th className="text-left py-1.5 px-2 text-slate-500">状态</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {preflightData.data.schema_probe.tables.map((table) => (
+                    <tr key={table.logical_name} className="border-b border-slate-700/30">
+                      <td className="py-1.5 px-2 text-slate-300 font-mono">{table.logical_name}</td>
+                      <td className="py-1.5 px-2 text-slate-400 font-mono">{table.detected_table_name}</td>
+                      <td className="py-1.5 px-2">
+                        <span className={table.exists ? 'text-green-400' : 'text-red-400'}>
+                          {String(table.exists)}
+                        </span>
+                      </td>
+                      <td className="py-1.5 px-2 text-slate-300">{table.row_count.toLocaleString()}</td>
+                      <td className="py-1.5 px-2 text-slate-400">{table.detected_date_column || '-'}</td>
+                      <td className="py-1.5 px-2">
+                        <GateStatusBadge status={table.schema_status === 'ok' ? 'PASS' : table.schema_status === 'missing' ? 'BLOCK' : 'WARN'} />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* Phase 2.2 Negative Tests */}
+        {realTestReport.length > 0 && (
+          <div className="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30 mb-4">
+            <h4 className="text-xs font-medium text-slate-400 mb-2">
+              Phase 2.2 负向测试 ({realTestReport.filter(t => t.assertion_result === 'PASS').length}/{realTestReport.length} 通过)
+            </h4>
+            <div className="space-y-2">
+              {realTestReport.map((test) => (
+                <div key={test.test_id} className="flex items-center justify-between text-xs bg-slate-800/50 rounded p-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-slate-300 font-mono">{test.test_id}</span>
+                    <span className="text-slate-500">{test.details}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-slate-500">期望: {test.expected_status}</span>
+                    <span className="text-slate-500">实际: {test.actual_status}</span>
+                    <GateStatusBadge status={test.assertion_result} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Footer */}
+        <div className="pt-3 border-t border-slate-700/50">
+          <div className="flex items-center justify-between text-xs text-slate-500">
+            <span>Phase 2.2A 真实数据库只读接入框架已就绪</span>
+            <span>等待负责人提供并确认真实数据库绝对路径</span>
+          </div>
+        </div>
       </div>
 
       {/* Footer Info */}

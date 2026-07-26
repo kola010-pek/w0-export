@@ -5,6 +5,7 @@ import { NextResponse } from 'next/server';
 import {
   buildPhase2Response,
   isMockMode,
+  isRealReadonlyMode,
 } from '@/lib/data-source';
 import {
   getReadOnlyConnection,

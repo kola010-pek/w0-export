@@ -53,6 +53,13 @@ output.log
 *.log.*
 logs/
 
+# Phase 2.2A: Real database test artifacts
+data/test-temp/
+data/real-negative-test-report.json
+# Real database files (if any local copies exist)
+data/real-*.db
+data/production*.db
+
 # 视频文件
 *.mp4
 *.avi

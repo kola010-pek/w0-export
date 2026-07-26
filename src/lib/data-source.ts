@@ -1,20 +1,36 @@
-// Phase 2: Mock/Real data source switching mechanism
-// Controls whether APIs return mock data or connect to real read-only backends
+// Phase 2: Mock/Sample/Real-Readonly data source switching mechanism
+// Controls whether APIs return mock data, sample staging data, or real read-only database
 
 import { v4 as uuidv4 } from 'uuid';
 
-export type DataSourceMode = 'mock' | 'real';
+export type DataSourceMode = 'mock' | 'sample' | 'real_readonly';
 
 /**
  * Get current data source mode from environment variable.
- * Defaults to 'mock' for safety - real mode must be explicitly enabled.
+ * Supported values:
+ * - 'mock': Mock data (simulation environment)
+ * - 'sample': Sample Staging SQLite (Phase 2.1 baseline)
+ * - 'real_readonly': Real financial database read-only (Phase 2.2A)
+ *
+ * 'real' is treated as alias for 'sample' for backward compatibility.
+ * Defaults to 'mock' for safety.
  */
 export function getDataSourceMode(): DataSourceMode {
-  return process.env.DATA_SOURCE_MODE === 'real' ? 'real' : 'mock';
+  const raw = process.env.DATA_SOURCE_MODE;
+  if (raw === 'real_readonly') return 'real_readonly';
+  if (raw === 'sample' || raw === 'real') return 'sample';
+  return 'mock';
 }
 
 export function isMockMode(): boolean {
   return getDataSourceMode() === 'mock';
+}
+
+/**
+ * Check if the current data source is the real financial database (read-only).
+ */
+export function isRealReadonlyMode(): boolean {
+  return getDataSourceMode() === 'real_readonly';
 }
 
 /**
@@ -29,36 +45,53 @@ export function isRealFinancialDatabase(): boolean {
 /**
  * Get current environment label based on data source mode.
  * Contract:
- * - Mock mode → simulation (never production)
- * - Real mode → staging (production not allowed in Phase 2.1)
- * 
- * Phase 2.1 restriction: Real mode only returns staging, never production.
+ * - Mock mode -> simulation (never production)
+ * - Sample mode -> staging (Phase 2.1 baseline)
+ * - Real Readonly mode -> staging (Phase 2.2A, production not allowed)
+ *
  * Production environment is reserved for future phases with full safety controls.
  */
 export function getEnvironment(): 'simulation' | 'staging' | 'production' {
-  const isMock = isMockMode();
+  const mode = getDataSourceMode();
   
   // Mock mode always returns simulation
-  if (isMock) {
+  if (mode === 'mock') {
     return 'simulation';
   }
   
-  // Real mode: Phase 2.1 only allows staging
+  // Both sample and real_readonly return staging
   // Production is reserved for future phases
   return 'staging';
 }
 
 /**
+ * Get the data_source_kind label for API responses.
+ * - mock -> 'mock_data'
+ * - sample -> 'sample_staging_database'
+ * - real_readonly -> 'production_database_readonly'
+ */
+export function getDataSourceKind(): string {
+  const mode = getDataSourceMode();
+  switch (mode) {
+    case 'mock': return 'mock_data';
+    case 'sample': return 'sample_staging_database';
+    case 'real_readonly': return 'production_database_readonly';
+    default: return 'unknown';
+  }
+}
+
+/**
  * Generate a data cutoff date.
  * Mock mode: today's date.
- * Real mode: latest trade date from database.
+ * Sample mode: latest trade date from sample staging database.
+ * Real Readonly mode: today's date (real DB preflight handles its own cutoff).
  */
 export function getDataCutoff(): string {
   const mode = getDataSourceMode();
   
-  if (mode === 'real') {
+  if (mode === 'sample') {
     try {
-      // Try to get the latest trade date from the database
+      // Try to get the latest trade date from the sample staging database
       const Database = require('better-sqlite3');
       const dbPath = process.env.SQLITE_DB_PATH || './data/staging.db';
       const db = new Database(dbPath, { readonly: true, fileMustExist: true });
@@ -87,6 +120,8 @@ export function getDataCutoff(): string {
     }
   }
   
+  // For mock and real_readonly modes, return today's date
+  // real_readonly mode's preflight API computes its own cutoff from the real DB
   return new Date().toISOString().split('T')[0];
 }
 
@@ -107,7 +142,9 @@ export interface Phase2Response<T> {
   success: boolean;
   data: T;
   environment: 'simulation' | 'staging' | 'production';
+  data_source_kind: string;
   is_mock: boolean;
+  is_sample: boolean;
   fallback_used: boolean;
   data_cutoff: string;
   generated_at: string;
@@ -144,6 +181,7 @@ export function buildPhase2Response<T>(params: {
   };
 }): Phase2Response<T> {
   const isMock = isMockMode();
+  const mode = getDataSourceMode();
   const environment = getEnvironment();
   const warnings = [...(params.warnings || [])];
   let gateStatus = params.gateStatus || (params.error ? 'BLOCK' : 'PASS');
@@ -190,7 +228,9 @@ export function buildPhase2Response<T>(params: {
     success: params.success !== undefined ? params.success : !params.error,
     data: params.data,
     environment,
+    data_source_kind: getDataSourceKind(),
     is_mock: isMock,
+    is_sample: mode === 'sample',
     fallback_used: false,
     data_cutoff: getDataCutoff(),
     generated_at: new Date().toISOString(),

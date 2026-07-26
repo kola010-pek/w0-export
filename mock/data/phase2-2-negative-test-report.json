@@ -1,0 +1,131 @@
+{
+  "test_run_id": "96a1eda0-a2a2-4cb1-9d88-c289675f8b8c",
+  "phase": "2.2A",
+  "executed_at": "2026-07-26T05:53:52.910Z",
+  "total_tests": 10,
+  "passed_tests": 10,
+  "failed_tests": 0,
+  "evidence_id_uniqueness": true,
+  "results": [
+    {
+      "test_id": "REAL_001_PATH_MISSING",
+      "test_run_id": "96a1eda0-a2a2-4cb1-9d88-c289675f8b8c",
+      "test_evidence_id": "evt_real_real_001_path_missing_8fe9d73a",
+      "expected_status": "BLOCK",
+      "actual_status": "BLOCK",
+      "assertion_result": "PASS",
+      "block_reasons": [
+        "real_sqlite_db_path_not_configured"
+      ],
+      "details": "Path configured: false. Expected: not configured -> BLOCK"
+    },
+    {
+      "test_id": "REAL_002_FILE_NOT_FOUND",
+      "test_run_id": "96a1eda0-a2a2-4cb1-9d88-c289675f8b8c",
+      "test_evidence_id": "evt_real_real_002_file_not_found_ea4c0256",
+      "expected_status": "BLOCK",
+      "actual_status": "BLOCK",
+      "assertion_result": "PASS",
+      "block_reasons": [
+        "database_file_not_found"
+      ],
+      "details": "File exists: false. Expected: not found -> BLOCK"
+    },
+    {
+      "test_id": "REAL_003_INVALID_SQLITE",
+      "test_run_id": "96a1eda0-a2a2-4cb1-9d88-c289675f8b8c",
+      "test_evidence_id": "evt_real_real_003_invalid_sqlite_898f1e27",
+      "expected_status": "BLOCK",
+      "actual_status": "BLOCK",
+      "assertion_result": "PASS",
+      "block_reasons": [
+        "readonly_connection_failed"
+      ],
+      "details": "Connection succeeded with corrupt DB: false. Expected: fail -> BLOCK"
+    },
+    {
+      "test_id": "REAL_004_READONLY_CONNECTION_FAILED",
+      "test_run_id": "96a1eda0-a2a2-4cb1-9d88-c289675f8b8c",
+      "test_evidence_id": "evt_real_real_004_readonly_connection_failed_ac990fb1",
+      "expected_status": "BLOCK",
+      "actual_status": "BLOCK",
+      "assertion_result": "PASS",
+      "block_reasons": [
+        "readonly_connection_failed"
+      ],
+      "details": "Connection to directory succeeded: false. Expected: fail -> BLOCK"
+    },
+    {
+      "test_id": "REAL_005_QUICK_CHECK_FAILED",
+      "test_run_id": "96a1eda0-a2a2-4cb1-9d88-c289675f8b8c",
+      "test_evidence_id": "evt_real_real_005_quick_check_failed_69b82150",
+      "expected_status": "BLOCK",
+      "actual_status": "BLOCK",
+      "assertion_result": "PASS",
+      "block_reasons": [
+        "quick_check_failed"
+      ],
+      "details": "Quick check passed on corrupt DB: false. Expected: fail -> BLOCK"
+    },
+    {
+      "test_id": "REAL_006_REQUIRED_TABLE_MISSING",
+      "test_run_id": "96a1eda0-a2a2-4cb1-9d88-c289675f8b8c",
+      "test_evidence_id": "evt_real_real_006_required_table_missing_588d9365",
+      "expected_status": "BLOCK",
+      "actual_status": "BLOCK",
+      "assertion_result": "PASS",
+      "block_reasons": [
+        "required_table_missing:daily_kline"
+      ],
+      "details": "Table daily_kline exists: false. Expected: missing -> BLOCK"
+    },
+    {
+      "test_id": "REAL_007_REQUIRED_COLUMN_MISSING",
+      "test_run_id": "96a1eda0-a2a2-4cb1-9d88-c289675f8b8c",
+      "test_evidence_id": "evt_real_real_007_required_column_missing_f851fad2",
+      "expected_status": "BLOCK",
+      "actual_status": "BLOCK",
+      "assertion_result": "PASS",
+      "block_reasons": [
+        "required_column_missing:open_price"
+      ],
+      "details": "Column open_price exists: false. Expected: missing -> BLOCK"
+    },
+    {
+      "test_id": "REAL_008_SCHEMA_UNRECOGNIZED",
+      "test_run_id": "96a1eda0-a2a2-4cb1-9d88-c289675f8b8c",
+      "test_evidence_id": "evt_real_real_008_schema_unrecognized_b5211d1d",
+      "expected_status": "BLOCK",
+      "actual_status": "BLOCK",
+      "assertion_result": "PASS",
+      "block_reasons": [
+        "schema_unrecognized:no_candidate_tables_detected"
+      ],
+      "details": "Any candidate table detected: false. Expected: none -> BLOCK"
+    },
+    {
+      "test_id": "REAL_009_NO_FALLBACK_TO_SAMPLE",
+      "test_run_id": "96a1eda0-a2a2-4cb1-9d88-c289675f8b8c",
+      "test_evidence_id": "evt_real_real_009_no_fallback_to_sample_0ec5444a",
+      "expected_status": "BLOCK",
+      "actual_status": "BLOCK",
+      "assertion_result": "PASS",
+      "block_reasons": [
+        "real_sqlite_db_path_not_configured"
+      ],
+      "details": "Mode: real_readonly, isRealReadonly: true, pathExists: false. Expected: no fallback -> BLOCK"
+    },
+    {
+      "test_id": "REAL_010_PATH_NOT_EXPOSED",
+      "test_run_id": "96a1eda0-a2a2-4cb1-9d88-c289675f8b8c",
+      "test_evidence_id": "evt_real_real_010_path_not_exposed_39bd0d33",
+      "expected_status": "BLOCK",
+      "actual_status": "BLOCK",
+      "assertion_result": "PASS",
+      "block_reasons": [
+        "path_correctly_hidden"
+      ],
+      "details": "Path exposed in response: false. database_path_exposed: false. Expected: not exposed -> BLOCK (test passes)"
+    }
+  ]
+}

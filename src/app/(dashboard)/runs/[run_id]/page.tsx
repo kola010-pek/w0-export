@@ -21,6 +21,7 @@ interface RunDetail {
   current_node: string | null;
   created_at: string;
   updated_at: string;
+  mock_mode?: boolean;
 }
 
 interface TaskData {
@@ -46,7 +47,22 @@ interface ResultData {
 interface GateData {
   gate_id: string;
   status: string;
-  rules: Array<{ rule_id: string; status: string; details?: string }>;
+  rules: Array<{
+    rule_id: string;
+    status: string;
+    details?: string;
+    metric?: string;
+    actual_value?: number;
+    threshold?: number;
+    compare?: string;
+    unit?: string;
+    data_range?: { start: string; end: string };
+    cutoff_date?: string;
+    rule_version?: string;
+    checked_at?: string;
+    source?: string;
+    evidence_id?: string;
+  }>;
 }
 
 interface AuditEvent {
@@ -79,12 +95,25 @@ const STATUS_COLORS: Record<string, string> = {
   PENDING: 'bg-blue-50 text-blue-700 border-blue-200',
   RUNNING: 'bg-yellow-50 text-yellow-700 border-yellow-200',
   SUCCEEDED: 'bg-green-50 text-green-700 border-green-200',
+  MOCK_SUCCEEDED: 'bg-emerald-50 text-emerald-700 border-emerald-200',
   FAILED: 'bg-red-50 text-red-700 border-red-200',
   BLOCKED: 'bg-red-100 text-red-800 border-red-300',
   SKIPPED_BY_GATE: 'bg-gray-100 text-gray-600 border-gray-200',
   WAITING_APPROVAL: 'bg-orange-50 text-orange-700 border-orange-200',
   PAUSED: 'bg-gray-50 text-gray-600 border-gray-200',
   COMPLETED: 'bg-green-50 text-green-700 border-green-200',
+};
+
+// Helper to get display status - show MOCK_SUCCEEDED for mock runs
+const getDisplayStatus = (status: string, mockMode: boolean): string => {
+  if (status === 'SUCCEEDED' && mockMode) return 'MOCK_SUCCEEDED';
+  return status;
+};
+
+const getDisplayStatusText = (status: string, mockMode: boolean): string => {
+  if (status === 'SUCCEEDED' && mockMode) return '模拟执行成功';
+  if (status === 'NOT_EXECUTED') return '生产门禁未执行';
+  return status;
 };
 
 const GATE_COLORS: Record<string, string> = {
@@ -229,19 +258,26 @@ export default function RunDetailPage() {
             </CardHeader>
             <CardContent>
               <div className="flex items-center gap-1 overflow-x-auto pb-2">
-                {sortedTasks.map(([taskId, task], idx) => (
-                  <div key={taskId} className="flex items-center">
-                    <div className={`border-2 rounded-lg p-3 min-w-28 text-center ${STATUS_COLORS[task.status] || 'bg-gray-50'}`}>
-                      <div className="text-xs font-medium">{NODE_LABELS[task.dag_node] || task.dag_node}</div>
-                      <div className="text-xs mt-1 font-mono font-bold">{task.status}</div>
-                      <div className="text-xs text-gray-400 mt-0.5">{task.assigned_agent.replace('-agent', '')}</div>
+                {sortedTasks.map(([taskId, task], idx) => {
+                  const displayStatus = getDisplayStatus(task.status, run.mock_mode ?? false);
+                  const displayText = getDisplayStatusText(task.status, run.mock_mode ?? false);
+                  return (
+                    <div key={taskId} className="flex items-center">
+                      <div className={`border-2 rounded-lg p-3 min-w-28 text-center ${STATUS_COLORS[displayStatus] || STATUS_COLORS[task.status] || 'bg-gray-50'}`}>
+                        <div className="text-xs font-medium">{NODE_LABELS[task.dag_node] || task.dag_node}</div>
+                        <div className="text-xs mt-1 font-mono font-bold" title={task.status}>{displayText}</div>
+                        <div className="text-xs text-gray-400 mt-0.5">{task.assigned_agent.replace('-agent', '')}</div>
+                      </div>
+                      {idx < sortedTasks.length - 1 && (
+                        <div className="text-gray-300 mx-1 text-lg">→</div>
+                      )}
                     </div>
-                    {idx < sortedTasks.length - 1 && (
-                      <div className="text-gray-300 mx-1 text-lg">→</div>
-                    )}
-                  </div>
-                ))}
+                  );
+                })}
               </div>
+              {run.mock_mode && (
+                <p className="text-xs text-amber-600 mt-2">* 当前为模拟环境，所有任务均为 Mock 执行，非真实生产数据</p>
+              )}
             </CardContent>
           </Card>
 
@@ -319,28 +355,50 @@ export default function RunDetailPage() {
                         <span className="font-mono text-sm">{gateId}</span>
                         <Badge className={GATE_COLORS[gate.status]}>{gate.status}</Badge>
                       </div>
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>规则</TableHead>
-                            <TableHead>状态</TableHead>
-                            <TableHead>详情</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {gate.rules.map(rule => (
-                            <TableRow key={rule.rule_id}>
-                              <TableCell className="font-mono text-xs">{rule.rule_id}</TableCell>
-                              <TableCell>
-                                <Badge className={GATE_COLORS[rule.status]}>{rule.status}</Badge>
-                              </TableCell>
-                              <TableCell className="text-xs text-gray-500">
-                                {'details' in rule && rule.details ? rule.details : '-'}
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
+                      <div className="space-y-3">
+                        {gate.rules.map(rule => (
+                          <div key={rule.rule_id} className="border-l-4 border-gray-200 pl-4 py-2">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="font-mono text-sm font-medium">{rule.metric || rule.rule_id}</span>
+                              <Badge className={GATE_COLORS[rule.status]}>{rule.status}</Badge>
+                              {rule.evidence_id && (
+                                <span className="text-xs text-gray-400 font-mono">evidence: {rule.evidence_id}</span>
+                              )}
+                            </div>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+                              <div>
+                                <span className="text-gray-500">实际值:</span>{' '}
+                                <span className="font-mono">{rule.actual_value ?? '-'}</span>
+                                {rule.unit && <span className="text-gray-400 ml-1">{rule.unit}</span>}
+                              </div>
+                              <div>
+                                <span className="text-gray-500">阈值:</span>{' '}
+                                <span className="font-mono">{rule.threshold ?? '-'}</span>
+                                {rule.compare && <span className="text-gray-400 ml-1">({rule.compare})</span>}
+                              </div>
+                              <div>
+                                <span className="text-gray-500">截止日:</span>{' '}
+                                <span className="font-mono">{rule.cutoff_date || '-'}</span>
+                              </div>
+                              <div>
+                                <span className="text-gray-500">规则版本:</span>{' '}
+                                <span className="font-mono">{rule.rule_version || '-'}</span>
+                              </div>
+                            </div>
+                            {rule.data_range && (
+                              <div className="text-xs text-gray-500 mt-1">
+                                <span>数据范围:</span>{' '}
+                                <span className="font-mono">{rule.data_range.start} ~ {rule.data_range.end}</span>
+                              </div>
+                            )}
+                            {rule.checked_at && (
+                              <div className="text-xs text-gray-400 mt-1">
+                                检查时间: {new Date(rule.checked_at).toLocaleString('zh-CN')}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   ))}
                 </div>

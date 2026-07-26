@@ -360,7 +360,9 @@ export default function Phase2Page() {
           <span className="text-amber-400 text-xl">⚠</span>
           <div className="flex-1">
             <h3 className="text-sm font-semibold text-amber-300 mb-1">
-              模拟环境 · 生产功能未启用
+              {healthData.environment === 'simulation' && '模拟环境 · 生产功能未启用'}
+              {healthData.environment === 'staging' && 'Sample Staging 只读环境 · 生产功能未启用'}
+              {healthData.environment === 'production' && '生产环境（当前不得启用）'}
             </h3>
             <ul className="text-xs text-amber-200/80 space-y-0.5">
               <li>• 真实数据库写入：禁用</li>

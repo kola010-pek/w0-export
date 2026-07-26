@@ -108,6 +108,7 @@ export interface Phase2Response<T> {
   data: T;
   environment: 'simulation' | 'staging' | 'production';
   is_mock: boolean;
+  fallback_used: boolean;
   data_cutoff: string;
   generated_at: string;
   source: string;
@@ -190,6 +191,7 @@ export function buildPhase2Response<T>(params: {
     data: params.data,
     environment,
     is_mock: isMock,
+    fallback_used: false,
     data_cutoff: getDataCutoff(),
     generated_at: new Date().toISOString(),
     source: params.source,

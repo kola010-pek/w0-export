@@ -2,6 +2,9 @@
   {
     "url": "http://localhost:5000/api/phase2/real-db-preflight",
     "status": 200,
-    "method": "GET"
+    "method": "GET",
+    "response_body_sha256": "e5b5de75bddc95b71299548001dc94a6e56c30e9450d6381a4fbb4bfebc9fc1d",
+    "response_body_length": 1322,
+    "response_body_preview": "{\"success\":true,\"data\":{\"configuration\":{\"active_data_source\":\"sample\",\"active_data_source_kind\":\"sample_staging_database\",\"preflight_target\":\"real_readonly\",\"real_db_path_configured\":false},\"connection\":{\"status\":\"not_configured\",\"readonly_required\":true,\"query_only_required\":true,\"readonly_connection_verified\":false,\"query_only_verified\":false,\"readonly_connection\":false,\"query_only\":false,\"quick_check\":false,\"write_rejection_verified\":false,\"write_rejection_methods\":[]},\"identity\":null,\"schem"
   }
 ]

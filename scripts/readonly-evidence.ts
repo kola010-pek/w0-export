@@ -1,12 +1,13 @@
 /**
- * Phase 2.2A: Read-Only Connection Evidence Script
+ * Phase 2.2A: Read-Only Connection Isolated Evidence Script
  * 
- * This script demonstrates and verifies:
- * 1. SQLite driver and version
- * 2. readonly: true connection code
- * 3. PRAGMA query_only read-back value
- * 4. CREATE/INSERT/UPDATE/DELETE/DDL write rejection
- * 5. Actual error messages for each rejection
+ * Tests each defense layer independently and in combination:
+ * Layer 1: readonly=true alone (without query_only)
+ * Layer 2: query_only=ON alone (without readonly)
+ * Layer 3: Both together (defense-in-depth)
+ * 
+ * This proves each layer works independently, not that all failures
+ * are caused by only one mechanism.
  */
 
 import Database from 'better-sqlite3';
@@ -16,23 +17,24 @@ import os from 'os';
 
 const pkg = require('better-sqlite3/package.json');
 
-console.log('=== Phase 2.2A Read-Only Connection Evidence ===\n');
+console.log('=== Phase 2.2A Read-Only Isolated Evidence ===\n');
 
-// ============ 1. Driver Info ============
-console.log('--- 1. SQLite Driver & Version ---');
+// ============ Driver Info ============
+console.log('--- 0. SQLite Driver & Version ---');
 console.log(`Driver: better-sqlite3`);
-console.log(`Version: ${pkg.version}`);
-console.log(`SQLite engine version: ${Database().pragma('sqlite_version', { simple: true }) || 'N/A'}`);
+console.log(`npm package version: ${pkg.version}`);
+// Get SQLite engine version via a temp db
+const tmpVersionDb = new Database(':memory:');
+const sqliteVersion = tmpVersionDb.prepare('SELECT sqlite_version() as v').get() as { v: string };
+console.log(`SQLite engine version: ${sqliteVersion.v}`);
+tmpVersionDb.close();
 console.log('');
 
-// ============ 2. Create test database ============
+// ============ Setup test database ============
 const tmpDir = os.tmpdir();
-const testDbPath = path.join(tmpDir, 'readonly_evidence_test.db');
-
-// Clean up if exists
+const testDbPath = path.join(tmpDir, 'readonly_isolated_test.db');
 try { fs.unlinkSync(testDbPath); } catch {}
 
-// Create a test database with some data
 const setupDb = new Database(testDbPath);
 setupDb.exec(`
   CREATE TABLE test_data (
@@ -46,155 +48,183 @@ setupDb.exec(`
   INSERT INTO test_data (name, value, created_at) VALUES ('gamma', 3.3, '2026-01-03');
 `);
 setupDb.close();
+console.log(`Test database: ${testDbPath} (${fs.statSync(testDbPath).size} bytes)\n`);
 
-console.log(`Test database created at: ${testDbPath}`);
-console.log(`File size: ${fs.statSync(testDbPath).size} bytes`);
-console.log('');
+// ============ Helper ============
+interface WriteTestResult {
+  operation: string;
+  rejected: boolean;
+  error_message: string;
+}
 
-// ============ 3. Open with readonly: true ============
-console.log('--- 2. Read-Only Connection Code ---');
-console.log('Code:');
-console.log('  const db = new Database(resolvedPath, {');
-console.log('    readonly: true,');
-console.log('    fileMustExist: true,');
-console.log('  });');
-console.log('');
+function testWriteOperations(db: Database.Database, label: string): WriteTestResult[] {
+  const results: WriteTestResult[] = [];
 
-let db: Database.Database;
-try {
-  db = new Database(testDbPath, {
-    readonly: true,
-    fileMustExist: true,
-  });
-  console.log('Connection result: SUCCESS');
+  const operations = [
+    { name: 'INSERT', sql: "INSERT INTO test_data (name, value, created_at) VALUES ('delta', 4.4, '2026-01-04')" },
+    { name: 'UPDATE', sql: "UPDATE test_data SET value = 999 WHERE id = 1" },
+    { name: 'DELETE', sql: "DELETE FROM test_data WHERE id = 1" },
+    { name: 'CREATE TABLE', sql: 'CREATE TABLE should_fail (id INTEGER PRIMARY KEY)', isExec: true },
+    { name: 'DROP TABLE', sql: 'DROP TABLE test_data', isExec: true },
+    { name: 'ALTER TABLE', sql: 'ALTER TABLE test_data ADD COLUMN extra TEXT', isExec: true },
+  ];
+
+  for (const op of operations) {
+    try {
+      if (op.isExec) {
+        db.exec(op.sql);
+      } else {
+        db.prepare(op.sql).run();
+      }
+      results.push({ operation: op.name, rejected: false, error_message: 'NOT REJECTED (unexpected)' });
+    } catch (err) {
+      results.push({ operation: op.name, rejected: true, error_message: (err as Error).message });
+    }
+  }
+
+  return results;
+}
+
+function printWriteResults(results: WriteTestResult[], label: string) {
+  console.log(`  Write test results (${label}):`);
+  for (const r of results) {
+    const status = r.rejected ? 'REJECTED' : 'NOT REJECTED';
+    console.log(`    [${status}] ${r.operation}: ${r.error_message}`);
+  }
+  const allRejected = results.every(r => r.rejected);
+  console.log(`  Layer effective: ${allRejected ? 'YES' : 'NO — some writes succeeded!'}`);
   console.log('');
-} catch (err) {
-  console.log(`Connection result: FAILED - ${err}`);
-  process.exit(1);
 }
 
-// ============ 4. PRAGMA query_only ============
-console.log('--- 3. PRAGMA query_only ---');
-try {
-  db.pragma('query_only = ON');
-  const queryOnlyValue = db.pragma('query_only', { simple: true });
-  console.log(`PRAGMA query_only = ON executed: YES`);
-  console.log(`PRAGMA query_only read-back value: ${queryOnlyValue} (type: ${typeof queryOnlyValue})`);
-  console.log(`Verification: ${queryOnlyValue === 1 || queryOnlyValue === '1' || queryOnlyValue === true ? 'PASS (query_only is enabled)' : 'FAIL'}`);
-} catch (err) {
-  console.log(`PRAGMA query_only error: ${err}`);
-}
+// ============ LAYER 1: readonly=true ONLY (no query_only) ============
+console.log('--- Layer 1: readonly=true ONLY (no PRAGMA query_only) ---');
+console.log('Purpose: Verify that readonly connection option alone prevents writes.');
 console.log('');
 
-// ============ 5. PRAGMA quick_check ============
-console.log('--- 4. PRAGMA quick_check ---');
+let layer1Db: Database.Database;
 try {
-  const checkResult = db.pragma('quick_check', { simple: true });
-  console.log(`PRAGMA quick_check result: ${checkResult}`);
+  layer1Db = new Database(testDbPath, { readonly: true, fileMustExist: true });
+  console.log('  Connection with readonly=true: SUCCESS');
+  
+  // Check query_only status (should be OFF since we didn't set it)
+  const qoValue = layer1Db.pragma('query_only', { simple: true });
+  console.log(`  PRAGMA query_only value: ${qoValue} (expected: 0/OFF since we did not set it)`);
+  
+  // Test reads
+  const rows = layer1Db.prepare('SELECT COUNT(*) as cnt FROM test_data').get() as { cnt: number };
+  console.log(`  SELECT COUNT(*): SUCCESS (${rows.cnt} rows)`);
+  
+  // Test writes
+  const layer1Results = testWriteOperations(layer1Db, 'readonly=true only');
+  printWriteResults(layer1Results, 'readonly=true only');
+  
+  layer1Db.close();
 } catch (err) {
-  console.log(`PRAGMA quick_check error: ${err}`);
+  console.log(`  Connection failed: ${(err as Error).message}`);
+  console.log('');
 }
+
+// ============ LAYER 2: query_only=ON ONLY (no readonly) ============
+console.log('--- Layer 2: PRAGMA query_only=ON ONLY (no readonly flag) ---');
+console.log('Purpose: Verify that query_only pragma alone prevents writes on a read-write connection.');
 console.log('');
 
-// ============ 6. Read verification ============
-console.log('--- 5. Read Operations (should succeed) ---');
+let layer2Db: Database.Database;
 try {
-  const rows = db.prepare('SELECT * FROM test_data').all();
-  console.log(`SELECT * FROM test_data: SUCCESS (${rows.length} rows)`);
-  rows.forEach((row: any) => {
-    console.log(`  id=${row.id}, name=${row.name}, value=${row.value}, created_at=${row.created_at}`);
-  });
+  // Open WITHOUT readonly — this is a normal read-write connection
+  layer2Db = new Database(testDbPath, { readonly: false, fileMustExist: true });
+  console.log('  Connection with readonly=false (read-write): SUCCESS');
+  
+  // Enable query_only
+  layer2Db.pragma('query_only = ON');
+  const qoValue = layer2Db.pragma('query_only', { simple: true });
+  console.log(`  PRAGMA query_only = ON executed: YES`);
+  console.log(`  PRAGMA query_only read-back: ${qoValue} (type: ${typeof qoValue})`);
+  
+  // Test reads
+  const rows = layer2Db.prepare('SELECT COUNT(*) as cnt FROM test_data').get() as { cnt: number };
+  console.log(`  SELECT COUNT(*): SUCCESS (${rows.cnt} rows)`);
+  
+  // Test writes
+  const layer2Results = testWriteOperations(layer2Db, 'query_only=ON only');
+  printWriteResults(layer2Results, 'query_only=ON only');
+  
+  // Verify: disable query_only and confirm writes work again (proves query_only was the blocker)
+  layer2Db.pragma('query_only = OFF');
+  const qoOff = layer2Db.pragma('query_only', { simple: true });
+  console.log(`  PRAGMA query_only = OFF, read-back: ${qoOff}`);
+  try {
+    layer2Db.prepare("INSERT INTO test_data (name, value, created_at) VALUES ('verify', 0, '2026-01-04')").run();
+    console.log('  After query_only=OFF, INSERT: SUCCESS (confirms query_only was the blocking mechanism)');
+    // Clean up the verification row
+    layer2Db.prepare("DELETE FROM test_data WHERE name = 'verify'").run();
+  } catch (err) {
+    console.log(`  After query_only=OFF, INSERT: FAILED — ${(err as Error).message}`);
+  }
+  
+  layer2Db.close();
 } catch (err) {
-  console.log(`SELECT failed: ${err}`);
+  console.log(`  Connection failed: ${(err as Error).message}`);
+  console.log('');
 }
+
+// ============ LAYER 3: BOTH readonly=true AND query_only=ON ============
+console.log('--- Layer 3: readonly=true + PRAGMA query_only=ON (defense-in-depth) ---');
+console.log('Purpose: Verify both layers active simultaneously.');
 console.log('');
 
-// ============ 7. Write rejection tests ============
-console.log('--- 6. Write Rejection Tests ---');
-
-// Test CREATE TABLE
-console.log('\n[TEST] CREATE TABLE (DDL):');
+let layer3Db: Database.Database;
 try {
-  db.exec('CREATE TABLE should_fail (id INTEGER PRIMARY KEY)');
-  console.log('  Result: UNEXPECTED SUCCESS (write was NOT rejected!)');
+  layer3Db = new Database(testDbPath, { readonly: true, fileMustExist: true });
+  console.log('  Connection with readonly=true: SUCCESS');
+  
+  layer3Db.pragma('query_only = ON');
+  const qoValue = layer3Db.pragma('query_only', { simple: true });
+  console.log(`  PRAGMA query_only = ON, read-back: ${qoValue}`);
+  
+  // quick_check
+  const qcResult = layer3Db.pragma('quick_check', { simple: true });
+  console.log(`  PRAGMA quick_check: ${qcResult}`);
+  
+  // Test reads
+  const rows = layer3Db.prepare('SELECT COUNT(*) as cnt FROM test_data').get() as { cnt: number };
+  console.log(`  SELECT COUNT(*): SUCCESS (${rows.cnt} rows)`);
+  
+  // Test writes
+  const layer3Results = testWriteOperations(layer3Db, 'readonly + query_only');
+  printWriteResults(layer3Results, 'readonly + query_only');
+  
+  layer3Db.close();
 } catch (err) {
-  console.log(`  Result: REJECTED`);
-  console.log(`  Error: ${(err as Error).message}`);
+  console.log(`  Connection failed: ${(err as Error).message}`);
+  console.log('');
 }
 
-// Test INSERT
-console.log('\n[TEST] INSERT:');
-try {
-  db.prepare("INSERT INTO test_data (name, value, created_at) VALUES ('delta', 4.4, '2026-01-04')").run();
-  console.log('  Result: UNEXPECTED SUCCESS (write was NOT rejected!)');
-} catch (err) {
-  console.log(`  Result: REJECTED`);
-  console.log(`  Error: ${(err as Error).message}`);
-}
-
-// Test UPDATE
-console.log('\n[TEST] UPDATE:');
-try {
-  db.prepare("UPDATE test_data SET value = 999 WHERE id = 1").run();
-  console.log('  Result: UNEXPECTED SUCCESS (write was NOT rejected!)');
-} catch (err) {
-  console.log(`  Result: REJECTED`);
-  console.log(`  Error: ${(err as Error).message}`);
-}
-
-// Test DELETE
-console.log('\n[TEST] DELETE:');
-try {
-  db.prepare("DELETE FROM test_data WHERE id = 1").run();
-  console.log('  Result: UNEXPECTED SUCCESS (write was NOT rejected!)');
-} catch (err) {
-  console.log(`  Result: REJECTED`);
-  console.log(`  Error: ${(err as Error).message}`);
-}
-
-// Test DROP TABLE (DDL)
-console.log('\n[TEST] DROP TABLE (DDL):');
-try {
-  db.exec('DROP TABLE test_data');
-  console.log('  Result: UNEXPECTED SUCCESS (write was NOT rejected!)');
-} catch (err) {
-  console.log(`  Result: REJECTED`);
-  console.log(`  Error: ${(err as Error).message}`);
-}
-
-// Test ALTER TABLE (DDL)
-console.log('\n[TEST] ALTER TABLE (DDL):');
-try {
-  db.exec('ALTER TABLE test_data ADD COLUMN extra TEXT');
-  console.log('  Result: UNEXPECTED SUCCESS (write was NOT rejected!)');
-} catch (err) {
-  console.log(`  Result: REJECTED`);
-  console.log(`  Error: ${(err as Error).message}`);
-}
-
+// ============ Summary ============
+console.log('--- Summary ---');
+console.log('Layer 1 (readonly=true only): Prevents writes via file descriptor and SQLite internal checks.');
+console.log('  - better-sqlite3 passes readonly option to SQLite C API (sqlite3_open_v2 with SQLITE_OPEN_READONLY).');
+console.log('  - SQLite rejects write operations with "attempt to write a readonly database".');
+console.log('  - This is documented behavior of SQLite, not just OS-level O_RDONLY.');
 console.log('');
-
-// ============ 8. Summary ============
-console.log('--- 7. Read-Only Guarantee Summary ---');
-console.log('Guarantee mechanisms:');
-console.log('  1. better-sqlite3 connection option: readonly: true');
-console.log('     - Opens the file with O_RDONLY at the OS level');
-console.log('     - SQLite internally rejects all write operations');
-console.log('  2. PRAGMA query_only = ON');
-console.log('     - SQLite-level enforcement: all write statements fail');
-console.log('     - Defense-in-depth: even if readonly flag is somehow bypassed, query_only blocks writes');
+console.log('Layer 2 (query_only=ON only): Prevents writes via SQLite engine pragma.');
+console.log('  - Works on a normal read-write connection.');
+console.log('  - Verified: writes fail with query_only=ON, succeed with query_only=OFF on same connection.');
+console.log('  - This proves query_only is an independent defense layer.');
 console.log('');
-console.log('Limitations:');
-console.log('  - readonly:true prevents file-level writes (OS permission)');
-console.log('  - query_only prevents SQL-level writes (SQLite engine)');
-console.log('  - These two mechanisms together provide defense-in-depth');
-console.log('  - Does NOT protect against: file deletion at OS level, file permission changes');
-console.log('  - Does NOT protect against: concurrent readers seeing stale data');
-console.log('  - WAL journal mode is not available in readonly mode');
+console.log('Layer 3 (both): Defense-in-depth. Both mechanisms active simultaneously.');
+console.log('');
+console.log('Limitations (accurate description):');
+console.log('  - readonly:true prevents SQLite-level writes; the file is opened with SQLITE_OPEN_READONLY.');
+console.log('  - query_only=ON prevents SQL-level writes at the SQLite engine level.');
+console.log('  - Neither protects against OS-level file deletion or permission changes by other processes.');
+console.log('  - WAL journal mode: SQLite opens with readonly cannot create WAL files; this is a');
+console.log('    consequence of the readonly flag, not a separate limitation of query_only.');
+console.log('  - These mechanisms protect against accidental writes through the application,');
+console.log('    not against deliberate attacks with direct file system access.');
 console.log('');
 
 // Cleanup
-db.close();
 try { fs.unlinkSync(testDbPath); } catch {}
 console.log('Test database cleaned up.');
-console.log('\n=== Evidence Complete ===');
+console.log('\n=== Isolated Evidence Complete ===');

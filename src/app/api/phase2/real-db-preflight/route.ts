@@ -6,6 +6,8 @@ import { NextResponse } from 'next/server';
 import {
   buildPhase2Response,
   isRealReadonlyMode,
+  getDataSourceMode,
+  getDataSourceKind,
 } from '@/lib/data-source';
 import {
   establishReadOnlyConnection,
@@ -17,13 +19,28 @@ import type { SchemaProbeResult } from '@/lib/real-db-connector';
 
 interface PreflightData {
   configuration: {
-    data_source_mode: string;
-    data_source_kind: string;
+    /** The data source currently active for serving API requests. */
+    active_data_source: string;
+    /** The data source kind currently active. */
+    active_data_source_kind: string;
+    /** The preflight check target — always real_readonly for this endpoint. */
+    preflight_target: 'real_readonly';
+    /** Whether REAL_SQLITE_DB_PATH has been configured. */
     real_db_path_configured: boolean;
   };
   connection: {
     status: 'not_configured' | 'connected' | 'failed';
+    /** Whether readonly mode is required by the preflight target (always true). */
+    readonly_required: true;
+    /** Whether query_only is required by the preflight target (always true). */
+    query_only_required: true;
+    /** Whether a readonly connection has been actually verified (only true when connected). */
+    readonly_connection_verified: boolean;
+    /** Whether query_only has been actually verified (only true when connected). */
+    query_only_verified: boolean;
+    /** @deprecated Use readonly_connection_verified. Kept for backward compat. Reflects actual verification only. */
     readonly_connection: boolean;
+    /** @deprecated Use query_only_verified. Kept for backward compat. Reflects actual verification only. */
     query_only: boolean;
     quick_check: boolean;
     write_rejection_verified: boolean;
@@ -58,14 +75,21 @@ interface PreflightData {
 }
 
 function buildNotConfiguredPreflight(): PreflightData {
+  const activeMode = getDataSourceMode();
+  const activeKind = getDataSourceKind();
   return {
     configuration: {
-      data_source_mode: 'real_readonly',
-      data_source_kind: 'production_database_readonly',
+      active_data_source: activeMode,
+      active_data_source_kind: activeKind,
+      preflight_target: 'real_readonly',
       real_db_path_configured: false,
     },
     connection: {
       status: 'not_configured',
+      readonly_required: true,
+      query_only_required: true,
+      readonly_connection_verified: false,
+      query_only_verified: false,
       readonly_connection: false,
       query_only: false,
       quick_check: false,
@@ -191,12 +215,17 @@ export async function GET() {
 
     const data: PreflightData = {
       configuration: {
-        data_source_mode: 'real_readonly',
-        data_source_kind: 'production_database_readonly',
+        active_data_source: getDataSourceMode(),
+        active_data_source_kind: getDataSourceKind(),
+        preflight_target: 'real_readonly',
         real_db_path_configured: true,
       },
       connection: {
         status: 'connected',
+        readonly_required: true,
+        query_only_required: true,
+        readonly_connection_verified: identity.readonly_connection,
+        query_only_verified: identity.query_only,
         readonly_connection: identity.readonly_connection,
         query_only: identity.query_only,
         quick_check: identity.quick_check,

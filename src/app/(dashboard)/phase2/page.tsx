@@ -114,12 +114,17 @@ interface SchemaProbeTable {
 
 interface PreflightData {
   configuration: {
-    data_source_mode: string;
-    data_source_kind: string;
+    active_data_source: string;
+    active_data_source_kind: string;
+    preflight_target: 'real_readonly';
     real_db_path_configured: boolean;
   };
   connection: {
     status: 'not_configured' | 'connected' | 'failed';
+    readonly_required: true;
+    query_only_required: true;
+    readonly_connection_verified: boolean;
+    query_only_verified: boolean;
     readonly_connection: boolean;
     query_only: boolean;
     quick_check: boolean;
@@ -816,15 +821,21 @@ export default function Phase2Page() {
             <h4 className="text-xs font-medium text-slate-400 mb-2">数据源配置</h4>
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <span className="text-xs text-slate-500">data_source_mode</span>
-                <span className="text-xs font-mono text-purple-300">
-                  {preflightData.data.configuration.data_source_mode || 'real_readonly'}
+                <span className="text-xs text-slate-500">active_data_source</span>
+                <span className="text-xs font-mono text-blue-300">
+                  {preflightData.data.configuration.active_data_source || 'unknown'}
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-xs text-slate-500">data_source_kind</span>
+                <span className="text-xs text-slate-500">active_data_source_kind</span>
+                <span className="text-xs font-mono text-blue-300">
+                  {preflightData.data.configuration.active_data_source_kind || 'unknown'}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-slate-500">preflight_target</span>
                 <span className="text-xs font-mono text-purple-300">
-                  {preflightData.data.configuration.data_source_kind || 'production_database_readonly'}
+                  {preflightData.data.configuration.preflight_target || 'real_readonly'}
                 </span>
               </div>
               <div className="flex items-center justify-between">
@@ -841,20 +852,34 @@ export default function Phase2Page() {
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <span className="text-xs text-slate-500">connection_status</span>
-                <span className="text-xs font-mono text-red-400">
+                <span className={`text-xs font-mono ${
+                  preflightData.data.connection?.status === 'connected' ? 'text-green-400' : 'text-red-400'
+                }`}>
                   {preflightData.data.connection?.status || 'not_configured'}
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-xs text-slate-500">readonly_connection</span>
-                <span className="text-xs font-mono text-slate-500">
-                  {String(preflightData.data.connection?.readonly_connection ?? false)}
+                <span className="text-xs text-slate-500">readonly_required</span>
+                <span className="text-xs font-mono text-green-400">
+                  {String(preflightData.data.connection?.readonly_required ?? true)}
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-xs text-slate-500">query_only</span>
-                <span className="text-xs font-mono text-slate-500">
-                  {String(preflightData.data.connection?.query_only ?? false)}
+                <span className="text-xs text-slate-500">query_only_required</span>
+                <span className="text-xs font-mono text-green-400">
+                  {String(preflightData.data.connection?.query_only_required ?? true)}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-slate-500">readonly_connection_verified</span>
+                <span className={`text-xs font-mono ${preflightData.data.connection?.readonly_connection_verified ? 'text-green-400' : 'text-slate-500'}`}>
+                  {String(preflightData.data.connection?.readonly_connection_verified ?? false)}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-slate-500">query_only_verified</span>
+                <span className={`text-xs font-mono ${preflightData.data.connection?.query_only_verified ? 'text-green-400' : 'text-slate-500'}`}>
+                  {String(preflightData.data.connection?.query_only_verified ?? false)}
                 </span>
               </div>
               <div className="flex items-center justify-between">

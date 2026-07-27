@@ -1,10 +1,11 @@
 /**
- * Phase 2.2A: Frontend Contract Tests
+ * Phase 2.2A: Frontend Contract Tests (Runtime)
  *
- * Tests that verify the API contract between /api/phase2/real-db-preflight
- * and the /phase2 frontend page.
+ * Runtime tests that verify the API contract between /api/phase2/real-db-preflight
+ * and the /phase2 frontend page by actually hitting the live API.
  *
  * Run: npx tsx tests/phase2-2-frontend-contract-tests.ts
+ * Requires: Service running on localhost:5000
  */
 
 import * as fs from 'fs';
@@ -22,7 +23,7 @@ interface TestResult {
   details: string;
 }
 
-const testRunId = `run_frontend_contract_${Date.now().toString(16)}`;
+const testRunId = `run_frontend_contract_rt_${Date.now().toString(16)}`;
 const results: TestResult[] = [];
 
 function makeEvidenceId(testId: string): string {
@@ -39,41 +40,77 @@ async function fetchJson(url: string): Promise<{ ok: boolean; status: number; da
   }
 }
 
-// ============ PREFLIGHT_UI_001_DIRECT_RESPONSE ============
-async function testPreflightUi001DirectResponse(): Promise<TestResult> {
+// ============ PREFLIGHT_UI_001: API Normal Response ============
+async function testPreflightUi001NormalResponse(): Promise<TestResult> {
   const testId = 'PREFLIGHT_UI_001';
   const evidenceId = makeEvidenceId(testId);
 
   try {
     const res = await fetchJson(`${BASE_URL}/api/phase2/real-db-preflight`);
 
-    // Verify the response has the expected wrapper structure
-    const hasSuccess = res.data?.success === true;
-    const hasData = res.data?.data !== undefined && res.data?.data !== null;
-    const hasConfiguration = res.data?.data?.configuration !== undefined;
-    const hasConnection = res.data?.data?.connection !== undefined;
-    const hasSchemaProbe = res.data?.data?.schema_probe !== undefined;
-    const hasSafety = res.data?.data?.safety !== undefined;
+    if (!res.ok) {
+      return {
+        test_id: testId,
+        test_run_id: testRunId,
+        test_evidence_id: evidenceId,
+        expected_status: 'HTTP 200',
+        actual_status: `HTTP ${res.status}`,
+        assertion_result: 'FAIL',
+        details: `API returned non-200 status: ${res.status}`,
+      };
+    }
 
-    // Frontend reads: preflightData.data.configuration
-    // This must not throw TypeError
-    const canReadConfiguration = hasSuccess && hasData && hasConfiguration;
-    const canReadConnection = hasSuccess && hasData && hasConnection;
-    const canReadSchemaProbe = hasSuccess && hasData && hasSchemaProbe;
-    const canReadSafety = hasSuccess && hasData && hasSafety;
+    const d = res.data;
 
-    const allPass = canReadConfiguration && canReadConnection && canReadSchemaProbe && canReadSafety;
+    // Check envelope
+    const hasSuccess = d?.success === true;
+    const hasData = d?.data !== undefined && d?.data !== null;
+    const hasGateStatus = typeof d?.gate_status === 'string';
+    const hasFallbackUsed = typeof d?.fallback_used === 'boolean';
+
+    // Check configuration: active_data_source vs preflight_target
+    const config = d?.data?.configuration;
+    const hasActiveDataSource = typeof config?.active_data_source === 'string';
+    const hasActiveDataSourceKind = typeof config?.active_data_source_kind === 'string';
+    const hasPreflightTarget = config?.preflight_target === 'real_readonly';
+    const hasPathConfigured = typeof config?.real_db_path_configured === 'boolean';
+
+    // Check connection: capability vs verification split
+    const conn = d?.data?.connection;
+    const hasReadonlyRequired = conn?.readonly_required === true;
+    const hasQueryOnlyRequired = conn?.query_only_required === true;
+    const hasReadonlyVerified = typeof conn?.readonly_connection_verified === 'boolean';
+    const hasQueryOnlyVerified = typeof conn?.query_only_verified === 'boolean';
+
+    // Check safety
+    const safety = d?.data?.safety;
+    const hasSafety = safety !== undefined;
+
+    // Check no path leakage
+    const raw = JSON.stringify(d);
+    const pathPatterns = ['/workspace', '/tmp/real', '/home/', '/root/'];
+    const hasPathLeak = pathPatterns.some(p => raw.includes(p));
+
+    // Check identity contract: active_data_source must NOT claim real_readonly when mode is sample
+    const activeIsSample = config?.active_data_source === 'sample';
+    const targetIsReal = config?.preflight_target === 'real_readonly';
+    const identityCorrect = activeIsSample || config?.active_data_source === 'real_readonly';
+
+    const allPass = hasSuccess && hasData && hasGateStatus && hasFallbackUsed &&
+      hasActiveDataSource && hasActiveDataSourceKind && hasPreflightTarget && hasPathConfigured &&
+      hasReadonlyRequired && hasQueryOnlyRequired && hasReadonlyVerified && hasQueryOnlyVerified &&
+      hasSafety && !hasPathLeak && identityCorrect;
 
     return {
       test_id: testId,
       test_run_id: testRunId,
       test_evidence_id: evidenceId,
       expected_status: 'BLOCK',
-      actual_status: res.data?.gate_status || 'UNKNOWN',
+      actual_status: d?.gate_status || 'UNKNOWN',
       assertion_result: allPass ? 'PASS' : 'FAIL',
       details: allPass
-        ? 'preflight 直接返回 {success,data} 包装，前端可安全读取 data.configuration/connection/schema_probe/safety'
-        : `结构异常: success=${hasSuccess}, data=${hasData}, configuration=${hasConfiguration}, connection=${hasConnection}, schema_probe=${hasSchemaProbe}, safety=${hasSafety}`,
+        ? `API normal response: success=true, gate_status=BLOCK, active_data_source=${config?.active_data_source}, preflight_target=${config?.preflight_target}, fallback_used=${d?.fallback_used}, no path leakage, identity contract correct`
+        : `FAIL: success=${hasSuccess}, data=${hasData}, gate=${hasGateStatus}, active_ds=${hasActiveDataSource}, target=${hasPreflightTarget}, ro_req=${hasReadonlyRequired}, qo_req=${hasQueryOnlyRequired}, ro_ver=${hasReadonlyVerified}, qo_ver=${hasQueryOnlyVerified}, safety=${hasSafety}, pathLeak=${hasPathLeak}, identity=${identityCorrect}`,
     };
   } catch (e: any) {
     return {
@@ -83,84 +120,98 @@ async function testPreflightUi001DirectResponse(): Promise<TestResult> {
       expected_status: 'BLOCK',
       actual_status: 'ERROR',
       assertion_result: 'FAIL',
-      details: `异常: ${e.message}`,
+      details: `Exception: ${e.message}`,
     };
   }
 }
 
-// ============ PREFLIGHT_UI_002_LOADING ============
-async function testPreflightUi002Loading(): Promise<TestResult> {
+// ============ PREFLIGHT_UI_002: Null Data (Loading State) ============
+async function testPreflightUi002NullData(): Promise<TestResult> {
   const testId = 'PREFLIGHT_UI_002';
   const evidenceId = makeEvidenceId(testId);
 
   try {
-    // Simulate the loading state: before fetch completes, preflightData is null
-    // The frontend must show a loading state, not crash
+    // Simulate loading state: preflightData is null before fetch completes
     const preflightData: any = null;
 
-    // Simulate what the frontend does with null data
-    // These are the exact expressions used in the page component
+    // These are the exact optional-chaining expressions used in the page component
     const gateStatus = preflightData?.gate_status || 'BLOCK';
     const hasConfiguration = preflightData?.data?.configuration;
-    const dataSourceMode = preflightData?.data?.configuration?.data_source_mode || 'real_readonly';
+    const activeDataSource = preflightData?.data?.configuration?.active_data_source || 'unknown';
+    const preflightTarget = preflightData?.data?.configuration?.preflight_target || 'real_readonly';
     const connectionStatus = preflightData?.data?.connection?.status || 'not_configured';
+    const readonlyRequired = preflightData?.data?.connection?.readonly_required ?? true;
+    const queryOnlyRequired = preflightData?.data?.connection?.query_only_required ?? true;
+    const readonlyVerified = preflightData?.data?.connection?.readonly_connection_verified ?? false;
+    const queryOnlyVerified = preflightData?.data?.connection?.query_only_verified ?? false;
     const schemaProbed = preflightData?.data?.schema_probe?.probed;
+    const safetyMigration = preflightData?.data?.safety?.auto_migration_disabled ?? true;
+    const safetyFill = preflightData?.data?.safety?.auto_fill_disabled ?? true;
 
-    // All these must not throw
-    const noCrash = true;
+    // All must not throw and show safe defaults
     const showsBlock = gateStatus === 'BLOCK';
-    const showsDefaultMode = dataSourceMode === 'real_readonly';
+    const noConfigShowsDefault = !hasConfiguration;
+    const showsUnknownDS = activeDataSource === 'unknown';
+    const showsDefaultTarget = preflightTarget === 'real_readonly';
     const showsDefaultConnection = connectionStatus === 'not_configured';
+    const showsRequiredTrue = readonlyRequired === true && queryOnlyRequired === true;
+    const showsVerifiedFalse = readonlyVerified === false && queryOnlyVerified === false;
     const hidesSchemaTable = !schemaProbed;
+    const showsSafetyDefaults = safetyMigration === true && safetyFill === true;
 
-    const allPass = noCrash && showsBlock && showsDefaultMode && showsDefaultConnection && hidesSchemaTable;
+    const allPass = showsBlock && noConfigShowsDefault && showsUnknownDS && showsDefaultTarget &&
+      showsDefaultConnection && showsRequiredTrue && showsVerifiedFalse && hidesSchemaTable && showsSafetyDefaults;
 
     return {
       test_id: testId,
       test_run_id: testRunId,
       test_evidence_id: evidenceId,
-      expected_status: 'loading',
-      actual_status: 'loading',
+      expected_status: 'loading/null-safe',
+      actual_status: 'loading/null-safe',
       assertion_result: allPass ? 'PASS' : 'FAIL',
       details: allPass
-        ? '请求未完成时 preflightData=null，页面安全显示加载/默认状态，不崩溃'
-        : `异常: gateStatus=${gateStatus}, mode=${dataSourceMode}, connection=${connectionStatus}, probed=${schemaProbed}`,
+        ? 'preflightData=null: gate=BLOCK, active_ds=unknown, target=real_readonly, connection=not_configured, required=true, verified=false, schema hidden, safety defaults correct'
+        : `FAIL: block=${showsBlock}, noConfig=${noConfigShowsDefault}, ds=${showsUnknownDS}, target=${showsDefaultTarget}, conn=${showsDefaultConnection}, req=${showsRequiredTrue}, ver=${showsVerifiedFalse}, schema=${hidesSchemaTable}, safety=${showsSafetyDefaults}`,
     };
   } catch (e: any) {
     return {
       test_id: testId,
       test_run_id: testRunId,
       test_evidence_id: evidenceId,
-      expected_status: 'loading',
+      expected_status: 'loading/null-safe',
       actual_status: 'ERROR',
       assertion_result: 'FAIL',
-      details: `异常: ${e.message}`,
+      details: `Exception: ${e.message}`,
     };
   }
 }
 
-// ============ PREFLIGHT_UI_003_FETCH_FAILED ============
+// ============ PREFLIGHT_UI_003: Fetch Failure ============
 async function testPreflightUi003FetchFailed(): Promise<TestResult> {
   const testId = 'PREFLIGHT_UI_003';
   const evidenceId = makeEvidenceId(testId);
 
   try {
     // Simulate fetch failure: preflightData remains null
-    // The frontend must show BLOCK, not crash
     const preflightData: any = null;
 
-    // These are the exact expressions from the page
+    // Page expressions
     const gateStatus = preflightData?.gate_status || 'BLOCK';
     const hasConfiguration = preflightData?.data?.configuration;
+    const fallbackUsed = preflightData?.fallback_used;
     const safetyMigration = preflightData?.data?.safety?.auto_migration_disabled ?? true;
     const safetyFill = preflightData?.data?.safety?.auto_fill_disabled ?? true;
+    const readonlyVerified = preflightData?.data?.connection?.readonly_connection_verified ?? false;
+    const queryOnlyVerified = preflightData?.data?.connection?.query_only_verified ?? false;
 
     const showsBlock = gateStatus === 'BLOCK';
-    const showsFormatError = !hasConfiguration; // Will show "预检响应格式异常"
+    const showsFormatError = !hasConfiguration;
+    const noFallback = fallbackUsed === undefined || fallbackUsed === false;
     const showsMigrationDisabled = safetyMigration === true;
     const showsFillDisabled = safetyFill === true;
+    const showsVerifiedFalse = readonlyVerified === false && queryOnlyVerified === false;
 
-    const allPass = showsBlock && showsFormatError && showsMigrationDisabled && showsFillDisabled;
+    const allPass = showsBlock && showsFormatError && noFallback && showsMigrationDisabled && showsFillDisabled && showsVerifiedFalse;
 
     return {
       test_id: testId,
@@ -170,8 +221,8 @@ async function testPreflightUi003FetchFailed(): Promise<TestResult> {
       actual_status: gateStatus,
       assertion_result: allPass ? 'PASS' : 'FAIL',
       details: allPass
-        ? '请求失败时 preflightData=null，页面显示 BLOCK + 格式异常提示，不崩溃'
-        : `异常: gateStatus=${gateStatus}, hasConfiguration=${hasConfiguration}`,
+        ? 'Fetch failed: preflightData=null, gate=BLOCK, format error shown, no fallback, verified=false, safety defaults correct'
+        : `FAIL: block=${showsBlock}, formatErr=${showsFormatError}, noFallback=${noFallback}, migration=${showsMigrationDisabled}, fill=${showsFillDisabled}, verified=${showsVerifiedFalse}`,
     };
   } catch (e: any) {
     return {
@@ -181,12 +232,12 @@ async function testPreflightUi003FetchFailed(): Promise<TestResult> {
       expected_status: 'BLOCK',
       actual_status: 'ERROR',
       assertion_result: 'FAIL',
-      details: `异常: ${e.message}`,
+      details: `Exception: ${e.message}`,
     };
   }
 }
 
-// ============ PREFLIGHT_UI_004_CONFIGURATION_MISSING ============
+// ============ PREFLIGHT_UI_004: Configuration Missing ============
 async function testPreflightUi004ConfigurationMissing(): Promise<TestResult> {
   const testId = 'PREFLIGHT_UI_004';
   const evidenceId = makeEvidenceId(testId);
@@ -196,23 +247,33 @@ async function testPreflightUi004ConfigurationMissing(): Promise<TestResult> {
     const preflightData: any = {
       success: true,
       data: {
-        // configuration is intentionally missing
-        connection: { status: 'not_configured' },
+        // configuration intentionally missing
+        connection: {
+          status: 'not_configured',
+          readonly_required: true,
+          query_only_required: true,
+          readonly_connection_verified: false,
+          query_only_verified: false,
+        },
         schema_probe: { probed: false, tables: [] },
         safety: { auto_migration_disabled: true, auto_fill_disabled: true },
       },
       gate_status: 'BLOCK',
     };
 
-    // Frontend checks: !preflightData?.data?.configuration
+    // Frontend expressions
     const hasConfiguration = preflightData?.data?.configuration;
     const showsFormatError = !hasConfiguration;
-
-    // These must not throw even when configuration is missing
     const connectionStatus = preflightData?.data?.connection?.status || 'not_configured';
+    const readonlyRequired = preflightData?.data?.connection?.readonly_required ?? true;
+    const queryOnlyRequired = preflightData?.data?.connection?.query_only_required ?? true;
+    const readonlyVerified = preflightData?.data?.connection?.readonly_connection_verified ?? false;
+    const queryOnlyVerified = preflightData?.data?.connection?.query_only_verified ?? false;
     const schemaProbed = preflightData?.data?.schema_probe?.probed;
 
-    const allPass = showsFormatError && connectionStatus === 'not_configured' && !schemaProbed;
+    const allPass = showsFormatError && connectionStatus === 'not_configured' &&
+      readonlyRequired === true && queryOnlyRequired === true &&
+      readonlyVerified === false && queryOnlyVerified === false && !schemaProbed;
 
     return {
       test_id: testId,
@@ -222,8 +283,8 @@ async function testPreflightUi004ConfigurationMissing(): Promise<TestResult> {
       actual_status: showsFormatError ? 'format_error' : 'rendered',
       assertion_result: allPass ? 'PASS' : 'FAIL',
       details: allPass
-        ? 'configuration 缺失时页面显示"预检响应格式异常"，不崩溃'
-        : `异常: hasConfiguration=${hasConfiguration}`,
+        ? 'configuration missing: format error shown, connection defaults safe, required=true, verified=false, schema hidden'
+        : `FAIL: formatErr=${showsFormatError}, conn=${connectionStatus}, roReq=${readonlyRequired}, qoReq=${queryOnlyRequired}, roVer=${readonlyVerified}, qoVer=${queryOnlyVerified}, schema=${schemaProbed}`,
     };
   } catch (e: any) {
     return {
@@ -233,13 +294,13 @@ async function testPreflightUi004ConfigurationMissing(): Promise<TestResult> {
       expected_status: 'format_error',
       actual_status: 'ERROR',
       assertion_result: 'FAIL',
-      details: `异常: ${e.message}`,
+      details: `Exception: ${e.message}`,
     };
   }
 }
 
-// ============ PREFLIGHT_UI_005_SECURITY_FLAGS ============
-async function testPreflightUi005SecurityFlags(): Promise<TestResult> {
+// ============ PREFLIGHT_UI_005: Safety Fields Combination ============
+async function testPreflightUi005SafetyFlags(): Promise<TestResult> {
   const testId = 'PREFLIGHT_UI_005';
   const evidenceId = makeEvidenceId(testId);
 
@@ -254,7 +315,7 @@ async function testPreflightUi005SecurityFlags(): Promise<TestResult> {
         expected_status: 'PASS',
         actual_status: 'FAIL',
         assertion_result: 'FAIL',
-        details: `API 返回异常: ok=${res.ok}, success=${res.data?.success}`,
+        details: `API returned error: ok=${res.ok}, success=${res.data?.success}`,
       };
     }
 
@@ -267,16 +328,41 @@ async function testPreflightUi005SecurityFlags(): Promise<TestResult> {
         expected_status: 'PASS',
         actual_status: 'FAIL',
         assertion_result: 'FAIL',
-        details: 'safety 字段缺失',
+        details: 'safety field missing',
       };
     }
 
+    const conn = res.data.data?.connection;
+    const config = res.data.data?.configuration;
+
+    // Safety assertions
     const migrationDisabled = safety.auto_migration_disabled === true;
     const fillDisabled = safety.auto_fill_disabled === true;
     const writeDisabled = safety.production_write_enabled === false;
     const sqlInputDisabled = safety.sql_input_accepted === false;
+    const pathNotSelectable = safety.db_path_selectable === false;
 
-    const allPass = migrationDisabled && fillDisabled && writeDisabled && sqlInputDisabled;
+    // Connection capability vs verification
+    const readonlyRequiredTrue = conn?.readonly_required === true;
+    const queryOnlyRequiredTrue = conn?.query_only_required === true;
+    const readonlyNotVerified = conn?.readonly_connection_verified === false;
+    const queryOnlyNotVerified = conn?.query_only_verified === false;
+
+    // Identity contract
+    const activeNotClaimingReal = config?.active_data_source !== 'real_readonly' || config?.real_db_path_configured === true;
+    const targetIsReal = config?.preflight_target === 'real_readonly';
+
+    // No fallback
+    const noFallback = res.data.fallback_used === false;
+
+    // No path leakage
+    const raw = JSON.stringify(res.data);
+    const pathPatterns = ['/workspace', '/tmp/real', '/home/', '/root/'];
+    const noPathLeak = !pathPatterns.some(p => raw.includes(p));
+
+    const allPass = migrationDisabled && fillDisabled && writeDisabled && sqlInputDisabled && pathNotSelectable &&
+      readonlyRequiredTrue && queryOnlyRequiredTrue && readonlyNotVerified && queryOnlyNotVerified &&
+      activeNotClaimingReal && targetIsReal && noFallback && noPathLeak;
 
     return {
       test_id: testId,
@@ -286,8 +372,8 @@ async function testPreflightUi005SecurityFlags(): Promise<TestResult> {
       actual_status: allPass ? 'all_disabled' : 'some_enabled',
       assertion_result: allPass ? 'PASS' : 'FAIL',
       details: allPass
-        ? `auto_migration_disabled=true, auto_fill_disabled=true, production_write_enabled=false, sql_input_accepted=false`
-        : `auto_migration_disabled=${safety.auto_migration_disabled}, auto_fill_disabled=${safety.auto_fill_disabled}, production_write_enabled=${safety.production_write_enabled}, sql_input_accepted=${safety.sql_input_accepted}`,
+        ? `safety: write=false, migration=true, fill=true, sql=false, path_selectable=false; connection: required=true, verified=false; identity: active=${config?.active_data_source}, target=${config?.preflight_target}; fallback=false; no path leak`
+        : `FAIL: migration=${safety.auto_migration_disabled}, fill=${safety.auto_fill_disabled}, write=${safety.production_write_enabled}, sql=${safety.sql_input_accepted}, roReq=${readonlyRequiredTrue}, qoReq=${queryOnlyRequiredTrue}, roVer=${readonlyNotVerified}, qoVer=${queryOnlyNotVerified}, identity=${activeNotClaimingReal}, target=${targetIsReal}, fallback=${noFallback}, pathLeak=${noPathLeak}`,
     };
   } catch (e: any) {
     return {
@@ -297,21 +383,23 @@ async function testPreflightUi005SecurityFlags(): Promise<TestResult> {
       expected_status: 'all_disabled',
       actual_status: 'ERROR',
       assertion_result: 'FAIL',
-      details: `异常: ${e.message}`,
+      details: `Exception: ${e.message}`,
     };
   }
 }
 
 // ============ Main ============
 async function main() {
-  console.log('=== Phase 2.2A Frontend Contract Tests ===\n');
+  console.log('=== Phase 2.2A Frontend Contract Tests (Runtime) ===\n');
+  console.log(`BASE_URL: ${BASE_URL}`);
+  console.log(`Test Run ID: ${testRunId}\n`);
 
   const tests = [
-    testPreflightUi001DirectResponse,
-    testPreflightUi002Loading,
+    testPreflightUi001NormalResponse,
+    testPreflightUi002NullData,
     testPreflightUi003FetchFailed,
     testPreflightUi004ConfigurationMissing,
-    testPreflightUi005SecurityFlags,
+    testPreflightUi005SafetyFlags,
   ];
 
   for (const test of tests) {

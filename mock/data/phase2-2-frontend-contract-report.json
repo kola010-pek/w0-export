@@ -1,14 +1,14 @@
 {
-  "test_run_id": "run_frontend_contract_rt_19fa156118f",
-  "generated_at": "2026-07-27T02:10:00.277Z",
+  "test_run_id": "run_frontend_contract_rt_19fa1a70983",
+  "generated_at": "2026-07-27T03:38:26.612Z",
   "total_tests": 5,
   "passed_tests": 5,
   "failed_tests": 0,
   "results": [
     {
       "test_id": "PREFLIGHT_UI_001",
-      "test_run_id": "run_frontend_contract_rt_19fa156118f",
-      "test_evidence_id": "evt_fc_PREFLIGHT_UI_001_19fa1561190_cb8322",
+      "test_run_id": "run_frontend_contract_rt_19fa1a70983",
+      "test_evidence_id": "evt_fc_PREFLIGHT_UI_001_19fa1a70984_b080c0",
       "expected_status": "BLOCK",
       "actual_status": "BLOCK",
       "assertion_result": "PASS",
@@ -16,8 +16,8 @@
     },
     {
       "test_id": "PREFLIGHT_UI_002",
-      "test_run_id": "run_frontend_contract_rt_19fa156118f",
-      "test_evidence_id": "evt_fc_PREFLIGHT_UI_002_19fa15611c9_378621",
+      "test_run_id": "run_frontend_contract_rt_19fa1a70983",
+      "test_evidence_id": "evt_fc_PREFLIGHT_UI_002_19fa1a709ab_0adb20",
       "expected_status": "loading/null-safe",
       "actual_status": "loading/null-safe",
       "assertion_result": "PASS",
@@ -25,8 +25,8 @@
     },
     {
       "test_id": "PREFLIGHT_UI_003",
-      "test_run_id": "run_frontend_contract_rt_19fa156118f",
-      "test_evidence_id": "evt_fc_PREFLIGHT_UI_003_19fa15611c9_a66b32",
+      "test_run_id": "run_frontend_contract_rt_19fa1a70983",
+      "test_evidence_id": "evt_fc_PREFLIGHT_UI_003_19fa1a709ab_c891da",
       "expected_status": "BLOCK",
       "actual_status": "BLOCK",
       "assertion_result": "PASS",
@@ -34,8 +34,8 @@
     },
     {
       "test_id": "PREFLIGHT_UI_004",
-      "test_run_id": "run_frontend_contract_rt_19fa156118f",
-      "test_evidence_id": "evt_fc_PREFLIGHT_UI_004_19fa15611c9_b8371a",
+      "test_run_id": "run_frontend_contract_rt_19fa1a70983",
+      "test_evidence_id": "evt_fc_PREFLIGHT_UI_004_19fa1a709ab_fa5ab8",
       "expected_status": "format_error",
       "actual_status": "format_error",
       "assertion_result": "PASS",
@@ -43,8 +43,8 @@
     },
     {
       "test_id": "PREFLIGHT_UI_005",
-      "test_run_id": "run_frontend_contract_rt_19fa156118f",
-      "test_evidence_id": "evt_fc_PREFLIGHT_UI_005_19fa15611c9_8992b3",
+      "test_run_id": "run_frontend_contract_rt_19fa1a70983",
+      "test_evidence_id": "evt_fc_PREFLIGHT_UI_005_19fa1a709ab_e23bdb",
       "expected_status": "all_disabled",
       "actual_status": "all_disabled",
       "assertion_result": "PASS",

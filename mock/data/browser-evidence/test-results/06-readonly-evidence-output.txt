@@ -1,0 +1,85 @@
+=== TEST 6: readonly-evidence.ts ===
+=== Phase 2.2A Read-Only Isolated Evidence ===
+
+--- 0. SQLite Driver & Version ---
+Driver: better-sqlite3
+npm package version: 13.0.1
+SQLite engine version: 3.53.3
+
+Test database: /tmp/readonly_isolated_test.db (8192 bytes)
+
+--- Layer 1: readonly=true ONLY (no PRAGMA query_only) ---
+Purpose: Verify that readonly connection option alone prevents writes.
+
+  Connection with readonly=true: SUCCESS
+  PRAGMA query_only value: 0 (expected: 0/OFF since we did not set it)
+  SELECT COUNT(*): SUCCESS (3 rows)
+  Write test results (readonly=true only):
+    [REJECTED] INSERT: attempt to write a readonly database
+    [REJECTED] UPDATE: attempt to write a readonly database
+    [REJECTED] DELETE: attempt to write a readonly database
+    [REJECTED] CREATE TABLE: attempt to write a readonly database
+    [REJECTED] DROP TABLE: attempt to write a readonly database
+    [REJECTED] ALTER TABLE: attempt to write a readonly database
+  Layer effective: YES
+
+--- Layer 2: PRAGMA query_only=ON ONLY (no readonly flag) ---
+Purpose: Verify that query_only pragma alone prevents writes on a read-write connection.
+
+  Connection with readonly=false (read-write): SUCCESS
+  PRAGMA query_only = ON executed: YES
+  PRAGMA query_only read-back: 1 (type: number)
+  SELECT COUNT(*): SUCCESS (3 rows)
+  Write test results (query_only=ON only):
+    [REJECTED] INSERT: attempt to write a readonly database
+    [REJECTED] UPDATE: attempt to write a readonly database
+    [REJECTED] DELETE: attempt to write a readonly database
+    [REJECTED] CREATE TABLE: attempt to write a readonly database
+    [REJECTED] DROP TABLE: attempt to write a readonly database
+    [REJECTED] ALTER TABLE: attempt to write a readonly database
+  Layer effective: YES
+
+  PRAGMA query_only = OFF, read-back: 0
+  After query_only=OFF, INSERT: SUCCESS (confirms query_only was the blocking mechanism)
+--- Layer 3: readonly=true + PRAGMA query_only=ON (defense-in-depth) ---
+Purpose: Verify both layers active simultaneously.
+
+  Connection with readonly=true: SUCCESS
+  PRAGMA query_only = ON, read-back: 1
+  PRAGMA quick_check: ok
+  SELECT COUNT(*): SUCCESS (3 rows)
+  Write test results (readonly + query_only):
+    [REJECTED] INSERT: attempt to write a readonly database
+    [REJECTED] UPDATE: attempt to write a readonly database
+    [REJECTED] DELETE: attempt to write a readonly database
+    [REJECTED] CREATE TABLE: attempt to write a readonly database
+    [REJECTED] DROP TABLE: attempt to write a readonly database
+    [REJECTED] ALTER TABLE: attempt to write a readonly database
+  Layer effective: YES
+
+--- Summary ---
+Layer 1 (readonly=true only): Prevents writes via file descriptor and SQLite internal checks.
+  - better-sqlite3 passes readonly option to SQLite C API (sqlite3_open_v2 with SQLITE_OPEN_READONLY).
+  - SQLite rejects write operations with "attempt to write a readonly database".
+  - This is documented behavior of SQLite, not just OS-level O_RDONLY.
+
+Layer 2 (query_only=ON only): Prevents writes via SQLite engine pragma.
+  - Works on a normal read-write connection.
+  - Verified: writes fail with query_only=ON, succeed with query_only=OFF on same connection.
+  - This proves query_only is an independent defense layer.
+
+Layer 3 (both): Defense-in-depth. Both mechanisms active simultaneously.
+
+Limitations (accurate description):
+  - readonly:true prevents SQLite-level writes; the file is opened with SQLITE_OPEN_READONLY.
+  - query_only=ON prevents SQL-level writes at the SQLite engine level.
+  - Neither protects against OS-level file deletion or permission changes by other processes.
+  - WAL journal mode: SQLite opens with readonly cannot create WAL files; this is a
+    consequence of the readonly flag, not a separate limitation of query_only.
+  - These mechanisms protect against accidental writes through the application,
+    not against deliberate attacks with direct file system access.
+
+Test database cleaned up.
+
+=== Isolated Evidence Complete ===
+Exit code: 0

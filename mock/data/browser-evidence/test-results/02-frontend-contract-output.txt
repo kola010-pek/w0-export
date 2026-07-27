@@ -1,0 +1,17 @@
+=== TEST 2: phase2-2-frontend-contract-tests ===
+=== Phase 2.2A Frontend Contract Tests (Runtime) ===
+
+BASE_URL: http://localhost:5000
+Test Run ID: run_frontend_contract_rt_19fa1a70983
+
+[PASS] PREFLIGHT_UI_001: API normal response: success=true, gate_status=BLOCK, active_data_source=sample, preflight_target=real_readonly, fallback_used=false, no path leakage, identity contract correct
+[PASS] PREFLIGHT_UI_002: preflightData=null: gate=BLOCK, active_ds=unknown, target=real_readonly, connection=not_configured, required=true, verified=false, schema hidden, safety defaults correct
+[PASS] PREFLIGHT_UI_003: Fetch failed: preflightData=null, gate=BLOCK, format error shown, no fallback, verified=false, safety defaults correct
+[PASS] PREFLIGHT_UI_004: configuration missing: format error shown, connection defaults safe, required=true, verified=false, schema hidden
+[PASS] PREFLIGHT_UI_005: safety: write=false, migration=true, fill=true, sql=false, path_selectable=false; connection: required=true, verified=false; identity: active=sample, target=real_readonly; fallback=false; no path leak
+
+=== Summary ===
+Total: 5, Passed: 5, Failed: 0
+
+Report saved to: /workspace/projects/mock/data/phase2-2-frontend-contract-report.json
+Exit code: 0

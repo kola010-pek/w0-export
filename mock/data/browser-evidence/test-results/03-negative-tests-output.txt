@@ -1,0 +1,73 @@
+=== TEST 3: phase2-2-negative-tests ===
+=== Phase 2.2A Real Database Read-Only Negative Tests ===
+
+Test Run ID: 8270e0af-4b02-4d79-95d0-1ce71df2abe3
+Phase: 2.2A
+Executed At: 2026-07-27T03:38:27.102Z
+Total Tests: 10
+Passed: 10
+Failed: 0
+Evidence ID Uniqueness: true
+
+  ✓ REAL_001_PATH_MISSING: PASS
+    Evidence: evt_real_real_001_path_missing_8241c960
+    Expected: BLOCK, Actual: BLOCK
+    Block Reasons: real_sqlite_db_path_not_configured
+    Details: Path configured: false. Expected: not configured -> BLOCK
+
+  ✓ REAL_002_FILE_NOT_FOUND: PASS
+    Evidence: evt_real_real_002_file_not_found_c3fbd4ff
+    Expected: BLOCK, Actual: BLOCK
+    Block Reasons: database_file_not_found
+    Details: File exists: false. Expected: not found -> BLOCK
+
+  ✓ REAL_003_INVALID_SQLITE: PASS
+    Evidence: evt_real_real_003_invalid_sqlite_d04ecb87
+    Expected: BLOCK, Actual: BLOCK
+    Block Reasons: readonly_connection_failed
+    Details: Connection succeeded with corrupt DB: false. Expected: fail -> BLOCK
+
+  ✓ REAL_004_READONLY_CONNECTION_FAILED: PASS
+    Evidence: evt_real_real_004_readonly_connection_failed_b5c5f4e5
+    Expected: BLOCK, Actual: BLOCK
+    Block Reasons: readonly_connection_failed
+    Details: Connection to directory succeeded: false. Expected: fail -> BLOCK
+
+  ✓ REAL_005_QUICK_CHECK_FAILED: PASS
+    Evidence: evt_real_real_005_quick_check_failed_124671be
+    Expected: BLOCK, Actual: BLOCK
+    Block Reasons: quick_check_failed
+    Details: Quick check passed on corrupt DB: false. Expected: fail -> BLOCK
+
+  ✓ REAL_006_REQUIRED_TABLE_MISSING: PASS
+    Evidence: evt_real_real_006_required_table_missing_af40931d
+    Expected: BLOCK, Actual: BLOCK
+    Block Reasons: required_table_missing:daily_kline
+    Details: Table daily_kline exists: false. Expected: missing -> BLOCK
+
+  ✓ REAL_007_REQUIRED_COLUMN_MISSING: PASS
+    Evidence: evt_real_real_007_required_column_missing_96c697c9
+    Expected: BLOCK, Actual: BLOCK
+    Block Reasons: required_column_missing:open_price
+    Details: Column open_price exists: false. Expected: missing -> BLOCK
+
+  ✓ REAL_008_SCHEMA_UNRECOGNIZED: PASS
+    Evidence: evt_real_real_008_schema_unrecognized_88bea4a3
+    Expected: BLOCK, Actual: BLOCK
+    Block Reasons: schema_unrecognized:no_candidate_tables_detected
+    Details: Any candidate table detected: false. Expected: none -> BLOCK
+
+  ✓ REAL_009_NO_FALLBACK_TO_SAMPLE: PASS
+    Evidence: evt_real_real_009_no_fallback_to_sample_1e78801a
+    Expected: BLOCK, Actual: BLOCK
+    Block Reasons: real_sqlite_db_path_not_configured
+    Details: Mode: real_readonly, isRealReadonly: true, pathExists: false. Expected: no fallback -> BLOCK
+
+  ✓ REAL_010_PATH_NOT_EXPOSED: PASS
+    Evidence: evt_real_real_010_path_not_exposed_2ae9f943
+    Expected: BLOCK, Actual: BLOCK
+    Block Reasons: path_correctly_hidden
+    Details: Path exposed in response: false. database_path_exposed: false. Expected: not exposed -> BLOCK (test passes)
+
+Report saved to: /workspace/projects/mock/data/phase2-2-negative-test-report.json
+Exit code: 0

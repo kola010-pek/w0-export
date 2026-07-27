@@ -265,7 +265,8 @@ test.describe('Scenario 3: Fetch failure', () => {
     // Page should not crash - body is visible
     await expect(page.locator('body')).toBeVisible();
 
-    // Full DOM assertions for Scenario 3:
+    // Full DOM assertions for Scenario 3 using data-testid:
+
     // 1. Phase 2.2 section is visible (with default values when fetch fails)
     const pageText = await page.locator('body').innerText();
     expect(pageText).toContain('Phase 2.2');
@@ -274,27 +275,30 @@ test.describe('Scenario 3: Fetch failure', () => {
     const blockText = page.locator('text=BLOCK');
     await expect(blockText.first()).toBeVisible({ timeout: 5000 });
 
-    // 3. fallback=false is visible (no auto-fallback)
-    expect(pageText).not.toContain('自动回退已启用');
-    expect(pageText).not.toContain('fallback_used=true');
+    // 3. fallback_used=false is visible via data-testid
+    const fallbackUsed = page.locator('[data-testid="phase2-2-fallback-used"]');
+    await expect(fallbackUsed).toBeVisible({ timeout: 5000 });
+    await expect(fallbackUsed).toContainText('fallback_used = false');
 
-    // 4. readonly_required=true is visible
-    const readonlyRequiredLabel = page.locator('text=readonly_required');
-    await expect(readonlyRequiredLabel.first()).toBeVisible({ timeout: 5000 });
-    expect(pageText).toContain('true');
+    // 4. readonly_required=true via data-testid
+    const readonlyRequired = page.locator('[data-testid="phase2-2-readonly-required"]');
+    await expect(readonlyRequired).toBeVisible({ timeout: 5000 });
+    await expect(readonlyRequired).toHaveText('true');
 
-    // 5. query_only_required=true is visible
-    const queryOnlyRequiredLabel = page.locator('text=query_only_required');
-    await expect(queryOnlyRequiredLabel.first()).toBeVisible({ timeout: 5000 });
+    // 5. query_only_required=true via data-testid
+    const queryOnlyRequired = page.locator('[data-testid="phase2-2-query-only-required"]');
+    await expect(queryOnlyRequired).toBeVisible({ timeout: 5000 });
+    await expect(queryOnlyRequired).toHaveText('true');
 
-    // 6. readonly_connection_verified=false is visible
-    const readonlyVerifiedLabel = page.locator('text=readonly_connection_verified');
-    await expect(readonlyVerifiedLabel.first()).toBeVisible({ timeout: 5000 });
-    expect(pageText).toContain('false');
+    // 6. readonly_connection_verified=false via data-testid
+    const readonlyVerified = page.locator('[data-testid="phase2-2-readonly-connection-verified"]');
+    await expect(readonlyVerified).toBeVisible({ timeout: 5000 });
+    await expect(readonlyVerified).toHaveText('false');
 
-    // 7. query_only_verified=false is visible
-    const queryOnlyVerifiedLabel = page.locator('text=query_only_verified');
-    await expect(queryOnlyVerifiedLabel.first()).toBeVisible({ timeout: 5000 });
+    // 7. query_only_verified=false via data-testid
+    const queryOnlyVerified = page.locator('[data-testid="phase2-2-query-only-verified"]');
+    await expect(queryOnlyVerified).toBeVisible({ timeout: 5000 });
+    await expect(queryOnlyVerified).toHaveText('false');
 
     // 8. No real path values appear in visible text
     const pathPatterns = ['/workspace/', '/tmp/', '/home/', '/root/'];

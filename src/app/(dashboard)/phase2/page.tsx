@@ -808,7 +808,7 @@ export default function Phase2Page() {
               <ul className="text-xs text-red-200/80 space-y-1">
                 <li>• 未连接真实数据库</li>
                 <li>• 未执行真实数据质量验收</li>
-                <li>• fallback_used = false（不会自动回退到 Sample 或 Mock）</li>
+                <li data-testid="phase2-2-fallback-used">• fallback_used = false（不会自动回退到 Sample 或 Mock）</li>
                 <li>• release_eligibility = BLOCK</li>
                 <li>• 等待负责人提供并确认真实数据库绝对路径</li>
               </ul>
@@ -878,25 +878,25 @@ export default function Phase2Page() {
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-xs text-slate-500">readonly_required</span>
-                <span className="text-xs font-mono text-green-400">
+                <span data-testid="phase2-2-readonly-required" className="text-xs font-mono text-green-400">
                   {String(preflightData?.data?.connection?.readonly_required ?? true)}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-xs text-slate-500">query_only_required</span>
-                <span className="text-xs font-mono text-green-400">
+                <span data-testid="phase2-2-query-only-required" className="text-xs font-mono text-green-400">
                   {String(preflightData?.data?.connection?.query_only_required ?? true)}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-xs text-slate-500">readonly_connection_verified</span>
-                <span className={`text-xs font-mono ${preflightData?.data?.connection?.readonly_connection_verified ? 'text-green-400' : 'text-slate-500'}`}>
+                <span data-testid="phase2-2-readonly-connection-verified" className={`text-xs font-mono ${preflightData?.data?.connection?.readonly_connection_verified ? 'text-green-400' : 'text-slate-500'}`}>
                   {String(preflightData?.data?.connection?.readonly_connection_verified ?? false)}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-xs text-slate-500">query_only_verified</span>
-                <span className={`text-xs font-mono ${preflightData?.data?.connection?.query_only_verified ? 'text-green-400' : 'text-slate-500'}`}>
+                <span data-testid="phase2-2-query-only-verified" className={`text-xs font-mono ${preflightData?.data?.connection?.query_only_verified ? 'text-green-400' : 'text-slate-500'}`}>
                   {String(preflightData?.data?.connection?.query_only_verified ?? false)}
                 </span>
               </div>

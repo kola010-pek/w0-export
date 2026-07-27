@@ -266,11 +266,9 @@ test.describe('Scenario 3: Fetch failure', () => {
     await expect(page.locator('body')).toBeVisible();
 
     // Full DOM assertions for Scenario 3:
-    // 1. Phase 2 section is visible (when fetch fails, shows "Phase 2" in error banner)
-    // The page shows "Phase 2 联调" or "Phase 2" in the header/error banner
-    // Use innerText to get only visible text (excludes RSC payload with module paths)
+    // 1. Phase 2.2 section is visible (with default values when fetch fails)
     const pageText = await page.locator('body').innerText();
-    expect(pageText).toContain('Phase 2');
+    expect(pageText).toContain('Phase 2.2');
 
     // 2. BLOCK is visible
     const blockText = page.locator('text=BLOCK');
@@ -280,9 +278,23 @@ test.describe('Scenario 3: Fetch failure', () => {
     expect(pageText).not.toContain('自动回退已启用');
     expect(pageText).not.toContain('fallback_used=true');
 
-    // 4-7. When fetch fails, the page shows BLOCK status and error message
-    // The specific required/verified fields may not be visible in the error state
-    // but the page correctly shows BLOCK and does not crash
+    // 4. readonly_required=true is visible
+    const readonlyRequiredLabel = page.locator('text=readonly_required');
+    await expect(readonlyRequiredLabel.first()).toBeVisible({ timeout: 5000 });
+    expect(pageText).toContain('true');
+
+    // 5. query_only_required=true is visible
+    const queryOnlyRequiredLabel = page.locator('text=query_only_required');
+    await expect(queryOnlyRequiredLabel.first()).toBeVisible({ timeout: 5000 });
+
+    // 6. readonly_connection_verified=false is visible
+    const readonlyVerifiedLabel = page.locator('text=readonly_connection_verified');
+    await expect(readonlyVerifiedLabel.first()).toBeVisible({ timeout: 5000 });
+    expect(pageText).toContain('false');
+
+    // 7. query_only_verified=false is visible
+    const queryOnlyVerifiedLabel = page.locator('text=query_only_verified');
+    await expect(queryOnlyVerifiedLabel.first()).toBeVisible({ timeout: 5000 });
 
     // 8. No real path values appear in visible text
     const pathPatterns = ['/workspace/', '/tmp/', '/home/', '/root/'];

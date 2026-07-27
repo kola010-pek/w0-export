@@ -311,7 +311,8 @@ export default function Phase2Page() {
         setLoading(true);
         setError(null);
 
-        const [healthRes, watermarksRes, qualityRes, testReportRes, preflightRes, realTestRes] = await Promise.all([
+        // Fetch core data with Promise.allSettled to handle partial failures gracefully
+        const [healthResult, watermarksResult, qualityResult, testReportResult, preflightResult, realTestResult] = await Promise.allSettled([
           fetch('/api/health'),
           fetch('/api/data/watermarks'),
           fetch('/api/quality/gates'),
@@ -320,9 +321,13 @@ export default function Phase2Page() {
           fetch('/api/phase2/real-negative-test-report'),
         ]);
 
-        // Check if any core response is not OK - must BLOCK, never degrade
-        if (!healthRes.ok || !watermarksRes.ok || !qualityRes.ok) {
-          setError('一个或多个接口不可达');
+        // Check core responses - must BLOCK if core APIs fail
+        const healthRes = healthResult.status === 'fulfilled' ? healthResult.value : null;
+        const watermarksRes = watermarksResult.status === 'fulfilled' ? watermarksResult.value : null;
+        const qualityRes = qualityResult.status === 'fulfilled' ? qualityResult.value : null;
+
+        if (!healthRes?.ok || !watermarksRes?.ok || !qualityRes?.ok) {
+          setError('一个或多个核心接口不可达');
           setLoading(false);
           return;
         }
@@ -343,7 +348,8 @@ export default function Phase2Page() {
         setQualityData(quality);
 
         // Parse preflight data (optional - don't fail if not available)
-        if (preflightRes.ok) {
+        const preflightRes = preflightResult.status === 'fulfilled' ? preflightResult.value : null;
+        if (preflightRes?.ok) {
           try {
             const preflight = await preflightRes.json();
             // Validate basic structure
@@ -356,32 +362,42 @@ export default function Phase2Page() {
         }
 
         // Parse real negative test report (optional)
-        if (realTestRes.ok) {
-          const realTestJson = await realTestRes.json();
-          if (realTestJson.success && Array.isArray(realTestJson.data?.results)) {
-            setRealTestReport(realTestJson.data.results);
+        const realTestRes = realTestResult.status === 'fulfilled' ? realTestResult.value : null;
+        if (realTestRes?.ok) {
+          try {
+            const realTestJson = await realTestRes.json();
+            if (realTestJson.success && Array.isArray(realTestJson.data?.results)) {
+              setRealTestReport(realTestJson.data.results);
+            }
+          } catch {
+            // Non-fatal
           }
         }
 
         // Parse test report (optional - don't fail if not available)
-        if (testReportRes.ok) {
-          const testReportJson = await testReportRes.json();
-          if (testReportJson.success && testReportJson.data) {
-            // New format: response.data.results
-            if (Array.isArray(testReportJson.data.results)) {
-              setTestReport(testReportJson.data.results);
-              setTestRunId(testReportJson.data.test_run_id || null);
-              setTestSummary({
-                total_tests: testReportJson.data.total_tests || 0,
-                passed_tests: testReportJson.data.passed_tests || 0,
-                failed_tests: testReportJson.data.failed_tests || 0,
-                evidence_id_uniqueness: testReportJson.data.evidence_id_uniqueness || false,
-              });
+        const testReportRes = testReportResult.status === 'fulfilled' ? testReportResult.value : null;
+        if (testReportRes?.ok) {
+          try {
+            const testReportJson = await testReportRes.json();
+            if (testReportJson.success && testReportJson.data) {
+              // New format: response.data.results
+              if (Array.isArray(testReportJson.data.results)) {
+                setTestReport(testReportJson.data.results);
+                setTestRunId(testReportJson.data.test_run_id || null);
+                setTestSummary({
+                  total_tests: testReportJson.data.total_tests || 0,
+                  passed_tests: testReportJson.data.passed_tests || 0,
+                  failed_tests: testReportJson.data.failed_tests || 0,
+                  evidence_id_uniqueness: testReportJson.data.evidence_id_uniqueness || false,
+                });
+              }
+              // Legacy format: response.data as array
+              else if (Array.isArray(testReportJson.data)) {
+                setTestReport(testReportJson.data);
+              }
             }
-            // Legacy format: response.data as array
-            else if (Array.isArray(testReportJson.data)) {
-              setTestReport(testReportJson.data);
-            }
+          } catch {
+            // Non-fatal
           }
         }
       } catch (err) {
@@ -815,7 +831,9 @@ export default function Phase2Page() {
               </div>
             </div>
           </div>
-        ) : (
+        ) : null}
+
+        {/* Connection Status - Always render with defaults */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div className="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30">
             <h4 className="text-xs font-medium text-slate-400 mb-2">数据源配置</h4>
@@ -823,25 +841,25 @@ export default function Phase2Page() {
               <div className="flex items-center justify-between">
                 <span className="text-xs text-slate-500">active_data_source</span>
                 <span className="text-xs font-mono text-blue-300">
-                  {preflightData.data.configuration.active_data_source || 'unknown'}
+                  {preflightData?.data?.configuration?.active_data_source || 'unknown'}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-xs text-slate-500">active_data_source_kind</span>
                 <span className="text-xs font-mono text-blue-300">
-                  {preflightData.data.configuration.active_data_source_kind || 'unknown'}
+                  {preflightData?.data?.configuration?.active_data_source_kind || 'unknown'}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-xs text-slate-500">preflight_target</span>
                 <span className="text-xs font-mono text-purple-300">
-                  {preflightData.data.configuration.preflight_target || 'real_readonly'}
+                  {preflightData?.data?.configuration?.preflight_target || 'real_readonly'}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-xs text-slate-500">real_db_path_configured</span>
-                <span className={`text-xs font-mono ${preflightData.data.configuration.real_db_path_configured ? 'text-green-400' : 'text-red-400'}`}>
-                  {String(preflightData.data.configuration.real_db_path_configured ?? false)}
+                <span className={`text-xs font-mono ${preflightData?.data?.configuration?.real_db_path_configured ? 'text-green-400' : 'text-red-400'}`}>
+                  {String(preflightData?.data?.configuration?.real_db_path_configured ?? false)}
                 </span>
               </div>
             </div>
@@ -853,33 +871,33 @@ export default function Phase2Page() {
               <div className="flex items-center justify-between">
                 <span className="text-xs text-slate-500">connection_status</span>
                 <span className={`text-xs font-mono ${
-                  preflightData.data.connection?.status === 'connected' ? 'text-green-400' : 'text-red-400'
+                  preflightData?.data?.connection?.status === 'connected' ? 'text-green-400' : 'text-red-400'
                 }`}>
-                  {preflightData.data.connection?.status || 'not_configured'}
+                  {preflightData?.data?.connection?.status || 'not_configured'}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-xs text-slate-500">readonly_required</span>
                 <span className="text-xs font-mono text-green-400">
-                  {String(preflightData.data.connection?.readonly_required ?? true)}
+                  {String(preflightData?.data?.connection?.readonly_required ?? true)}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-xs text-slate-500">query_only_required</span>
                 <span className="text-xs font-mono text-green-400">
-                  {String(preflightData.data.connection?.query_only_required ?? true)}
+                  {String(preflightData?.data?.connection?.query_only_required ?? true)}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-xs text-slate-500">readonly_connection_verified</span>
-                <span className={`text-xs font-mono ${preflightData.data.connection?.readonly_connection_verified ? 'text-green-400' : 'text-slate-500'}`}>
-                  {String(preflightData.data.connection?.readonly_connection_verified ?? false)}
+                <span className={`text-xs font-mono ${preflightData?.data?.connection?.readonly_connection_verified ? 'text-green-400' : 'text-slate-500'}`}>
+                  {String(preflightData?.data?.connection?.readonly_connection_verified ?? false)}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-xs text-slate-500">query_only_verified</span>
-                <span className={`text-xs font-mono ${preflightData.data.connection?.query_only_verified ? 'text-green-400' : 'text-slate-500'}`}>
-                  {String(preflightData.data.connection?.query_only_verified ?? false)}
+                <span className={`text-xs font-mono ${preflightData?.data?.connection?.query_only_verified ? 'text-green-400' : 'text-slate-500'}`}>
+                  {String(preflightData?.data?.connection?.query_only_verified ?? false)}
                 </span>
               </div>
               <div className="flex items-center justify-between">
@@ -889,7 +907,6 @@ export default function Phase2Page() {
             </div>
           </div>
         </div>
-        )}
 
         {/* Safety Flags */}
         <div className="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30 mb-4">

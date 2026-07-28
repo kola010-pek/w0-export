@@ -400,7 +400,7 @@ test.describe('Scenario 5: Safety field combination', () => {
 
 test.describe('Network and Console Evidence', () => {
   test('collects network requests and console logs', async ({ page }) => {
-    const networkRequests: Array<{ url: string; status: number; method: string }> = [];
+    const networkRequests: Array<{ url: string; status: number; method: string; response_body_sha256?: string; response_body_length?: number; response_body_preview?: string }> = [];
     const consoleMessages: Array<{ type: string; text: string }> = [];
 
     // Collect network requests

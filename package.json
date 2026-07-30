@@ -11,7 +11,14 @@
     "lint:style": "stylelint \"src/**/*.css\"",
     "start": "bash ./scripts/start.sh",
     "ts-check": "tsc -p tsconfig.json",
-    "validate": "pnpm dlx concurrently --group --names lint-tsc,lint-build,lint-style \"pnpm ts-check\" \"pnpm lint:build\" \"pnpm lint:style\""
+    "validate": "pnpm dlx concurrently --group --names lint-tsc,lint-build,lint-style \"pnpm ts-check\" \"pnpm lint:build\" \"pnpm lint:style\"",
+    "test": "npx tsx tests/run-all-tests.ts",
+    "test:unit": "npx tsx tests/run-tests.ts unit",
+    "test:integration": "npx tsx tests/run-tests.ts integration",
+    "test:contract": "npx tsx tests/run-tests.ts contract",
+    "test:negative": "npx tsx tests/run-tests.ts negative",
+    "test:smoke": "npx tsx tests/run-tests.ts smoke",
+    "verify": "bash ./scripts/verify.sh"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.958.0",

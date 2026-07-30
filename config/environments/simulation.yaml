@@ -1,0 +1,36 @@
+# Simulation Environment Configuration
+# This is the default safe environment for development and testing.
+# All data is mocked. No real database connections. No production capabilities.
+
+environment:
+  name: simulation
+  description: "Mock environment for development and testing"
+
+data:
+  source: mock
+  is_mock: true
+  is_sample: false
+  real_db_path_configured: false
+
+capabilities:
+  production_write_enabled: false
+  production_model_enabled: false
+  production_release_enabled: false
+  human_approval_required: false
+
+gates:
+  default_status: PASS
+  quality_gate_enabled: false
+
+safety:
+  fallback_used: false
+  auto_migration_disabled: true
+  auto_fill_disabled: true
+  sql_input_accepted: false
+  db_path_selectable: false
+
+notes: |
+  This environment uses completely synthetic data.
+  No real database is connected or referenced.
+  All agent actions are simulated.
+  This is the safest environment for development.

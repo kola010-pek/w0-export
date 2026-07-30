@@ -1,0 +1,54 @@
+# Real Read-Only Environment Configuration
+# Connects to real database in READ-ONLY mode.
+# No write operations allowed. No production capabilities.
+# BLOCK status until real database path is configured.
+
+environment:
+  name: real_readonly
+  description: "Real database read-only access (requires path configuration)"
+
+data:
+  source: unavailable
+  preflight_target: real_readonly
+  real_db_path_configured: false
+  real_db_path: ""  # MUST remain empty until authorized
+  
+  readonly:
+    required: true
+    verified: false
+    mechanism: "sqlite_open_v2 + SQLITE_OPEN_READONLY + PRAGMA query_only"
+  
+  query_only:
+    required: true
+    verified: false
+
+capabilities:
+  production_write_enabled: false
+  production_model_enabled: false
+  production_release_enabled: false
+  human_approval_required: false
+
+gates:
+  default_status: BLOCK
+  block_reasons:
+    - real_db_path_not_configured
+  quality_gate_enabled: true
+
+safety:
+  fallback_used: false
+  auto_migration_disabled: true
+  auto_fill_disabled: true
+  sql_input_accepted: false
+  db_path_selectable: false
+
+security:
+  path_not_exposed: true
+  write_rejection_verified: false
+  quick_check_required: true
+
+notes: |
+  This environment is BLOCKED until a real database path is configured.
+  The path must be provided by an authorized administrator.
+  Even when configured, only READ operations are permitted.
+  All write operations will be rejected at the SQLite level.
+  No fallback to mock or sample data is allowed.

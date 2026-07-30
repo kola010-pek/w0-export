@@ -1,0 +1,41 @@
+# Sample Staging Environment Configuration
+# Uses pre-generated sample data for testing data pipeline logic.
+# No real database connections. No production capabilities.
+
+environment:
+  name: sample_staging
+  description: "Sample staging environment with pre-generated data"
+
+data:
+  source: sample
+  is_mock: false
+  is_sample: true
+  real_db_path_configured: false
+  sample_data_path: "./mock/data/sample_staging.db"
+
+capabilities:
+  production_write_enabled: false
+  production_model_enabled: false
+  production_release_enabled: false
+  human_approval_required: false
+
+gates:
+  default_status: PASS
+  quality_gate_enabled: true
+  quality_checks:
+    - data_coverage
+    - data_freshness
+    - schema_validation
+
+safety:
+  fallback_used: false
+  auto_migration_disabled: true
+  auto_fill_disabled: true
+  sql_input_accepted: false
+  db_path_selectable: false
+
+notes: |
+  This environment uses sample data stored in mock/data/.
+  The sample database is pre-generated and read-only.
+  No real database is connected.
+  Data quality gates are enabled but operate on sample data.

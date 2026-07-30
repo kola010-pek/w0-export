@@ -1,0 +1,55 @@
+# Production Guarded Environment Configuration
+# Full production access with strict safety guards.
+# All production capabilities require human approval.
+# Default status is BLOCK until all conditions are met.
+
+environment:
+  name: production_guarded
+  description: "Production environment with strict safety guards"
+
+data:
+  source: unavailable
+  real_db_path_configured: false
+  real_db_path: ""  # MUST be configured by authorized administrator
+
+capabilities:
+  production_write_enabled: false
+  production_model_enabled: false
+  production_release_enabled: false
+  human_approval_required: true
+
+gates:
+  default_status: BLOCK
+  block_reasons:
+    - production_capabilities_disabled
+    - human_approval_required
+  quality_gate_enabled: true
+  approval_gate_enabled: true
+
+safety:
+  fallback_used: false
+  auto_migration_disabled: true
+  auto_fill_disabled: true
+  sql_input_accepted: false
+  db_path_selectable: false
+
+security:
+  path_not_exposed: true
+  write_rejection_verified: false
+  quick_check_required: true
+  audit_log_enabled: true
+  rollback_required: true
+
+approval:
+  required_for:
+    - production_write
+    - production_model
+    - production_release
+  approvers: []  # Must be configured
+
+notes: |
+  This environment has all production capabilities DISABLED by default.
+  Human approval is required for any production operation.
+  This environment should only be used by authorized personnel.
+  All operations are audited.
+  Rollback capability is required.

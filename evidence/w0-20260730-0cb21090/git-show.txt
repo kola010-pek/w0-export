@@ -1,0 +1,18 @@
+0cb2109 feat: W0 工程底座 - 补齐 API 端点和测试
+ data/negative-test-report.json                   |  50 ++--
+ mock/data/audit_events.json                      | 122 ++++-----
+ mock/data/phase2-2-frontend-contract-report.json |  24 +-
+ mock/data/phase2-2-negative-test-report.json     |  44 ++--
+ mock/data/runs.json                              | 300 +++++++++++------------
+ src/app/api/capabilities/route.ts                |  45 ++++
+ src/app/api/environment/route.ts                 |  41 ++++
+ src/app/api/evidence/latest/route.ts             |  42 ++++
+ src/app/api/gates/route.ts                       |  38 +++
+ src/app/api/health/route.ts                      |   9 +
+ src/app/api/version/route.ts                     |  29 +++
+ src/lib/config-validator.ts                      |  12 +-
+ tests/integration/w0-integration.test.ts         | 125 ++++++++++
+ tests/negative/phase1-negative-tests.ts          |   4 +-
+ tests/run-tests.ts                               |   3 +-
+ tests/smoke/w0-smoke.test.ts                     | 119 +++++++++
+ 16 files changed, 733 insertions(+), 274 deletions(-)

@@ -1,0 +1,1 @@
+{"success":true,"data":{"environment":"sample_staging","capabilities":{"production_write_enabled":false,"production_model_enabled":false,"production_release_enabled":false,"human_approval_required":false,"real_db_path_configured":false,"readonly_required":false,"query_only_required":false},"safety":{"fallback_used":false,"gate_status":"PASS","release_eligibility":"ELIGIBLE"}}}

@@ -1,0 +1,16 @@
+=== W0 Evidence Package ===
+Generated: 2026-07-30T03:18:48Z
+Commit: f4525913c3056d936f226eb27e266a34f2d8bee7
+
+## Files Verified
+-rw-r--r-- 1 root root 1479 Jul 30 10:10 config/environments/production_guarded.yaml
+-rw-r--r-- 1 root root 1478 Jul 30 10:10 config/environments/real_readonly.yaml
+-rw-r--r-- 1 root root 1076 Jul 30 10:10 config/environments/sample_staging.yaml
+-rw-r--r-- 1 root root  925 Jul 30 10:10 config/environments/simulation.yaml
+
+## Git Log
+f452591 feat: W0 标准工程底座建设
+e621763 feat: W0 标准工程底座建设
+4deb689 fix: 启用 outputFileTracingRoot 解决多 lockfile 冲突
+6e92c86 fix: 启用 outputFileTracingRoot 解决多 lockfile 冲突
+5c5f8ee fix: 修复多 lockfile 警告与生产构建缺失错误

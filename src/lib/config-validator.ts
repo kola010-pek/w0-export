@@ -303,7 +303,15 @@ function validateCommonSafety(config: EnvironmentConfig, blockReasons: string[])
  * Get current environment from environment variable or default to simulation
  */
 export function getCurrentEnvironment(): string {
-  return process.env.ENVIRONMENT || process.env.DATA_SOURCE_MODE || 'simulation';
+  const env = process.env.ENVIRONMENT || process.env.DATA_SOURCE_MODE || 'simulation';
+  // Map legacy DATA_SOURCE_MODE values to W0 environment names
+  const envMap: Record<string, string> = {
+    'mock': 'simulation',
+    'sample': 'sample_staging',
+    'real': 'real_readonly',
+    'production': 'production_guarded'
+  };
+  return envMap[env] || env;
 }
 
 /**
@@ -344,6 +352,7 @@ export interface FlatEnvironmentConfig {
   query_only_required: boolean;
   fallback_used: boolean;
   gate_status: string;
+  release_eligibility: string;
   environment: string;
 }
 
@@ -367,6 +376,7 @@ export function getFlatEnvironmentConfig(envName?: string): FlatEnvironmentConfi
     query_only_required: config.data.query_only?.required || false,
     fallback_used: config.safety.fallback_used ?? false,
     gate_status: config.gates.default_status || 'BLOCK',
+    release_eligibility: config.gates.default_status === 'PASS' ? 'ELIGIBLE' : 'BLOCK',
     environment: config.environment.name,
   };
 }

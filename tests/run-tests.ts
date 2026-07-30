@@ -22,7 +22,7 @@ const TEST_FILES: Record<string, string[]> = {
     'tests/unit/config-validation.test.ts',
   ],
   integration: [
-    // No integration tests yet
+    'tests/integration/w0-integration.test.ts',
   ],
   contract: [
     'tests/phase2-2-frontend-contract-tests.ts',
@@ -32,6 +32,7 @@ const TEST_FILES: Record<string, string[]> = {
     'tests/phase2-2-negative-tests.ts',
   ],
   smoke: [
+    'tests/smoke/w0-smoke.test.ts',
     'tests/core.test.ts',
   ],
 };

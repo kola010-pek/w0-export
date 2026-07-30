@@ -40,7 +40,7 @@ async function testDatabaseUnreachable(): Promise<TestResult> {
   const executedAt = new Date().toISOString();
   
   try {
-    const { createSQLiteAdapter } = await import('../src/lib/sqlite-adapter');
+    const { createSQLiteAdapter } = await import('../../src/lib/sqlite-adapter');
     const adapter = createSQLiteAdapter('/nonexistent/path/database.db');
     const health = await adapter.checkHealth();
     
@@ -220,7 +220,7 @@ async function testDependencyMissing(): Promise<TestResult> {
     `);
     db.close();
     
-    const { createSQLiteAdapter } = await import('../src/lib/sqlite-adapter');
+    const { createSQLiteAdapter } = await import('../../src/lib/sqlite-adapter');
     const adapter = createSQLiteAdapter(testDbPath);
     const health = await adapter.checkHealth();
     

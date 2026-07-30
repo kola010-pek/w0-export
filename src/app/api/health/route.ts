@@ -37,6 +37,7 @@ interface HealthData {
     required_tables: boolean;
     table_details?: Array<{ name: string; exists: boolean }>;
   };
+  service_status: 'PASS' | 'BLOCK';
 }
 
 // Mock health data
@@ -57,6 +58,7 @@ function getMockHealthData(): HealthData {
       sql_input_accepted: false,
       db_path_selectable: false,
     },
+    service_status: 'PASS',
   };
 }
 
@@ -126,6 +128,7 @@ async function getRealHealthData(): Promise<{ data: HealthData; warnings: string
       db_path_selectable: false,
     },
     database_check: databaseCheck,
+    service_status: status === 'healthy' ? 'PASS' : 'BLOCK',
   };
 
   return { data, warnings, gateStatus };
@@ -161,6 +164,9 @@ export async function GET() {
     }
 
     const source = isMock ? 'mock_health_service' : 'real_health_service';
+    
+    // Separate service_status from gate_status
+    const serviceStatus = data.status === 'healthy' ? 'PASS' : 'BLOCK';
 
     return NextResponse.json(
       buildPhase2Response({
@@ -169,6 +175,9 @@ export async function GET() {
         evidencePrefix: 'health',
         gateStatus,
         warnings: warnings.length > 0 ? warnings : undefined,
+        extra: {
+          service_health: serviceStatus as 'PASS' | 'WARN' | 'BLOCK',
+        },
       })
     );
   } catch (error) {

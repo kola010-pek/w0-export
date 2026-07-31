@@ -1,0 +1,127 @@
+task_id: GOVERNANCE-003-CODEX-READONLY
+title: "治理规则修订：固化 Codex 只读监理角色，删除修复例外"
+policy_version: 1.0.0
+target_policy_version: 1.1.0
+status: APPROVED_FOR_CONSTRUCTION
+
+owner: 平台负责人
+builder: 扣子编程 / coze-builder
+inspector: Codex / codex-inspector
+codex_mode: read_only
+codex_write_allowed: false
+
+environment: local_governance_workspace
+data_source: repository_files_only
+environment_assertions:
+  is_mock: false
+  is_sample: false
+  real_db_path_configured: false
+  production_write_enabled: false
+  production_model_enabled: false
+  production_release_enabled: false
+
+objective: >
+  将治理规则从 1.0.0 升级到 1.1.0，彻底删除"普通任务单授权后 Codex 可以修复或施工"
+  的例外及其近义后门，固化 Codex 默认角色为只读监理，
+  引入角色切换令牌机制和 pre_action_role_check 强制检查。
+
+in_scope:
+  - "修改 GOVERNANCE.md：版本升级到 1.1.0"
+  - "修改 GOVERNANCE.md：删除 2.3 节中'除非任务单明确授权修复'例外条款"
+  - "修改 GOVERNANCE.md：新增 Codex 只读监理固化条款"
+  - "修改 GOVERNANCE.md：新增角色切换令牌机制"
+  - "修改 GOVERNANCE.md：新增 pre_action_role_check 要求"
+  - "修改 GOVERNANCE.md：新增宿主层权限说明"
+  - "修改 GOVERNANCE.md：新增反规避条款"
+  - "创建 tasks/TASK_TEMPLATE.yaml"
+  - "更新 AGENTS.md 增加治理规则引用"
+  - "生成完整证据包"
+
+out_of_scope:
+  - "修改 src/** 任何业务源码"
+  - "修改 tests/** 任何测试文件"
+  - "修改 config/** 任何配置文件"
+  - "修改 runtime/**、adapters/**、database/**"
+  - "修改 package.json 或 pnpm-lock.yaml"
+  - "安装、升级或降级任何依赖"
+  - "连接、扫描或配置真实数据库"
+  - "运行或推广生产模型"
+  - "部署或发布"
+  - "自行批准施工结果"
+
+authorized_actions:
+  - "edit:GOVERNANCE.md"
+  - "edit:AGENTS.md"
+  - "create:tasks/TASK_TEMPLATE.yaml"
+  - "create:tasks/GOVERNANCE-003-CODEX-READONLY.yaml"
+  - "create:evidence/GOVERNANCE-003-CODEX-READONLY/*"
+
+forbidden_actions:
+  - discover_or_configure_real_database_path
+  - connect_or_scan_real_database
+  - production_database_read_or_write
+  - database_migration_or_backfill
+  - modify_business_source
+  - modify_business_tests
+  - modify_config_files
+  - modify_api_routes
+  - lower_gate_threshold
+  - modify_environment_config
+  - production_model_run
+  - model_promotion
+  - signal_release
+  - bypass_block_or_approval
+  - install_or_upgrade_dependencies
+  - self_approve_results
+  - call_self_check_independent_verification
+
+acceptance_criteria:
+  AC-01: "policy_version 从 1.0.0 提升到 1.1.0"
+  AC-02: "彻底删除'普通任务单授权后Codex可以修复或施工'的例外及近义表述"
+  AC-03: "固化 Codex 默认角色：role=inspector, mode=read_only, write_allowed=false"
+  AC-04: "builder==inspector 时必须输出 BLOCK—ROLE_CONFLICT"
+  AC-05: "普通自然语言（执行、继续、修复、落实、应用）不得触发 Codex 角色切换"
+  AC-06: "角色切换只能使用专用令牌 ROLE_SWITCH_CODEX_TO_BUILDER"
+  AC-07: "角色切换必须同时包含 task_id、authorized_files、independent_inspector"
+  AC-08: "缺少任一字段必须输出 BLOCK—INVALID_ROLE_SWITCH"
+  AC-09: "同一主体的自检不得称为独立验收"
+  AC-10: "每次写操作前必须执行并记录 pre_action_role_check"
+  AC-11: "明确说明仓库 Markdown/YAML 规则不能替代 Codex Desktop 宿主层只读权限"
+  AC-12: "不得通过降低标准、改写验收条件或删除门禁来取得 PASS"
+
+negative_tests:
+  - "验证：仅凭自然语言指令不能切换 Codex 角色"
+  - "验证：builder==inspector 时输出 BLOCK—ROLE_CONFLICT"
+  - "验证：缺少字段的角色切换令牌输出 BLOCK—INVALID_ROLE_SWITCH"
+  - "验证：同一主体自检不能标记为独立验收 PASS"
+
+evidence_requirements:
+  - "规则回执"
+  - "改动文件清单"
+  - "修改前后差异"
+  - "AC-01 至 AC-12 逐项映射"
+  - "实际执行命令与完整原始输出"
+  - "负面测试结果"
+  - "授权范围检查"
+  - "禁止文件未修改证明"
+  - "逐文件 SHA-256"
+  - "已知限制"
+  - "回滚方案"
+  - "外层交付包 SHA-256"
+
+rollback_plan: >
+  使用 git checkout 恢复到施工前的 GOVERNANCE.md、AGENTS.md 版本。
+  删除本次新增的 tasks/TASK_TEMPLATE.yaml、tasks/GOVERNANCE-003-CODEX-READONLY.yaml
+  和 evidence/GOVERNANCE-003-CODEX-READONLY/ 目录。
+
+dependencies:
+  - "GOVERNANCE.md policy_version 1.0.0 当前版本"
+  - "平台负责人书面指令（本任务单）"
+
+deliverables:
+  - "GOVERNANCE.md (v1.1.0)"
+  - "AGENTS.md (更新治理引用)"
+  - "tasks/TASK_TEMPLATE.yaml"
+  - "tasks/GOVERNANCE-003-CODEX-READONLY.yaml"
+  - "evidence/GOVERNANCE-003-CODEX-READONLY/ (完整证据包)"
+  - "最终交付 ZIP + SHA-256"

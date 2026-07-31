@@ -1,0 +1,85 @@
+# Task Template - Governance Task Definition
+# All tasks MUST include the following fields before construction can begin.
+# Reference: GOVERNANCE.md Section 6
+
+task_id: ""
+title: ""
+policy_version: ""
+status: DRAFT  # DRAFT | APPROVED_FOR_CONSTRUCTION | IN_PROGRESS | COMPLETED | BLOCKED
+
+owner: ""
+builder: ""
+inspector: ""
+
+# Codex role defaults (MUST NOT be overridden without ROLE_SWITCH_CODEX_TO_BUILDER token)
+codex_mode: read_only
+codex_write_allowed: false
+
+environment: ""
+data_source: ""
+environment_assertions:
+  is_mock: false
+  is_sample: false
+  real_db_path_configured: false
+  production_write_enabled: false
+  production_model_enabled: false
+  production_release_enabled: false
+
+objective: >
+  ""
+
+in_scope: []
+
+out_of_scope: []
+
+authorized_actions: []
+
+forbidden_actions:
+  - discover_or_configure_real_database_path
+  - connect_or_scan_real_database
+  - production_database_read_or_write
+  - database_migration_or_backfill
+  - modify_business_source
+  - modify_business_tests
+  - modify_config_files
+  - lower_gate_threshold
+  - modify_environment_config
+  - production_model_run
+  - model_promotion
+  - signal_release
+  - bypass_block_or_approval
+  - install_or_upgrade_dependencies
+  - self_approve_results
+  - call_self_check_independent_verification
+
+acceptance_criteria: {}
+
+negative_tests: []
+
+evidence_requirements:
+  - "规则回执"
+  - "改动文件清单"
+  - "修改前后差异"
+  - "验收标准逐项映射"
+  - "实际执行命令与完整原始输出"
+  - "负面测试结果"
+  - "授权范围检查"
+  - "禁止文件未修改证明"
+  - "逐文件 SHA-256"
+  - "已知限制"
+  - "回滚方案"
+
+dependencies: []
+
+deliverables: []
+
+rollback_plan: ""
+
+# Role Switch Token (only needed if requesting Codex to switch from inspector to builder)
+# role_switch_token:
+#   token: ROLE_SWITCH_CODEX_TO_BUILDER
+#   task_id: ""
+#   authorized_files: []
+#   independent_inspector: ""
+#   issued_by: ""
+#   issued_at: ""

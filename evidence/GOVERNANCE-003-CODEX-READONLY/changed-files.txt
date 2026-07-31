@@ -1,0 +1,50 @@
+# Changed Files List - GOVERNANCE-003-CODEX-READONLY
+
+## Modified Files
+
+1. **GOVERNANCE.md**
+   - Action: EDIT
+   - Changes:
+     - policy_version: 1.0.0 -> 1.1.0
+     - Added changelog section in header
+     - Section 2.3: Removed "除非任务单明确授权修复" exception
+     - Section 2.3: Hardened Codex default role to inspector/read_only/write_allowed=false
+     - Section 2.3: Added role switch token mechanism requirements
+     - Section 2.3: Added BLOCK—ROLE_CONFLICT and BLOCK—INVALID_ROLE_SWITCH rules
+     - Section 2.3: Added self-check != independent verification rule
+     - Section 10: Updated rule_acknowledgement template policy_version to 1.1.0
+     - Added Section 12: Codex 角色切换令牌机制
+     - Added Section 13: pre_action_role_check 强制检查
+     - Added Section 14: 宿主层权限与仓库规则的关系
+     - Added Section 15: 反规避条款
+
+2. **AGENTS.md**
+   - Action: EDIT
+   - Changes:
+     - Added "治理规则引用" section at the end
+     - References GOVERNANCE.md v1.1.0 core rules
+
+## Created Files
+
+3. **tasks/GOVERNANCE-003-CODEX-READONLY.yaml**
+   - Action: CREATE
+   - Purpose: Task definition file for this governance revision
+
+4. **tasks/TASK_TEMPLATE.yaml**
+   - Action: CREATE
+   - Purpose: Standard task template per GOVERNANCE.md Section 6
+
+## Evidence Files Created
+
+5. **evidence/GOVERNANCE-003-CODEX-READONLY/rule-acknowledgement.yaml**
+6. **evidence/GOVERNANCE-003-CODEX-READONLY/changed-files.txt** (this file)
+7. **evidence/GOVERNANCE-003-CODEX-READONLY/diff-GOVERNANCE.md.txt**
+8. **evidence/GOVERNANCE-003-CODEX-READONLY/diff-AGENTS.md.txt**
+9. **evidence/GOVERNANCE-003-CODEX-READONLY/ac-mapping.md**
+10. **evidence/GOVERNANCE-003-CODEX-READONLY/negative-tests.md**
+11. **evidence/GOVERNANCE-003-CODEX-READONLY/authorization-scope-check.md**
+12. **evidence/GOVERNANCE-003-CODEX-READONLY/forbidden-files-proof.md**
+13. **evidence/GOVERNANCE-003-CODEX-READONLY/known-limitations.md**
+14. **evidence/GOVERNANCE-003-CODEX-READONLY/rollback-plan.md**
+15. **evidence/GOVERNANCE-003-CODEX-READONLY/sha256sums.txt**
+16. **evidence/GOVERNANCE-003-CODEX-READONLY/delivery-manifest.md**

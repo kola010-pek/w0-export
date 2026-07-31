@@ -1,0 +1,61 @@
+rule_acknowledgement:
+  actor: coze-builder
+  policy_version_before: 1.0.0
+  policy_version_after: 1.1.0
+  task_id: GOVERNANCE-003-CODEX-READONLY
+  environment: local_governance_workspace
+  data_source: repository_files_only
+  is_mock: false
+  is_sample: false
+  real_db_path_configured: false
+  production_write_enabled: false
+  production_model_enabled: false
+  production_release_enabled: false
+  understood_forbidden_actions: true
+  authorized_files:
+    - GOVERNANCE.md
+    - AGENTS.md
+    - tasks/TASK_TEMPLATE.yaml
+    - tasks/GOVERNANCE-003-CODEX-READONLY.yaml
+    - "evidence/GOVERNANCE-003-CODEX-READONLY/**"
+  forbidden_files:
+    - "src/**"
+    - "tests/**"
+    - "config/**"
+    - "runtime/**"
+    - "adapters/**"
+    - "database/**"
+    - package.json
+    - pnpm-lock.yaml
+  forbidden_actions:
+    - install_or_upgrade_dependencies
+    - discover_or_configure_real_database
+    - database_write_or_migration
+    - modify_business_source_or_tests
+    - production_model_run
+    - deploy
+    - release_signals
+    - self_approve_results
+    - call_self_check_independent_verification
+  conflicts_found:
+    - "tasks/GOVERNANCE-003-CODEX-READONLY.yaml 不存在于仓库中 -> 已根据平台负责人指令创建"
+    - "tasks/TASK_TEMPLATE.yaml 不存在 -> 已创建"
+    - "GOVERNANCE.md 2.3 节含'除非任务单明确授权修复'例外 -> 已删除"
+  ready: true
+  pre_action_role_checks:
+    - file: GOVERNANCE.md
+      action: edit
+      role: builder
+      result: PROCEED
+    - file: AGENTS.md
+      action: edit
+      role: builder
+      result: PROCEED
+    - file: tasks/TASK_TEMPLATE.yaml
+      action: create
+      role: builder
+      result: PROCEED
+    - file: tasks/GOVERNANCE-003-CODEX-READONLY.yaml
+      action: create
+      role: builder
+      result: PROCEED

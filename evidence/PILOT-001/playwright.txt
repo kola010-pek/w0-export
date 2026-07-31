@@ -1,29 +1,33 @@
-=== PILOT-001 Playwright Test Evidence ===
+=== PILOT-001 Playwright Test Evidence (Sample Environment) ===
 Date: 2026-07-31
-Command: npx playwright test --config=/tmp/pw-pilot001.config.ts --reporter=list
+Command: DATA_SOURCE_MODE=sample COZE_PROJECT_ENV=PROD npx playwright test --config=/tmp/pw-pilot001.config.ts --reporter=list
 
 EXIT CODE: 0
 
 Environment:
   DEPLOY_RUN_PORT=5000
   COZE_PROJECT_ENV=PROD
-  DATA_SOURCE_MODE=mock
+  DATA_SOURCE_MODE=sample
+  real_db_path_configured=false
   Service: http://localhost:5000
   Browser: Chromium headless
 
-Results: 8 passed (6.7s)
+Results: 8 passed (6.9s)
 
-  ✓ 1. governance card root is visible
-  ✓ 2. policy version is exactly 1.0.0
-  ✓ 3. role separation is exactly 扣子施工 / Codex监理 / 负责人批准
-  ✓ 4. environment scope is exactly Sample Staging / 非生产
-  ✓ 5. real db status is exactly 未授权 / 未连接
-  ✓ 6. release status is exactly BLOCK
-  ✓ 7. no unauthorized extended content: 6 agents
-  ✓ 8. no dynamic environment or gate values
+  ✓ 1. governance card root is visible (787ms)
+  ✓ 2. policy version is exactly 1.0.0 (756ms)
+  ✓ 3. role separation is exactly 扣子施工 / Codex监理 / 负责人批准 (772ms)
+  ✓ 4. environment scope is exactly Sample Staging / 非生产 (756ms)
+  ✓ 5. real db status is exactly 未授权 / 未连接 (770ms)
+  ✓ 6. release status is exactly BLOCK (756ms)
+  ✓ 7. no unauthorized extended content: 6 agents (789ms)
+  ✓ 8. no dynamic environment or gate values (778ms)
 
 Contract assertions:
 - All 6 mandatory data-testid selectors verified
 - All 6 exact fixed text values verified
 - Forbidden values (production, real_readonly, real, prod) rejected
 - Unauthorized extended content (6 agents, dynamic values) confirmed absent
+
+Note: Previous run used DATA_SOURCE_MODE=mock. This run uses DATA_SOURCE_MODE=sample
+as required for Sample Staging acceptance evidence.

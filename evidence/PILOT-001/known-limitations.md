@@ -15,14 +15,19 @@ does not modify any project file.
 to allow the test to be discovered by the standard config. This change
 requires authorization outside PILOT-001 scope.
 
-## 2. Pre-existing TypeScript Errors
+## 2. AC-09 TypeScript Check: BLOCK
 
-37 pre-existing TypeScript errors exist in:
-- `tests/integration/w0-integration.test.ts` (null safety)
-- `tests/smoke/w0-smoke.test.ts` (null safety)
+`pnpm ts-check` exits with code **1** (FAILURE). The project has **33** pre-existing
+TypeScript errors in:
+- `tests/integration/w0-integration.test.ts` (null safety: TS2345, TS18047)
+- `tests/smoke/w0-smoke.test.ts` (null safety: TS2345, TS18047)
 
 These are NOT introduced by PILOT-001 and are outside the authorized
-modification scope. They should be addressed in a separate task.
+modification scope.
+
+**AC-09 cannot be claimed as PASS.** Status: **BLOCK**.
+Requesting acceptance criteria modification: either scope AC-09 to
+authorized files only, or authorize a separate fix for pre-existing errors.
 
 ## 3. Pre-existing ESLint Issues
 

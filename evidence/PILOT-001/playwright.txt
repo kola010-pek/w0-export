@@ -1,0 +1,30 @@
+# PILOT-001 Playwright Test Output
+# Command: npx playwright test --config=/tmp/pw-pilot001.config.ts --reporter=list
+# Date: 2026-07-31
+# Config: Temporary config in /tmp (not modifying project files)
+#   - testMatch: /pilot-001.*\.spec\.ts/
+#   - testDir: /workspace/projects/tests
+#   - baseURL: http://localhost:5000
+
+Running 8 tests using 1 worker
+
+  ✓  1 [chromium] › tests/pilot-001-governance-card.spec.ts:24:7 › PILOT-001 Governance Card › governance card is visible and titled correctly (392ms)
+  ✓  2 [chromium] › tests/pilot-001-governance-card.spec.ts:35:7 › PILOT-001 Governance Card › rule version section displays policy and schema versions (348ms)
+  ✓  3 [chromium] › tests/pilot-001-governance-card.spec.ts:51:7 › PILOT-001 Governance Card › environment boundary section shows simulation and all production capabilities disabled (342ms)
+  ✓  4 [chromium] › tests/pilot-001-governance-card.spec.ts:71:7 › PILOT-001 Governance Card › database authorization section shows current status (375ms)
+  ✓  5 [chromium] › tests/pilot-001-governance-card.spec.ts:90:7 › PILOT-001 Governance Card › role assignments section displays all six agent roles (360ms)
+  ✓  6 [chromium] › tests/pilot-001-governance-card.spec.ts:109:7 › PILOT-001 Governance Card › gate summary section displays numeric counts (357ms)
+  ✓  7 [chromium] › tests/pilot-001-governance-card.spec.ts:132:7 › PILOT-001 Governance Card › construction constraints section lists all five constraints (358ms)
+  ✓  8 [chromium] › tests/pilot-001-governance-card.spec.ts:147:7 › PILOT-001 Governance Card › footer shows task ID and completion declaration (367ms)
+
+  8 passed (3.6s)
+
+## Test Coverage:
+1. Card visibility and title correctness
+2. Rule version (policy_version=1.0.0, schema_version format, gate_config)
+3. Environment boundary (environment value, prod write/model/release all disabled)
+4. Database authorization (data_source, real_db_configured=false, connection, readonly_verified)
+5. Role assignments (all 6 agents visible)
+6. Gate summary (total/pass/warn/block counts, overall status)
+7. Construction constraints (5 constraint items listed)
+8. Footer (task_id and completion declaration)

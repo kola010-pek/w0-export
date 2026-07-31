@@ -1,0 +1,25 @@
+# PILOT-001 Changed Files
+# Generated during construction, not manually edited.
+
+Modified:
+  - src/app/(dashboard)/phase2/page.tsx
+    - Added read-only "建设与验收治理" governance card section
+    - Inserted between Phase 2.2 real-db section and footer
+    - Displays: rule version, environment boundary, database auth status,
+      role assignments, gate summary, construction constraints
+    - All fields use data-testid attributes for Playwright targeting
+    - No existing logic modified; purely additive insertion
+
+Created:
+  - tests/pilot-001-governance-card.spec.ts
+    - 8 Playwright test cases with precise assertions
+    - Tests: card visibility, rule version, env boundary, db auth,
+      roles, gate summary, constraints, footer declaration
+
+Not Modified (verified):
+  - No API routes changed
+  - No config/*.yaml changed
+  - No AGENTS.md or GOVERNANCE.md changed
+  - No package.json or dependency changes
+  - No database operations added
+  - No model or signal logic changed

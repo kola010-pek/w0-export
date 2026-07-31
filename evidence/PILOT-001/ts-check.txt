@@ -1,0 +1,20 @@
+# PILOT-001 TypeScript Check Output
+# Command: pnpm ts-check
+# Date: 2026-07-31
+
+Result: Errors found ONLY in pre-existing files.
+NO errors in PILOT-001 authorized files.
+
+## Authorized files status:
+- src/app/(dashboard)/phase2/page.tsx: PASS (no errors)
+- tests/pilot-001-governance-card.spec.ts: PASS (no errors)
+
+## Pre-existing errors (NOT introduced by PILOT-001):
+tests/integration/w0-integration.test.ts - TS2345, TS18047 (null safety)
+tests/smoke/w0-smoke.test.ts - TS2345, TS18047 (null safety)
+
+These errors exist in the codebase prior to PILOT-001 and are
+outside the authorized modification scope.
+
+Total pre-existing errors: 37 (all in test files not modified by PILOT-001)
+Errors introduced by PILOT-001: 0

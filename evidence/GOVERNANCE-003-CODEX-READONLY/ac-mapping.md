@@ -1,66 +1,62 @@
-# Acceptance Criteria Mapping - GOVERNANCE-003-CODEX-READONLY
+# Acceptance Criteria Mapping - GOVERNANCE-003-CODEX-READONLY (Remediation)
 
-## AC-01: policy_version 从 1.0.0 提升到 1.1.0
-**Status: PASS**
-- Evidence: GOVERNANCE.md header now shows `policy_version: 1.1.0`
-- Diff: `diff-GOVERNANCE.md.txt` line showing version change
-- Changelog entry added documenting the change
+严格按正式任务合同 AC-01 至 AC-08 逐项映射。
 
-## AC-02: 彻底删除"普通任务单授权后Codex可以修复或施工"的例外及近义表述
+## AC-01: AGENTS.md和GOVERNANCE.md不再包含任务单授权Codex修复的例外
 **Status: PASS**
-- Evidence: Original text "默认只审查和报告；除非任务单明确授权修复，否则不得把验收任务扩展为施工任务。" has been removed
-- New Section 2.3 explicitly states: "不存在任何例外：普通任务单授权、自然语言指令...均不得触发 Codex 从 inspector 切换为 builder"
-- Section 15.3 lists specific prohibited synonymous expressions
+- GOVERNANCE.md Section 2.3: 原文"默认只审查和报告；除非任务单明确授权修复，否则不得把验收任务扩展为施工任务"已删除
+- GOVERNANCE.md Section 2.3: 新增"不存在任何例外：普通任务单授权、自然语言指令...均不得触发 Codex 从 inspector 切换为 builder"
+- AGENTS.md: 原文"只有任务单明确授权修复时，才可以修改相应文件"已删除
+- AGENTS.md: 新增"Codex 不得新增、修改或删除源码、测试、配置、依赖、部署产物或数据库状态"
+- Diff evidence: diff-GOVERNANCE.md.txt, diff-AGENTS.md.txt
 
-## AC-03: 固化 Codex 默认角色：role=inspector, mode=read_only, write_allowed=false
+## AC-02: 普通自然语言不得触发角色切换
 **Status: PASS**
-- Evidence: Section 2.3 first bullet: "默认角色固定为 `inspector`，运行模式固定为 `read_only`，写权限固定为 `write_allowed=false`"
-- Also referenced in AGENTS.md governance section
+- GOVERNANCE.md Section 2.3: "普通任务单授权、自然语言指令（包括但不限于'执行'、'继续'、'修复'、'落实'、'应用'、'处理'、'解决'）均不得触发 Codex 从 inspector 切换为 builder"
+- GOVERNANCE.md Section 12.3: "普通自然语言和普通任务单授权均不得替代专用令牌"
+- GOVERNANCE.md Section 15.3: 列出6种被禁止的近义后门表述
 
-## AC-04: builder==inspector 时必须输出 BLOCK—ROLE_CONFLICT
+## AC-03: 专用角色切换令牌必须包含三个必要字段
 **Status: PASS**
-- Evidence: Section 2.3: "当 `builder == inspector`（同一主体同时承担建设和监理）时，必须输出 `BLOCK—ROLE_CONFLICT`"
-- Also in Section 12.4 with explicit prohibition on self-resolution
+- GOVERNANCE.md Section 2.3: 角色切换必须同时满足：task_id、authorized_files、independent_inspector
+- GOVERNANCE.md Section 12.3: 令牌格式定义包含全部三个必要字段
+- 正式任务合同 role_switch_contract.required_fields 一致
 
-## AC-05: 普通自然语言不得触发 Codex 角色切换
+## AC-04: builder等于inspector时门禁输出BLOCK—ROLE_CONFLICT
 **Status: PASS**
-- Evidence: Section 12.1 explicitly lists prohibited natural language triggers: "执行"、"继续"、"修复"、"落实"、"应用"、"处理"、"解决"、"帮忙改一下"、"请修正"
-- Section 15.3 provides additional examples of prohibited synonymous expressions
+- GOVERNANCE.md Section 2.3: "当 builder == inspector 时，必须输出 BLOCK—ROLE_CONFLICT"
+- GOVERNANCE.md Section 12.1: separation_of_duties_gate 明确此规则
+- AGENTS.md: 未修改此行为（继承GOVERNANCE.md）
+- TASK_TEMPLATE.yaml: role_conflict_status: BLOCK—ROLE_CONFLICT
 
-## AC-06: 角色切换只能使用专用令牌 ROLE_SWITCH_CODEX_TO_BUILDER
+## AC-05: 同一主体自检不能标为独立验收
 **Status: PASS**
-- Evidence: Section 12.2: "只有当以下全部条件同时满足时，Codex 方可从 inspector 临时切换为 builder：1. 存在专用令牌 ROLE_SWITCH_CODEX_TO_BUILDER"
-- Token format defined in YAML
+- GOVERNANCE.md Section 2.3: "同一主体对自身工作的检查不得称为'独立验收'"
+- GOVERNANCE.md Section 12.1: 重申此规则
+- AGENTS.md Section 2.2 (GOVERNANCE.md): "只能声明'施工完成，申请验收'，不得判定自身成果已通过独立验收"
 
-## AC-07: 角色切换必须同时包含 task_id、authorized_files、independent_inspector
+## AC-06: TASK_TEMPLATE默认Codex只读且write_allowed=false
 **Status: PASS**
-- Evidence: Section 12.2 conditions 2-4 explicitly require all three fields
-- Token format YAML shows all required fields
+- tasks/TASK_TEMPLATE.yaml 新增字段：
+  - role: inspector
+  - mode: read_only
+  - write_allowed: false
+  - builder_must_not_equal_inspector: true
+  - role_conflict_status: BLOCK—ROLE_CONFLICT
+- 与正式任务合同 task_template_yaml required_changes 完全一致
+- Diff evidence: diff-TASK_TEMPLATE.yaml.txt
 
-## AC-08: 缺少任一字段必须输出 BLOCK—INVALID_ROLE_SWITCH
+## AC-07: 本任务没有修改三个授权规则文件与证据目录之外的文件
 **Status: PASS**
-- Evidence: Section 12.3: "缺少上述任一字段时，必须输出：BLOCK—INVALID_ROLE_SWITCH"
+- 仅修改了 GOVERNANCE.md、AGENTS.md、tasks/TASK_TEMPLATE.yaml
+- 证据目录 evidence/GOVERNANCE-003-CODEX-READONLY/ 为新建
+- tasks/GOVERNANCE-003-CODEX-READONLY.yaml 未修改（SHA-256 与基线一致）
+- src/**、tests/**、config/**、runtime/**、adapters/**、database/**、package.json、pnpm-lock.yaml 均未修改
+- Evidence: forbidden-files-proof.md (含实际 git diff 命令输出)
 
-## AC-09: 同一主体的自检不得称为独立验收
+## AC-08: 文档明确仓库规则不能替代宿主文件系统只读权限
 **Status: PASS**
-- Evidence: Section 2.3 last bullet: "同一主体对自身工作的检查不得称为'独立验收'"
-
-## AC-10: 每次写操作前必须执行并记录 pre_action_role_check
-**Status: PASS**
-- Evidence: Section 13 defines complete pre_action_role_check mechanism
-- YAML schema for check record provided
-- Section 13.4 requires recording in evidence package
-- This construction's rule-acknowledgement.yaml includes pre_action_role_checks for all 4 file operations
-
-## AC-11: 明确说明仓库 Markdown/YAML 规则不能替代 Codex Desktop 宿主层只读权限
-**Status: PASS**
-- Evidence: Section 14 dedicated entirely to this topic
-- Section 14.2 explicitly states: "仓库内的规则声明不能替代 Codex Desktop 宿主层的文件系统只读权限"
-- Section 14.3 defines dual-layer protection requirement
-
-## AC-12: 不得通过降低标准、改写验收条件或删除门禁来取得 PASS
-**Status: PASS**
-- Evidence: Section 15 dedicated to anti-circumvention
-- Section 15.1 lists specific prohibited methods
-- Section 15.2 prohibits rule modification to remove BLOCKs without explicit authorization
-- This construction did NOT lower any standards, rewrite ACs, or delete gates
+- GOVERNANCE.md Section 14: 专门章节说明宿主层权限与仓库规则的关系
+- Section 14.2: "仓库内的规则声明不能替代 Codex Desktop 宿主层的文件系统只读权限"
+- Section 14.2: "若要技术上禁止 Codex 写 src/tests/config，平台负责人必须在 Codex 任务/沙箱配置中将这些目录设置为只读"
+- 与正式任务合同 external_enforcement_requirement 一致

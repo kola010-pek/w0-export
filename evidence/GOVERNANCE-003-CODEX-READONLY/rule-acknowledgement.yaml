@@ -16,8 +16,7 @@ rule_acknowledgement:
     - GOVERNANCE.md
     - AGENTS.md
     - tasks/TASK_TEMPLATE.yaml
-    - tasks/GOVERNANCE-003-CODEX-READONLY.yaml
-    - "evidence/GOVERNANCE-003-CODEX-READONLY/**"
+    - "evidence/GOVERNANCE-003-CODEX-READONLY/*"
   forbidden_files:
     - "src/**"
     - "tests/**"
@@ -27,20 +26,35 @@ rule_acknowledgement:
     - "database/**"
     - package.json
     - pnpm-lock.yaml
+    - tasks/GOVERNANCE-003-CODEX-READONLY.yaml
   forbidden_actions:
+    - modify_business_source
+    - modify_tests
+    - modify_runtime_configuration
     - install_or_upgrade_dependencies
-    - discover_or_configure_real_database
-    - database_write_or_migration
-    - modify_business_source_or_tests
-    - production_model_run
-    - deploy
-    - release_signals
-    - self_approve_results
-    - call_self_check_independent_verification
-  conflicts_found:
-    - "tasks/GOVERNANCE-003-CODEX-READONLY.yaml 不存在于仓库中 -> 已根据平台负责人指令创建"
-    - "tasks/TASK_TEMPLATE.yaml 不存在 -> 已创建"
-    - "GOVERNANCE.md 2.3 节含'除非任务单明确授权修复'例外 -> 已删除"
+    - connect_or_scan_real_database
+    - production_write
+    - deployment
+    - role_self_approval
+  baseline_verification:
+    - file: GOVERNANCE.md
+      expected_sha256: 14ca03393a6ace37263c09e9627bb4e48c7b61daaf171959251e68b68d9acc6d
+      actual_sha256: 14ca03393a6ace37263c09e9627bb4e48c7b61daaf171959251e68b68d9acc6d
+      match: true
+    - file: AGENTS.md
+      expected_sha256: 7dedb415c10a2cd117e207b47f292ce4a1009539fca70da1378572fccaab2ca7
+      actual_sha256: 7dedb415c10a2cd117e207b47f292ce4a1009539fca70da1378572fccaab2ca7
+      match: true
+    - file: tasks/TASK_TEMPLATE.yaml
+      expected_sha256: d205e1c00918d389929ef065bd8e388b186c168cf3fdd8ff137816de39c366af
+      actual_sha256: d205e1c00918d389929ef065bd8e388b186c168cf3fdd8ff137816de39c366af
+      match: true
+    - file: tasks/GOVERNANCE-003-CODEX-READONLY.yaml
+      expected_sha256: 382114bee5b81d953384a69747a6b036f4efebd37088d51515bcd713d2d8988e
+      actual_sha256: 382114bee5b81d953384a69747a6b036f4efebd37088d51515bcd713d2d8988e
+      match: true
+      note: "只读合同输入，未修改"
+  conflicts_found: []
   ready: true
   pre_action_role_checks:
     - file: GOVERNANCE.md
@@ -52,10 +66,6 @@ rule_acknowledgement:
       role: builder
       result: PROCEED
     - file: tasks/TASK_TEMPLATE.yaml
-      action: create
-      role: builder
-      result: PROCEED
-    - file: tasks/GOVERNANCE-003-CODEX-READONLY.yaml
-      action: create
+      action: edit
       role: builder
       result: PROCEED

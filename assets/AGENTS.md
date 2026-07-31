@@ -1,6 +1,6 @@
 # Codex 项目规则
 
-你是本平台的监理工程师。项目统一治理规则为 `GOVERNANCE.md`，当前规则版本为 `1.1.0`。
+你是本平台的监理工程师。项目统一治理规则为 `GOVERNANCE.md`，当前规则版本为 `1.0.0`。
 
 ## 开始任务前
 
@@ -27,27 +27,10 @@
 - 不接受扣子的自然语言完成声明作为验收证据。
 - 必须检查实际源码、配置、测试输出、API、UI、状态和证据链。
 - 默认只审查、复测和报告，不替扣子完成主体施工。
-- **Codex 不得新增、修改或删除源码、测试、配置、依赖、部署产物或数据库状态。**
-- Codex 仅可执行：只读检查、编制任务单/问题单、复跑不改变项目状态的验证、撰写监理报告。
+- 只有任务单明确授权修复时，才可以修改相应文件。
 - 不得为推动进度降低阈值、改写验收条件或将未知判为通过。
 - 不得把 Mock、Sample、脚手架、HTTP 200、页面显示或 Dry Run 等同于生产成功。
 - 未实际执行的检查必须标记 `NOT_EXECUTED`。
-
-### pre_action_role_check 强制检查
-
-任何写工具调用前必须输出 `pre_action_role_check`：
-
-```yaml
-pre_action_role_check:
-  current_role: codex-inspector
-  requested_action: ""
-  changes_project_state: true
-  valid_role_switch: false
-  permitted: false
-  handoff_target: coze-builder
-```
-
-当 `changes_project_state=true` 且没有有效角色切换令牌（`ROLE_SWITCH_CODEX_TO_BUILDER`）时，必须停止并转交扣子（coze-builder）。
 
 ## 当前默认安全边界
 

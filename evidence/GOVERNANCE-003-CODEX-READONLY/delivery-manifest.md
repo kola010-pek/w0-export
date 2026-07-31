@@ -1,46 +1,56 @@
-# Delivery Manifest - GOVERNANCE-003-CODEX-READONLY
+# Delivery Manifest - GOVERNANCE-003-CODEX-READONLY (Remediation 01)
 
 ## Task Information
 - **Task ID**: GOVERNANCE-003-CODEX-READONLY
-- **Policy Version**: 1.0.0 → 1.1.0
+- **Policy Version**: 1.0.0 -> 1.1.0
 - **Builder**: 扣子编程 / coze-builder
 - **Inspector**: Codex / codex-inspector (read_only)
 - **Environment**: local_governance_workspace
 - **Data Source**: repository_files_only
+- **Remediation Round**: 01
+
+## Input Baseline Verification (4/4 PASS)
+
+| File | Expected SHA-256 | Actual SHA-256 | Match |
+|------|-----------------|----------------|-------|
+| GOVERNANCE.md | 14ca0339...9acc6d | 14ca0339...9acc6d | YES |
+| AGENTS.md | 7dedb415...ab2ca7 | 7dedb415...ab2ca7 | YES |
+| tasks/TASK_TEMPLATE.yaml | d205e1c0...c366af | d205e1c0...c366af | YES |
+| tasks/GOVERNANCE-003-CODEX-READONLY.yaml | 382114be...d8988e | 382114be...d8988e | YES (read-only) |
 
 ## Deliverable Contents
 
-### Governance Rule Files (Modified)
-1. `GOVERNANCE.md` - v1.1.0 (SHA-256: bc9c3f17102cab81a4ecff974428af962e117d84a3dabf4e6f23b504604acd5f)
-2. `AGENTS.md` - Updated governance references (SHA-256: a27ab59ada35a5045885646cd514d3e493da49cb0c2223e098c7d78ba484a303)
+### Modified Files (3)
+1. `GOVERNANCE.md` - v1.1.0 (SHA-256: 5f35f882ff4aede90004921567b69655498aaf2e5cc233b2abd4c624e1b26a37)
+2. `AGENTS.md` - Updated (SHA-256: 5c1f5b59cd67fd35a31974ce7ed590727c584cd60affe94472b2e622d42044f3)
+3. `tasks/TASK_TEMPLATE.yaml` - Updated (SHA-256: e1dce58a24576b52265ec774f2501de0a60b721cf1866b07bccf9a63201159e7)
 
-### Task Definition Files (Created)
-3. `tasks/GOVERNANCE-003-CODEX-READONLY.yaml` (SHA-256: 9b1c9a74f0a13c5baa5fc5283d48f990b110fc35c91935836b09039738bfa07a)
-4. `tasks/TASK_TEMPLATE.yaml` (SHA-256: d7b70585424b99a67dd7a0db2625309e89325c3cb0ef0ea18162a1ffe648f891)
+### Evidence Package (12 files)
+4-15. `evidence/GOVERNANCE-003-CODEX-READONLY/*`
 
-### Evidence Package
-5. `evidence/GOVERNANCE-003-CODEX-READONLY/rule-acknowledgement.yaml` (SHA-256: d19c1eef3ff09db77dca5eb4fd1b9d719279ecbff81f005264c40b5771d4358b)
-6. `evidence/GOVERNANCE-003-CODEX-READONLY/changed-files.txt` (SHA-256: 69b6a7fb44dbb83508ede1e9ddad2e20dc066f8116dd014e82dcf1e55eefbe8d)
-7. `evidence/GOVERNANCE-003-CODEX-READONLY/diff-GOVERNANCE.md.txt` (SHA-256: 2b62614685a287abd8f54abe115e3ae99ecf08ef300b029e59be1c2aab326752)
-8. `evidence/GOVERNANCE-003-CODEX-READONLY/diff-AGENTS.md.txt` (SHA-256: 4717385e895e2709c1b4451f225aab9b33ad8d3b5cf519d3c65510f52df11aeb)
-9. `evidence/GOVERNANCE-003-CODEX-READONLY/ac-mapping.md` (SHA-256: 87f770ba9dbb671a9dff2249c06b74100f97a5d161f1dbf262fcdcbb2ae0f5ca)
-10. `evidence/GOVERNANCE-003-CODEX-READONLY/negative-tests.md` (SHA-256: 207c96de327f49adcb3b83e1e0a116ad5aa9e2c1b72e33bd85cf93872a0ceb19)
-11. `evidence/GOVERNANCE-003-CODEX-READONLY/authorization-scope-check.md` (SHA-256: 810151b960db67e86a3db3c85babc08db604b56cbac82eed57ed4227dd2de452)
-12. `evidence/GOVERNANCE-003-CODEX-READONLY/forbidden-files-proof.md` (SHA-256: 4644a8b42fd2bf7fe1b83a310a29e282f7f6719cfc999bbca0513b13c17d9019)
-13. `evidence/GOVERNANCE-003-CODEX-READONLY/known-limitations.md` (SHA-256: 2f04b73b1779bd944f490041f4749bd581fd272a7652979237c740114b0af69e)
-14. `evidence/GOVERNANCE-003-CODEX-READONLY/rollback-plan.md` (SHA-256: 5254b8215520ad75cffe81f9487ebc235deea4409e2be9940b3765c6a6e59492)
-15. `evidence/GOVERNANCE-003-CODEX-READONLY/sha256sums.txt` (SHA-256: computed after ZIP creation)
-16. `evidence/GOVERNANCE-003-CODEX-READONLY/delivery-manifest.md` (this file)
+## Acceptance Criteria Results (AC-01 to AC-08)
+
+| AC | Assertion | Result |
+|----|-----------|--------|
+| AC-01 | AGENTS.md和GOVERNANCE.md不再包含任务单授权Codex修复的例外 | PASS |
+| AC-02 | 普通自然语言不得触发角色切换 | PASS |
+| AC-03 | 专用角色切换令牌必须包含三个必要字段 | PASS |
+| AC-04 | builder等于inspector时门禁输出BLOCK—ROLE_CONFLICT | PASS |
+| AC-05 | 同一主体自检不能标为独立验收 | PASS |
+| AC-06 | TASK_TEMPLATE默认Codex只读且write_allowed=false | PASS |
+| AC-07 | 本任务没有修改三个授权规则文件与证据目录之外的文件 | PASS |
+| AC-08 | 文档明确仓库规则不能替代宿主文件系统只读权限 | PASS |
 
 ## Delivery Package
 
-- **ZIP File**: `GOVERNANCE-003-CODEX-READONLY-delivery.zip`
-- **Location**: `/workspace/projects/GOVERNANCE-003-CODEX-READONLY-delivery.zip`
-- **SHA-256**: `48f60ed979691a94ef716f4fc682009f4ef62d79968097fcade29da8300f4a8b`
+- **ZIP File**: `GOVERNANCE-003-CODEX-READONLY-remediation-01.zip`
+- **SHA-256**: b4f7a6862c8bca1b98d0855f229762774c31a323d41a384dca90f0dcc01a417d
+- **Contents**: GOVERNANCE.md, AGENTS.md, tasks/TASK_TEMPLATE.yaml, evidence/GOVERNANCE-003-CODEX-READONLY/**
+- **Excluded**: tasks/GOVERNANCE-003-CODEX-READONLY.yaml (read-only contract, not a deliverable)
 
 ## Construction Statement
 
-施工完成，申请Codex独立验收。
+整改施工完成，申请Codex复验。
 
 Builder 不得自行声明：
 - 独立验收 PASS

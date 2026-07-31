@@ -1,0 +1,16 @@
+--- /tmp/baseline_TASK_TEMPLATE.yaml	2026-07-31 22:04:11.327287244 +0800
++++ tasks/TASK_TEMPLATE.yaml	2026-07-31 22:07:49.845595383 +0800
+@@ -7,6 +7,13 @@
+ builder: 扣子编程
+ inspector: Codex
+ 
++# Codex 角色约束（AC-06）
++role: inspector
++mode: read_only
++write_allowed: false
++builder_must_not_equal_inspector: true
++role_conflict_status: BLOCK—ROLE_CONFLICT
++
+ environment: sample_staging
+ data_source: sample
+ environment_assertions:

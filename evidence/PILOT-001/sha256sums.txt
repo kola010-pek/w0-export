@@ -1,11 +1,13 @@
-e11fd2a4d0cb6809b82a5ccd9d10302998b5ad817083576505ac1f762c3f1f50  evidence/PILOT-001/README.md
-81b002de0910acac082ff8abf550f9632d0217ecce851548134bd357c8d06fec  evidence/PILOT-001/changed-files.txt
-28a2408fa8333e8df6b42b2bf26eb60573d10d10cc8bfb541cb4fe295145fae8  evidence/PILOT-001/eslint.txt
-2dc97b21d9c38998b867288c170b1016cf1bfd445e757ca283acb6faf50c4e8d  evidence/PILOT-001/known-limitations.md
-de2ba3d0cb1a99bafd06d01f8897601085a8fc8853ca180e1620d4d6d5a7c65b  evidence/PILOT-001/playwright.txt
-fa780cd78bec7883153182126c2bdaeba2a297a3680df264d42e00b958594210  evidence/PILOT-001/rollback-plan.md
+# PILOT-001 Delivery SHA-256 Checksums
+# Format: <sha256>  <relative-path>
+
+608c2638f6a4f310251c2a00f35ee2328662617f5cc697141e8f72f35eb17064  src/app/(dashboard)/phase2/page.tsx
+4fdd231174dcf467b7df5f4eea802d234b687ac65ecd49c0b4689620c871a1a8  tests/pilot-001-governance-card.spec.ts
 f33611d52680d3797f0729c9e25dff49d7c9397f7aa82a422f545ef867480196  evidence/PILOT-001/rule-acknowledgement.yaml
-1972780b4f7d83a00786b7ea8f8d7bfa3983973d4ce2a5c7caef65a77487733a  evidence/PILOT-001/test-commands.txt
-ee793bd06b3440e400b7c68af5ff72edd36ce52684a0527479b63ac565b92f0e  evidence/PILOT-001/ts-check.txt
-f889f3e597a61a2b3d2b3d2c0bf061debcb1e215a0f7f84c964e453aee330984  src/app/(dashboard)/phase2/page.tsx
-bbed0e81397fa74d56b1f134556f40f1873e8017a1180ec74e13f37d4d96675d  tests/pilot-001-governance-card.spec.ts
+227dc3e53cfddd8457c9d956c0faf33f37a996d6a77aad8eccf336465c94322e  evidence/PILOT-001/changed-files.txt
+b8f21997dd602c1dd2fad39178bca126d257b64e31346e6d499af631e534d901  evidence/PILOT-001/test-commands.txt
+b9b77b8a1ded393b067ffc3a9b6ac8fcc16fb62feeaa57e239f8ed235b76885f  evidence/PILOT-001/ts-check.txt
+79ad9c040b5d222c2b3a7ec96a19eb6f64d23dac9a7edf8b9ddfb2a97ba0bae9  evidence/PILOT-001/eslint.txt
+20274715b58c079a13eed78bab0faed458b32d3f47c2427ee7b78564cdbc0495  evidence/PILOT-001/playwright.txt
+ac1c3b92725d8db256e7da1772d3ff935a460a5a25498e237d525f448798d246  evidence/PILOT-001/known-limitations.md
+fa780cd78bec7883153182126c2bdaeba2a297a3680df264d42e00b958594210  evidence/PILOT-001/rollback-plan.md

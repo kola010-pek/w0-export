@@ -1,154 +1,121 @@
 import { test, expect } from '@playwright/test';
 
 /**
- * PILOT-001: Governance Card Precise Assertions
+ * PILOT-001: Governance Card Contract Assertions
  *
- * Verifies that the read-only "建设与验收治理" card on /phase2:
- * 1. Is visible and correctly titled
- * 2. Displays rule version information
- * 3. Displays environment boundary constraints
- * 4. Displays database authorization status
- * 5. Displays role assignments
- * 6. Displays gate summary
- * 7. Displays construction constraints
- * 8. Shows the completion declaration
+ * Contract: tasks/PILOT-001.yaml
+ *
+ * Verifies the 6 mandatory data-testid selectors and exact fixed text.
+ * Rejects production / real_readonly as acceptable values.
+ *
+ * Test environment contract:
+ *   environment=sample_staging
+ *   data_source=sample
+ *   real_db_path_configured=false
+ *   DATA_SOURCE_MODE != real
  */
 
-test.describe('PILOT-001 Governance Card', () => {
+const PAGE_URL = '/phase2';
+
+const FORBIDDEN_VALUES = ['production', 'real_readonly', 'real', 'prod'];
+
+test.describe('PILOT-001 Governance Card Contract', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/phase2');
-    // Wait for the governance card to appear (page must finish loading)
-    await page.waitForSelector('[data-testid="governance-card"]', { timeout: 15000 });
+    await page.goto(PAGE_URL);
+    await page.waitForLoadState('networkidle');
   });
 
-  test('governance card is visible and titled correctly', async ({ page }) => {
-    const card = page.locator('[data-testid="governance-card"]');
+  test('1. governance card root is visible', async ({ page }) => {
+    const card = page.locator('[data-testid="pilot-001-governance-card"]');
     await expect(card).toBeVisible();
-
-    const title = page.locator('[data-testid="governance-card-title"]');
-    await expect(title).toHaveText('建设与验收治理');
-
-    const readonly = page.locator('[data-testid="governance-card-readonly"]');
-    await expect(readonly).toHaveText('READ-ONLY');
   });
 
-  test('rule version section displays policy and schema versions', async ({ page }) => {
-    const section = page.locator('[data-testid="governance-section-rule-version"]');
-    await expect(section).toBeVisible();
+  test('2. policy version is exactly 1.0.0', async ({ page }) => {
+    const el = page.locator('[data-testid="pilot-001-policy-version"]');
+    await expect(el).toBeVisible();
+    await expect(el).toHaveText('1.0.0');
 
-    const policyVersion = page.locator('[data-testid="governance-policy-version"]');
-    await expect(policyVersion).toHaveText('1.0.0');
-
-    const schemaVersion = page.locator('[data-testid="governance-schema-version"]');
-    await expect(schemaVersion).toBeVisible();
-    // Schema version should start with 'v' followed by a version number (2 or 3 segments)
-    await expect(schemaVersion).toHaveText(/^v\d+\.\d+(\.\d+)?$/);
-
-    const gateConfig = page.locator('[data-testid="governance-gate-config"]');
-    await expect(gateConfig).toBeVisible();
-  });
-
-  test('environment boundary section shows simulation and all production capabilities disabled', async ({ page }) => {
-    const section = page.locator('[data-testid="governance-section-env-boundary"]');
-    await expect(section).toBeVisible();
-
-    const env = page.locator('[data-testid="governance-environment"]');
-    await expect(env).toBeVisible();
-    // Environment should be one of the known values
-    const envText = await env.textContent();
-    expect(['simulation', 'staging', 'production']).toContain(envText?.trim());
-
-    const prodWrite = page.locator('[data-testid="governance-prod-write"]');
-    await expect(prodWrite).toHaveText('禁用');
-
-    const prodModel = page.locator('[data-testid="governance-prod-model"]');
-    await expect(prodModel).toHaveText('禁用');
-
-    const prodRelease = page.locator('[data-testid="governance-prod-release"]');
-    await expect(prodRelease).toHaveText('禁用');
-  });
-
-  test('database authorization section shows current status', async ({ page }) => {
-    const section = page.locator('[data-testid="governance-section-db-auth"]');
-    await expect(section).toBeVisible();
-
-    const dataSource = page.locator('[data-testid="governance-data-source"]');
-    await expect(dataSource).toBeVisible();
-    const dsText = await dataSource.textContent();
-    expect(['mock', 'sample', 'real_readonly']).toContain(dsText?.trim());
-
-    const realDbConfigured = page.locator('[data-testid="governance-real-db-configured"]');
-    await expect(realDbConfigured).toHaveText('false');
-
-    const dbConnection = page.locator('[data-testid="governance-db-connection"]');
-    await expect(dbConnection).toBeVisible();
-
-    const readonlyVerified = page.locator('[data-testid="governance-readonly-verified"]');
-    await expect(readonlyVerified).toBeVisible();
-  });
-
-  test('role assignments section displays all six agent roles', async ({ page }) => {
-    const section = page.locator('[data-testid="governance-section-roles"]');
-    await expect(section).toBeVisible();
-
-    const expectedRoles = [
-      'governance-role-orchestrator-agent',
-      'governance-role-data-ops-agent',
-      'governance-role-data-quality-agent',
-      'governance-role-model-production-agent',
-      'governance-role-model-risk-agent',
-      'governance-role-release-observer-agent',
-    ];
-
-    for (const roleId of expectedRoles) {
-      const role = page.locator(`[data-testid="${roleId}"]`);
-      await expect(role).toBeVisible();
+    // Reject forbidden values
+    const text = await el.textContent();
+    for (const forbidden of FORBIDDEN_VALUES) {
+      expect(text?.toLowerCase()).not.toContain(forbidden);
     }
   });
 
-  test('gate summary section displays numeric counts', async ({ page }) => {
-    const section = page.locator('[data-testid="governance-section-gates"]');
-    await expect(section).toBeVisible();
-
-    const totalGates = page.locator('[data-testid="governance-total-gates"]');
-    await expect(totalGates).toBeVisible();
-    // Should be a non-negative integer
-    const totalText = await totalGates.textContent();
-    expect(Number(totalText)).toBeGreaterThanOrEqual(0);
-
-    const passGates = page.locator('[data-testid="governance-pass-gates"]');
-    await expect(passGates).toBeVisible();
-
-    const warnGates = page.locator('[data-testid="governance-warn-gates"]');
-    await expect(warnGates).toBeVisible();
-
-    const blockGates = page.locator('[data-testid="governance-block-gates"]');
-    await expect(blockGates).toBeVisible();
-
-    const overallStatus = page.locator('[data-testid="governance-gate-overall-status"]');
-    await expect(overallStatus).toBeVisible();
+  test('3. role separation is exactly 扣子施工 / Codex监理 / 负责人批准', async ({ page }) => {
+    const el = page.locator('[data-testid="pilot-001-role-separation"]');
+    await expect(el).toBeVisible();
+    await expect(el).toHaveText('扣子施工 / Codex监理 / 负责人批准');
   });
 
-  test('construction constraints section lists all five constraints', async ({ page }) => {
-    const constraints = [
-      'governance-constraint-no-api',
-      'governance-constraint-no-db',
-      'governance-constraint-no-config',
-      'governance-constraint-no-dep',
-      'governance-constraint-no-model',
-    ];
+  test('4. environment scope is exactly Sample Staging / 非生产', async ({ page }) => {
+    const el = page.locator('[data-testid="pilot-001-environment-scope"]');
+    await expect(el).toBeVisible();
+    await expect(el).toHaveText('Sample Staging / 非生产');
 
-    for (const constraintId of constraints) {
-      const el = page.locator(`[data-testid="${constraintId}"]`);
-      await expect(el).toBeVisible();
+    // Reject production values
+    const text = await el.textContent();
+    for (const forbidden of FORBIDDEN_VALUES) {
+      expect(text?.toLowerCase()).not.toContain(forbidden);
     }
   });
 
-  test('footer shows task ID and completion declaration', async ({ page }) => {
-    const taskId = page.locator('[data-testid="governance-card-task-id"]');
-    await expect(taskId).toHaveText('PILOT-001 · 建设与验收治理卡片');
+  test('5. real db status is exactly 未授权 / 未连接', async ({ page }) => {
+    const el = page.locator('[data-testid="pilot-001-real-db-status"]');
+    await expect(el).toBeVisible();
+    await expect(el).toHaveText('未授权 / 未连接');
 
-    const status = page.locator('[data-testid="governance-card-status"]');
-    await expect(status).toHaveText('施工完成，申请 Codex 独立验收');
+    // Reject real_readonly and real as pass values
+    const text = await el.textContent();
+    for (const forbidden of FORBIDDEN_VALUES) {
+      expect(text?.toLowerCase()).not.toContain(forbidden);
+    }
+  });
+
+  test('6. release status is exactly BLOCK', async ({ page }) => {
+    const el = page.locator('[data-testid="pilot-001-release-status"]');
+    await expect(el).toBeVisible();
+    await expect(el).toHaveText('BLOCK');
+  });
+
+  test('7. no unauthorized extended content: 6 agents', async ({ page }) => {
+    const card = page.locator('[data-testid="pilot-001-governance-card"]');
+
+    // Must NOT contain agent role testids from the old version
+    const agentIds = [
+      'orchestrator-agent',
+      'data-ops-agent',
+      'data-quality-agent',
+      'model-production-agent',
+      'model-risk-agent',
+      'release-observer-agent',
+    ];
+    for (const id of agentIds) {
+      const agent = card.locator(`[data-testid="governance-role-${id}"]`);
+      await expect(agent).not.toBeVisible();
+    }
+  });
+
+  test('8. no dynamic environment or gate values', async ({ page }) => {
+    const card = page.locator('[data-testid="pilot-001-governance-card"]');
+
+    // Must NOT contain dynamic environment testids
+    const dynamicIds = [
+      'governance-environment',
+      'governance-prod-write',
+      'governance-prod-model',
+      'governance-prod-release',
+      'governance-data-source',
+      'governance-real-db-configured',
+      'governance-db-connection',
+      'governance-total-gates',
+      'governance-pass-gates',
+      'governance-warn-gates',
+      'governance-block-gates',
+    ];
+    for (const id of dynamicIds) {
+      const el = card.locator(`[data-testid="${id}"]`);
+      await expect(el).not.toBeVisible();
+    }
   });
 });

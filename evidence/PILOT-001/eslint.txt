@@ -1,17 +1,31 @@
-# PILOT-001 ESLint Check Output
-# Command: pnpm lint
-# Date: 2026-07-31
+=== PILOT-001 ESLint/lint:build Evidence ===
+Date: 2026-07-31
+Command: pnpm lint:build
 
-Result: Warnings and errors found ONLY in pre-existing files.
-NO warnings or errors in PILOT-001 authorized files.
+EXIT CODE: 1
 
-## Authorized files status:
-- src/app/(dashboard)/phase2/page.tsx: PASS (no warnings, no errors)
-- tests/pilot-001-governance-card.spec.ts: PASS (no warnings, no errors)
+Total errors: 62
+Errors in PILOT-001 authorized files: 0
 
-## Pre-existing issues (NOT introduced by PILOT-001):
-- 62 errors across pre-existing files (require imports, explicit any, etc.)
-- 86 warnings across pre-existing files (unused vars, etc.)
-- All in files not modified by PILOT-001
+All 62 errors are pre-existing in files NOT modified by PILOT-001:
+- data/init-staging-db.js (3 errors: no-require-imports)
+- scripts/readonly-evidence.ts (1 error: no-require-imports)
+- src/app/api/quality/gates/route.ts (2 errors)
+- src/lib/dag/index.ts (1 error)
+- src/lib/data-source.ts (2 errors)
+- src/lib/mock/tools.ts (1 error: prefer-const)
+- src/lib/sqlite-adapter.ts (27 errors)
+- tests/contract/phase2-2-frontend-contract-tests.ts (10 errors)
+- tests/core.test.ts (1 error)
+- tests/integration/w0-integration.test.ts (2 errors)
+- tests/negative/phase1-negative-tests.ts (1 error)
+- tests/phase2-2-browser-tests.spec.ts (1 error)
+- tests/phase2-2-frontend-contract-tests.ts (10 errors)
+- tests/phase2-negative-tests.ts (1 error)
+- tests/smoke/w0-smoke.test.ts (1 error)
 
-Issues introduced by PILOT-001: 0
+PILOT-001 authorized files (0 errors):
+- src/app/(dashboard)/phase2/page.tsx: CLEAN
+- tests/pilot-001-governance-card.spec.ts: CLEAN
+
+STATUS: BLOCK (pre-existing errors, not introduced by PILOT-001)

@@ -1,59 +1,24 @@
-# PILOT-001 TypeScript Check Output
-# Command: pnpm ts-check
-# Date: 2026-07-31
-# Actual exit code: 1 (FAILURE)
+=== PILOT-001 TypeScript Check Evidence ===
+Date: 2026-07-31
+Command: pnpm ts-check
 
-## AC-09 Status: BLOCK
+EXIT CODE: 1
 
-`pnpm ts-check` exits with code 1. Full project has 33 TypeScript errors.
-PILOT-001 cannot claim AC-09 PASS while the project-wide check fails.
-Requesting acceptance criteria modification: either scope AC-09 to
-authorized files only, or authorize PILOT-001 to fix the pre-existing errors.
+Total errors: 33
+Errors in PILOT-001 authorized files: 0
 
-## Authorized files status:
-- src/app/(dashboard)/phase2/page.tsx: 0 errors (PASS)
-- tests/pilot-001-governance-card.spec.ts: 0 errors (PASS)
+All 33 errors are pre-existing in files NOT modified by PILOT-001:
+- tests/integration/w0-integration.test.ts (16 errors)
+- tests/smoke/w0-smoke.test.ts (17 errors)
 
-## Pre-existing errors (NOT introduced by PILOT-001):
-Files affected:
-  - tests/integration/w0-integration.test.ts
-  - tests/smoke/w0-smoke.test.ts
+Error types:
+- TS2345: Argument of type 'EnvironmentConfig | null' is not assignable
+- TS18047: 'config'/'flat' is possibly 'null'
 
-Error types: TS2345 (null not assignable), TS18047 (possibly null)
-Total pre-existing errors: 33 (all in test files not modified by PILOT-001)
-Errors introduced by PILOT-001: 0
+PILOT-001 authorized files (0 errors):
+- src/app/(dashboard)/phase2/page.tsx: CLEAN
+- tests/pilot-001-governance-card.spec.ts: CLEAN
 
-## Full error list (pre-existing):
-tests/integration/w0-integration.test.ts(35,48): TS2345
-tests/integration/w0-integration.test.ts(37,10): TS18047
-tests/integration/w0-integration.test.ts(42,48): TS2345
-tests/integration/w0-integration.test.ts(44,10): TS18047
-tests/integration/w0-integration.test.ts(49,48): TS2345
-tests/integration/w0-integration.test.ts(51,10): TS18047
-tests/integration/w0-integration.test.ts(56,48): TS2345
-tests/integration/w0-integration.test.ts(58,10): TS18047
-tests/integration/w0-integration.test.ts(68,10): TS18047
-tests/integration/w0-integration.test.ts(68,31): TS18047
-tests/integration/w0-integration.test.ts(69,10): TS18047
-tests/integration/w0-integration.test.ts(69,27): TS18047
-tests/integration/w0-integration.test.ts(76,10): TS18047
-tests/integration/w0-integration.test.ts(76,31): TS18047
-tests/integration/w0-integration.test.ts(77,10): TS18047
-tests/integration/w0-integration.test.ts(77,29): TS18047
-tests/integration/w0-integration.test.ts(109,44): TS2345
-tests/smoke/w0-smoke.test.ts(57,44): TS2345
-tests/smoke/w0-smoke.test.ts(63,44): TS2345
-tests/smoke/w0-smoke.test.ts(69,44): TS2345
-tests/smoke/w0-smoke.test.ts(77,44): TS2345
-tests/smoke/w0-smoke.test.ts(87,11): TS18047
-tests/smoke/w0-smoke.test.ts(88,11): TS18047
-tests/smoke/w0-smoke.test.ts(89,11): TS18047
-tests/smoke/w0-smoke.test.ts(94,11): TS18047
-tests/smoke/w0-smoke.test.ts(95,11): TS18047
-tests/smoke/w0-smoke.test.ts(96,11): TS18047
-tests/smoke/w0-smoke.test.ts(101,11): TS18047
-tests/smoke/w0-smoke.test.ts(102,11): TS18047
-tests/smoke/w0-smoke.test.ts(103,11): TS18047
-tests/smoke/w0-smoke.test.ts(108,11): TS18047
-tests/smoke/w0-smoke.test.ts(109,11): TS18047
-tests/smoke/w0-smoke.test.ts(110,11): TS18047
+STATUS: BLOCK
+AC-09 is NOT passed. Full project ts-check fails with exit code 1.
+Request: Modify AC-09 scope to authorized files only, or authorize PILOT-001 to fix pre-existing errors.

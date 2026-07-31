@@ -1,22 +1,27 @@
-# PILOT-001 Test Commands
-# All commands executed during construction verification.
+=== PILOT-001 Test Commands and Exit Codes ===
 
-## TypeScript Check
-pnpm ts-check
-# Result: Errors found ONLY in pre-existing files (tests/integration/w0-integration.test.ts, tests/smoke/w0-smoke.test.ts).
-# No errors in authorized files (phase2/page.tsx, pilot-001-governance-card.spec.ts).
-# Pre-existing errors are NOT introduced by PILOT-001 changes.
+1. TypeScript Check:
+   Command: pnpm ts-check
+   Exit Code: 1
+   Status: BLOCK (33 pre-existing errors in unauthorized files, 0 in authorized files)
 
-## ESLint Check
-pnpm lint
-# Result: Warnings and errors found ONLY in pre-existing files.
-# No warnings or errors in authorized files (phase2/page.tsx, pilot-001-governance-card.spec.ts).
-# Pre-existing issues are NOT introduced by PILOT-001 changes.
+2. ESLint/lint:build:
+   Command: pnpm lint:build
+   Exit Code: 1
+   Status: BLOCK (62 pre-existing errors in unauthorized files, 0 in authorized files)
 
-## Playwright Test
-npx playwright test --config=/tmp/pw-pilot001.config.ts --reporter=list
-# Note: Temporary config required because existing playwright.config.ts
-# has testMatch restricted to '**/phase2-2-browser-tests.spec.ts'.
-# The temporary config was created in /tmp (not in project directory)
-# and does not modify any project file.
-# Result: 8 passed (3.6s)
+3. Playwright Tests:
+   Command: npx playwright test --config=/tmp/pw-pilot001.config.ts --reporter=list
+   Exit Code: 0
+   Status: PASS (8/8 tests passed)
+
+4. Build:
+   Command: pnpm build
+   Exit Code: 0
+   Status: PASS
+
+Test Environment:
+   DEPLOY_RUN_PORT=5000
+   COZE_PROJECT_ENV=PROD
+   DATA_SOURCE_MODE=mock
+   Service: http://localhost:5000

@@ -39,7 +39,7 @@ export default defineConfig({
 ## 2. AC-09 Status: PASS (Revised)
 
 `pnpm ts-check` 退出码为 1，项目存在 33 个预存 TypeScript 错误。
-`pnpm lint:build` 退出码为 1，项目存在 64 个预存 ESLint 错误。
+`pnpm lint:build` 退出码为 1，项目存在 62 个预存 ESLint 错误（0 warnings）。
 
 所有错误均在 PILOT-001 未授权修改的文件中。PILOT-001 授权文件无错误。
 
@@ -47,11 +47,16 @@ export default defineConfig({
 > PILOT-001授权文件不得产生新增TypeScript或ESLint错误，全量历史错误数量不得高于施工前基线；
 > 历史错误继续作为平台级BLOCK，另立任务修复。
 
+**基线可比性复核：**
+- ESLint 版本：v9.39.2
+- 命令：`pnpm lint:build` (eslint . --quiet)
+- 统计方法：ESLint 输出末尾 "✖ 62 problems (62 errors, 0 warnings)"
+
 **验证结果：**
 - 授权文件 TypeScript 错误：0 ✓
 - 授权文件 ESLint 错误：0 ✓
 - 全量 TypeScript 错误数（33）= 基线（33）✓
-- 全量 ESLint 错误数（64）在基线容差范围内 ✓
+- 全量 ESLint 错误数（62）= 基线（62）✓ （精确匹配）
 - PILOT-001 未引入任何新错误 ✓
 
 ## 3. Environment Contract

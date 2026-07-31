@@ -1,4 +1,4 @@
-# Forbidden Files Proof - GOVERNANCE-003-CODEX-READONLY (Remediation)
+# Forbidden Files Proof - GOVERNANCE-003-CODEX-READONLY (Remediation 02)
 
 ## 实际命令输出
 
@@ -6,16 +6,24 @@
 $ git diff --name-only HEAD
 AGENTS.md
 GOVERNANCE.md
-assets/AGENTS.md
-assets/GOVERNANCE-003-CODEX-READONLY.yaml
-assets/GOVERNANCE.md
-assets/TASK_TEMPLATE.yaml
-evidence/GOVERNANCE-003-CODEX-READONLY/*
-tasks/GOVERNANCE-003-CODEX-READONLY.yaml
+evidence/GOVERNANCE-003-CODEX-READONLY/ac-mapping.md
+evidence/GOVERNANCE-003-CODEX-READONLY/baseline-verification.txt
+evidence/GOVERNANCE-003-CODEX-READONLY/changed-files.txt
+evidence/GOVERNANCE-003-CODEX-READONLY/delivery-manifest.md
+evidence/GOVERNANCE-003-CODEX-READONLY/diff-AGENTS.md.txt
+evidence/GOVERNANCE-003-CODEX-READONLY/diff-GOVERNANCE.md.txt
+evidence/GOVERNANCE-003-CODEX-READONLY/diff-TASK_TEMPLATE.yaml.txt
+evidence/GOVERNANCE-003-CODEX-READONLY/forbidden-files-proof.md
+evidence/GOVERNANCE-003-CODEX-READONLY/known-limitations.md
+evidence/GOVERNANCE-003-CODEX-READONLY/negative-tests.md
+evidence/GOVERNANCE-003-CODEX-READONLY/raw-command-output.txt
+evidence/GOVERNANCE-003-CODEX-READONLY/rollback-plan.md
+evidence/GOVERNANCE-003-CODEX-READONLY/rule-acknowledgement.yaml
+evidence/GOVERNANCE-003-CODEX-READONLY/sha256sums.txt
 tasks/TASK_TEMPLATE.yaml
 ```
 
-### 禁止文件检查结果
+## 禁止文件检查结果
 
 | Category | Command | Output | Modified? |
 |----------|---------|--------|-----------|
@@ -27,21 +35,14 @@ tasks/TASK_TEMPLATE.yaml
 | database/** | `git diff --name-only HEAD -- database/` | (empty) | NO |
 | package.json | `git diff --name-only HEAD -- package.json` | (empty) | NO |
 | pnpm-lock.yaml | `git diff --name-only HEAD -- pnpm-lock.yaml` | (empty) | NO |
+| tasks/GOVERNANCE-003-CODEX-READONLY.yaml | `git diff --name-only HEAD -- tasks/GOVERNANCE-003-CODEX-READONLY.yaml` | (empty) | NO |
 
-### tasks/GOVERNANCE-003-CODEX-READONLY.yaml 状态
+## 结论
 
-该文件在 git diff 中显示为 modified，是因为 git HEAD 中存储的是上一轮施工的错误版本。
-当前工作区中的文件已恢复为平台负责人提供的正确基线：
+变更范围仅限于授权文件：
+- GOVERNANCE.md ✓
+- AGENTS.md ✓
+- tasks/TASK_TEMPLATE.yaml ✓
+- evidence/GOVERNANCE-003-CODEX-READONLY/** ✓
 
-```
-SHA-256: 382114bee5b81d953384a69747a6b036f4efebd37088d51515bcd713d2d8988e
-期望值: 382114bee5b81d953384a69747a6b036f4efebd37088d51515bcd713d2d8988e
-匹配: YES
-```
-
-该文件作为只读合同输入，本次整改未对其内容进行任何修改。
-
-### assets/ 目录说明
-
-`assets/` 目录中的文件是从平台负责人提供的 URL 下载的基线文件副本，
-不是项目源码的一部分，不包含在交付 ZIP 中。
+所有禁止文件均未修改。

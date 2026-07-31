@@ -32,8 +32,9 @@
 - 不得为推动进度降低阈值、改写验收条件或将未知判为通过。
 - 不得把 Mock、Sample、脚手架、HTTP 200、页面显示或 Dry Run 等同于生产成功。
 - 未实际执行的检查必须标记 `NOT_EXECUTED`。
+- **同一主体的自检不得称为独立验收。**
 
-### pre_action_role_check 强制检查
+## pre_action_role_check 强制检查
 
 任何写工具调用前必须输出 `pre_action_role_check`：
 
@@ -48,6 +49,16 @@ pre_action_role_check:
 ```
 
 当 `changes_project_state=true` 且没有有效角色切换令牌（`ROLE_SWITCH_CODEX_TO_BUILDER`）时，必须停止并转交扣子（coze-builder）。
+
+## 角色切换规则
+
+- 普通自然语言指令（包括但不限于"执行"、"继续"、"修复"、"落实"、"应用"、"请修改"、"请施工"等）**不得触发 Codex 角色切换**。
+- 角色切换**仅**可通过专用令牌 `ROLE_SWITCH_CODEX_TO_BUILDER` 触发，且令牌必须同时包含以下三个字段：
+  - `task_id`：目标任务编号；
+  - `authorized_files`：授权修改的文件列表；
+  - `independent_inspector`：独立监理人标识（不得与 builder 相同）。
+- 缺少任一字段时，必须输出 `BLOCK—INVALID_ROLE_SWITCH`。
+- **builder 等于 inspector 时**，必须输出 `BLOCK—ROLE_CONFLICT`。
 
 ## 当前默认安全边界
 

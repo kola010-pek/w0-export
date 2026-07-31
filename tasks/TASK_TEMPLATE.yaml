@@ -6,8 +6,6 @@ status: DRAFT
 owner: 平台负责人
 builder: 扣子编程
 inspector: Codex
-
-# Codex 角色约束（AC-06）
 role: inspector
 mode: read_only
 write_allowed: false

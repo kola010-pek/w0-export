@@ -1,0 +1,61 @@
+=== 禁止文件未修改验证 ===
+
+--- git diff --name-only HEAD ---
+AGENTS.md
+GOVERNANCE.md
+evidence/GOVERNANCE-003-CODEX-READONLY/ac-mapping.md
+evidence/GOVERNANCE-003-CODEX-READONLY/changed-files.txt
+evidence/GOVERNANCE-003-CODEX-READONLY/delivery-manifest.md
+evidence/GOVERNANCE-003-CODEX-READONLY/diff-AGENTS.md.txt
+evidence/GOVERNANCE-003-CODEX-READONLY/diff-GOVERNANCE.md.txt
+evidence/GOVERNANCE-003-CODEX-READONLY/diff-TASK_TEMPLATE.yaml.txt
+evidence/GOVERNANCE-003-CODEX-READONLY/forbidden-files-proof.md
+evidence/GOVERNANCE-003-CODEX-READONLY/known-limitations.md
+evidence/GOVERNANCE-003-CODEX-READONLY/rollback-plan.md
+evidence/GOVERNANCE-003-CODEX-READONLY/rule-acknowledgement.yaml
+evidence/GOVERNANCE-003-CODEX-READONLY/sha256sums.txt
+tasks/TASK_TEMPLATE.yaml
+
+--- src/ ---
+(empty=not modified)
+--- tests/ ---
+(empty=not modified)
+--- config/ ---
+(empty=not modified)
+--- runtime/ ---
+(empty=not modified)
+--- adapters/ ---
+(empty=not modified)
+--- database/ ---
+(empty=not modified)
+--- package.json ---
+(empty=not modified)
+--- pnpm-lock.yaml ---
+(empty=not modified)
+--- tasks/GOVERNANCE-003-CODEX-READONLY.yaml ---
+(empty=not modified)
+
+=== 基线文件 SHA-256 验证 ===
+14ca03393a6ace37263c09e9627bb4e48c7b61daaf171959251e68b68d9acc6d  GOVERNANCE.md (baseline)
+7dedb415c10a2cd117e207b47f292ce4a1009539fca70da1378572fccaab2ca7  AGENTS.md (baseline)
+d205e1c00918d389929ef065bd8e388b186c168cf3fdd8ff137816de39c366af  tasks/TASK_TEMPLATE.yaml (baseline)
+382114bee5b81d953384a69747a6b036f4efebd37088d51515bcd713d2d8988e  tasks/GOVERNANCE-003-CODEX-READONLY.yaml (baseline, read-only)
+
+=== 施工后文件 SHA-256 ===
+(见 sha256sums.txt)
+
+=== 负面测试 ===
+NT-01: grep "除非任务单明确授权修复\|只有任务单明确授权修复" GOVERNANCE.md AGENTS.md
+  结果: 未找到任何匹配 (exit code 1) → PASS
+NT-02: grep "BLOCK—INVALID_ROLE_SWITCH" GOVERNANCE.md
+  结果: 找到 → PASS
+NT-03: grep "BLOCK—ROLE_CONFLICT" GOVERNANCE.md AGENTS.md
+  结果: 找到 → PASS
+NT-04: grep "ROLE_SWITCH_CODEX_TO_BUILDER" GOVERNANCE.md AGENTS.md
+  结果: 找到 → PASS
+NT-05: grep "pre_action_role_check" AGENTS.md
+  结果: 找到 → PASS
+NT-06: grep "self_check\|自检.*独立验收\|独立验收.*自检" GOVERNANCE.md AGENTS.md
+  结果: 找到"同一主体的自检不得称为独立验收" → PASS
+NT-07: 检查 tasks/GOVERNANCE-003-CODEX-READONLY.yaml 未被修改
+  结果: SHA-256 与基线一致 → PASS

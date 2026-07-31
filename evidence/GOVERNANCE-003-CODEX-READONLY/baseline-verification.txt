@@ -1,0 +1,30 @@
+# Baseline Verification - GOVERNANCE-003-CODEX-READONLY (Remediation 02)
+
+## 施工前基线验证
+
+施工目录: /tmp/governance-003-r02/ (全新干净目录)
+
+### 输入文件 SHA-256 验证
+
+| # | File | Expected SHA-256 | Actual SHA-256 | Match |
+|---|------|-----------------|----------------|-------|
+| 1 | GOVERNANCE.md | 14ca03393a6ace37263c09e9627bb4e48c7b61daaf171959251e68b68d9acc6d | 14ca03393a6ace37263c09e9627bb4e48c7b61daaf171959251e68b68d9acc6d | MATCH |
+| 2 | AGENTS.md | 7dedb415c10a2cd117e207b47f292ce4a1009539fca70da1378572fccaab2ca7 | 7dedb415c10a2cd117e207b47f292ce4a1009539fca70da1378572fccaab2ca7 | MATCH |
+| 3 | tasks/TASK_TEMPLATE.yaml | d205e1c00918d389929ef065bd8e388b186c168cf3fdd8ff137816de39c366af | d205e1c00918d389929ef065bd8e388b186c168cf3fdd8ff137816de39c366af | MATCH |
+| 4 | tasks/GOVERNANCE-003-CODEX-READONLY.yaml | 382114bee5b81d953384a69747a6b036f4efebd37088d51515bcd713d2d8988e | 382114bee5b81d953384a69747a6b036f4efebd37088d51515bcd713d2d8988e | MATCH (只读) |
+
+**结果: 4/4 MATCH**
+
+### 正式任务合同只读状态
+- tasks/GOVERNANCE-003-CODEX-READONLY.yaml 仅作为只读合同输入，未进行任何修改
+
+### 施工前变更清单
+- 干净目录，无变更
+
+### 施工前文件清单
+```
+./AGENTS.md
+./GOVERNANCE.md
+./tasks/GOVERNANCE-003-CODEX-READONLY.yaml
+./tasks/TASK_TEMPLATE.yaml
+```

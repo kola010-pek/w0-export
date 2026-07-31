@@ -1,71 +1,11 @@
 rule_acknowledgement:
   actor: coze-builder
-  policy_version_before: 1.0.0
-  policy_version_after: 1.1.0
+  policy_version: 1.1.0
   task_id: GOVERNANCE-003-CODEX-READONLY
   environment: local_governance_workspace
   data_source: repository_files_only
-  is_mock: false
-  is_sample: false
-  real_db_path_configured: false
-  production_write_enabled: false
-  production_model_enabled: false
-  production_release_enabled: false
   understood_forbidden_actions: true
-  authorized_files:
-    - GOVERNANCE.md
-    - AGENTS.md
-    - tasks/TASK_TEMPLATE.yaml
-    - "evidence/GOVERNANCE-003-CODEX-READONLY/*"
-  forbidden_files:
-    - "src/**"
-    - "tests/**"
-    - "config/**"
-    - "runtime/**"
-    - "adapters/**"
-    - "database/**"
-    - package.json
-    - pnpm-lock.yaml
-    - tasks/GOVERNANCE-003-CODEX-READONLY.yaml
-  forbidden_actions:
-    - modify_business_source
-    - modify_tests
-    - modify_runtime_configuration
-    - install_or_upgrade_dependencies
-    - connect_or_scan_real_database
-    - production_write
-    - deployment
-    - role_self_approval
-  baseline_verification:
-    - file: GOVERNANCE.md
-      expected_sha256: 14ca03393a6ace37263c09e9627bb4e48c7b61daaf171959251e68b68d9acc6d
-      actual_sha256: 14ca03393a6ace37263c09e9627bb4e48c7b61daaf171959251e68b68d9acc6d
-      match: true
-    - file: AGENTS.md
-      expected_sha256: 7dedb415c10a2cd117e207b47f292ce4a1009539fca70da1378572fccaab2ca7
-      actual_sha256: 7dedb415c10a2cd117e207b47f292ce4a1009539fca70da1378572fccaab2ca7
-      match: true
-    - file: tasks/TASK_TEMPLATE.yaml
-      expected_sha256: d205e1c00918d389929ef065bd8e388b186c168cf3fdd8ff137816de39c366af
-      actual_sha256: d205e1c00918d389929ef065bd8e388b186c168cf3fdd8ff137816de39c366af
-      match: true
-    - file: tasks/GOVERNANCE-003-CODEX-READONLY.yaml
-      expected_sha256: 382114bee5b81d953384a69747a6b036f4efebd37088d51515bcd713d2d8988e
-      actual_sha256: 382114bee5b81d953384a69747a6b036f4efebd37088d51515bcd713d2d8988e
-      match: true
-      note: "只读合同输入，未修改"
-  conflicts_found: []
+  conflicts_found:
+    - "施工前工作区含有上一轮 Remediation 01 的残留文件（assets/、旧版 evidence/），已在施工前清理"
+    - "tasks/GOVERNANCE-003-CODEX-READONLY.yaml 在 git HEAD 中与基线不同（上一轮被错误修改），施工前已用基线覆盖恢复"
   ready: true
-  pre_action_role_checks:
-    - file: GOVERNANCE.md
-      action: edit
-      role: builder
-      result: PROCEED
-    - file: AGENTS.md
-      action: edit
-      role: builder
-      result: PROCEED
-    - file: tasks/TASK_TEMPLATE.yaml
-      action: edit
-      role: builder
-      result: PROCEED

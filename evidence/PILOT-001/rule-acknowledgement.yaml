@@ -1,0 +1,96 @@
+rule_acknowledgement:
+  actor: coze-builder
+  policy_version: 1.0.0
+  task_id: PILOT-001
+  environment: sample_staging
+  data_source: sample
+  understood_forbidden_actions: true
+  conflicts_found: []
+  ready: true
+
+task_summary:
+  title: "Phase 2 页面增加治理与环境边界只读卡片"
+  objective: >
+    在现有 /phase2 页面增加一个只读的"建设与验收治理"卡片，
+    清晰展示规则版本、角色分工、当前环境边界、真实数据库授权状态和发布门禁；
+    用一个独立 Playwright 测试证明页面字段可见且语义准确。
+
+in_scope:
+  - "修改 src/app/(dashboard)/phase2/page.tsx，增加只读治理卡片"
+  - "新增 tests/pilot-001-governance-card.spec.ts"
+  - "执行与本任务直接相关的 TypeScript、ESLint 和 Playwright 检查"
+  - "将原始施工证据写入 evidence/PILOT-001/"
+
+out_of_scope:
+  - "修改任何 API 路由"
+  - "修改 GOVERNANCE.md 或 AGENTS.md"
+  - "修改 config/agents.yaml、config/gates.yaml 或任何环境配置"
+  - "修改既有 Phase 2.2 数据库预检逻辑"
+  - "修改既有质量门禁、审批、模型或发布流程"
+  - "新增数据库读取或写入"
+  - "连接、扫描或验证真实数据库"
+
+forbidden_actions:
+  - discover_or_configure_real_database_path
+  - connect_or_scan_real_database
+  - production_database_read_or_write
+  - database_migration_or_backfill
+  - modify_api_routes
+  - modify_governance_or_task_contract
+  - modify_agent_permissions
+  - lower_gate_threshold
+  - modify_environment_config
+  - production_model_run
+  - model_promotion
+  - signal_release
+  - bypass_block_or_approval
+  - install_or_upgrade_dependencies
+
+authorized_files:
+  - "src/app/(dashboard)/phase2/page.tsx"
+  - "tests/pilot-001-governance-card.spec.ts"
+  - "evidence/PILOT-001/*"
+
+acceptance_criteria_verification:
+  AC-01:
+    assertion: "/phase2 显示"建设与验收治理"卡片"
+    method: "Playwright 按 data-testid=pilot-001-governance-card 定位并断言可见"
+    evidence: "playwright.txt 及测试源码"
+  AC-02:
+    assertion: "规则版本精确显示为 1.0.0"
+    method: "对 data-testid=pilot-001-policy-version 做精确文本断言"
+    evidence: "playwright.txt"
+  AC-03:
+    assertion: "页面明确区分扣子施工、Codex 监理和负责人批准"
+    method: "对 data-testid=pilot-001-role-separation 做精确文本断言"
+    evidence: "playwright.txt"
+  AC-04:
+    assertion: "当前范围精确显示为 Sample Staging / 非生产"
+    method: "对 data-testid=pilot-001-environment-scope 做精确文本断言"
+    evidence: "playwright.txt"
+  AC-05:
+    assertion: "真实数据库精确显示为 未授权 / 未连接"
+    method: "对 data-testid=pilot-001-real-db-status 做精确文本断言"
+    evidence: "playwright.txt"
+  AC-06:
+    assertion: "生产发布精确显示为 BLOCK"
+    method: "对 data-testid=pilot-001-release-status 做精确文本断言"
+    evidence: "playwright.txt"
+  AC-07:
+    assertion: "页面改动不新增网络请求、数据库访问、路径输入或写操作"
+    method: "Codex 审查页面 diff 及新测试源码"
+    evidence: "changed-files.txt 及独立源码审查"
+  AC-08:
+    assertion: "除两个授权源码文件和证据目录外没有其他施工改动"
+    method: "Codex 核对实际改动文件清单"
+    evidence: "changed-files.txt 及工作区检查"
+  AC-09:
+    assertion: "TypeScript 检查和 ESLint 检查实际执行并通过"
+    method: "Codex 复跑授权命令"
+    evidence: "ts-check.txt 及 eslint.txt"
+
+negative_tests:
+  NT-01: "页面不得出现"真实数据库已连接"或等价表述"
+  NT-02: "页面不得将 Sample、测试或规则卡片显示描述为生产 PASS"
+  NT-03: "不得新增数据库路径、SQL、写入、模型推广或发布控件"
+  NT-04: "测试不得通过弱断言替代五个字段的精确 data-testid 断言"

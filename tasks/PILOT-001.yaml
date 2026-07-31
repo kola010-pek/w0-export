@@ -1,0 +1,192 @@
+task_id: PILOT-001
+title: "Phase 2 页面增加治理与环境边界只读卡片"
+policy_version: 1.0.0
+status: APPROVED_FOR_CONSTRUCTION
+
+owner: 平台负责人
+builder: 扣子编程
+inspector: Codex
+
+environment: sample_staging
+data_source: sample
+environment_assertions:
+  is_mock: false
+  is_sample: true
+  real_db_path_configured: false
+  production_write_enabled: false
+  production_model_enabled: false
+  production_release_enabled: false
+
+objective: >
+  在现有 /phase2 页面增加一个只读的“建设与验收治理”卡片，
+  清晰展示规则版本、角色分工、当前环境边界、真实数据库授权状态和发布门禁；
+  用一个独立 Playwright 测试证明页面字段可见且语义准确。
+
+in_scope:
+  - "修改 src/app/(dashboard)/phase2/page.tsx，增加只读治理卡片"
+  - "新增 tests/pilot-001-governance-card.spec.ts"
+  - "执行与本任务直接相关的 TypeScript、ESLint 和 Playwright 检查"
+  - "将原始施工证据写入 evidence/PILOT-001/"
+
+out_of_scope:
+  - "修改任何 API 路由"
+  - "修改 GOVERNANCE.md 或 AGENTS.md"
+  - "修改 config/agents.yaml、config/gates.yaml 或任何环境配置"
+  - "修改既有 Phase 2.2 数据库预检逻辑"
+  - "修改既有质量门禁、审批、模型或发布流程"
+  - "新增数据库读取或写入"
+  - "连接、扫描或验证真实数据库"
+
+authorized_actions:
+  - "edit:src/app/(dashboard)/phase2/page.tsx"
+  - "create:tests/pilot-001-governance-card.spec.ts"
+  - "create:evidence/PILOT-001/*"
+  - "run:pnpm ts-check"
+  - "run:pnpm lint:build"
+  - "run:pnpm exec playwright test tests/pilot-001-governance-card.spec.ts"
+
+forbidden_actions:
+  - discover_or_configure_real_database_path
+  - connect_or_scan_real_database
+  - production_database_read_or_write
+  - database_migration_or_backfill
+  - modify_api_routes
+  - modify_governance_or_task_contract
+  - modify_agent_permissions
+  - lower_gate_threshold
+  - modify_environment_config
+  - production_model_run
+  - model_promotion
+  - signal_release
+  - bypass_block_or_approval
+  - install_or_upgrade_dependencies
+
+dependencies:
+  - "GOVERNANCE.md policy_version 1.0.0"
+  - "现有 /phase2 页面可由项目开发服务器访问"
+  - "现有 Playwright 依赖可用"
+
+deliverables:
+  - "src/app/(dashboard)/phase2/page.tsx 中的只读治理卡片"
+  - "tests/pilot-001-governance-card.spec.ts"
+  - "evidence/PILOT-001/rule-acknowledgement.yaml"
+  - "evidence/PILOT-001/changed-files.txt"
+  - "evidence/PILOT-001/test-commands.txt"
+  - "evidence/PILOT-001/ts-check.txt"
+  - "evidence/PILOT-001/eslint.txt"
+  - "evidence/PILOT-001/playwright.txt"
+  - "evidence/PILOT-001/known-limitations.md"
+  - "evidence/PILOT-001/rollback-plan.md"
+
+ui_contract:
+  card:
+    heading: "建设与验收治理"
+    test_id: "pilot-001-governance-card"
+  fields:
+    - label: "规则版本"
+      value: "1.0.0"
+      test_id: "pilot-001-policy-version"
+    - label: "角色分工"
+      value: "扣子施工 / Codex监理 / 负责人批准"
+      test_id: "pilot-001-role-separation"
+    - label: "当前范围"
+      value: "Sample Staging / 非生产"
+      test_id: "pilot-001-environment-scope"
+    - label: "真实数据库"
+      value: "未授权 / 未连接"
+      test_id: "pilot-001-real-db-status"
+    - label: "生产发布"
+      value: "BLOCK"
+      test_id: "pilot-001-release-status"
+
+acceptance_criteria:
+  - id: AC-01
+    assertion: "/phase2 显示“建设与验收治理”卡片"
+    verification_method: "Playwright按 data-testid=pilot-001-governance-card 定位并断言可见"
+    evidence_required: "playwright.txt及测试源码"
+    severity_on_failure: BLOCK
+
+  - id: AC-02
+    assertion: "规则版本精确显示为 1.0.0"
+    verification_method: "对 data-testid=pilot-001-policy-version 做精确文本断言"
+    evidence_required: "playwright.txt"
+    severity_on_failure: BLOCK
+
+  - id: AC-03
+    assertion: "页面明确区分扣子施工、Codex监理和负责人批准"
+    verification_method: "对 data-testid=pilot-001-role-separation 做精确文本断言"
+    evidence_required: "playwright.txt"
+    severity_on_failure: BLOCK
+
+  - id: AC-04
+    assertion: "当前范围精确显示为 Sample Staging / 非生产"
+    verification_method: "对 data-testid=pilot-001-environment-scope 做精确文本断言"
+    evidence_required: "playwright.txt"
+    severity_on_failure: BLOCK
+
+  - id: AC-05
+    assertion: "真实数据库精确显示为 未授权 / 未连接"
+    verification_method: "对 data-testid=pilot-001-real-db-status 做精确文本断言"
+    evidence_required: "playwright.txt"
+    severity_on_failure: BLOCK
+
+  - id: AC-06
+    assertion: "生产发布精确显示为 BLOCK"
+    verification_method: "对 data-testid=pilot-001-release-status 做精确文本断言"
+    evidence_required: "playwright.txt"
+    severity_on_failure: BLOCK
+
+  - id: AC-07
+    assertion: "页面改动不新增网络请求、数据库访问、路径输入或写操作"
+    verification_method: "Codex审查页面diff及新测试源码"
+    evidence_required: "changed-files.txt及独立源码审查"
+    severity_on_failure: BLOCK
+
+  - id: AC-08
+    assertion: "除两个授权源码文件和证据目录外没有其他施工改动"
+    verification_method: "Codex核对实际改动文件清单"
+    evidence_required: "changed-files.txt及工作区检查"
+    severity_on_failure: BLOCK
+
+  - id: AC-09
+    assertion: "TypeScript检查和ESLint检查实际执行并通过"
+    verification_method: "Codex复跑授权命令"
+    evidence_required: "ts-check.txt及eslint.txt"
+    severity_on_failure: BLOCK
+
+negative_tests:
+  - id: NT-01
+    assertion: "页面不得出现“真实数据库已连接”或等价表述"
+    severity_on_failure: BLOCK
+  - id: NT-02
+    assertion: "页面不得将Sample、测试或规则卡片显示描述为生产PASS"
+    severity_on_failure: BLOCK
+  - id: NT-03
+    assertion: "不得新增数据库路径、SQL、写入、模型推广或发布控件"
+    severity_on_failure: BLOCK
+  - id: NT-04
+    assertion: "测试不得通过弱断言替代五个字段的精确 data-testid 断言"
+    severity_on_failure: BLOCK
+
+required_evidence:
+  - rule_acknowledgement
+  - changed_files
+  - source_version_or_file_hashes
+  - test_commands
+  - raw_test_outputs
+  - test_summary
+  - playwright_assertions
+  - negative_test_results
+  - known_limitations
+  - rollback_plan
+
+evidence_directory: "evidence/PILOT-001/"
+review_report: "reviews/PILOT-001-review.md"
+
+release_allowed: false
+human_approval_required: true
+
+approval:
+  approved_by: "平台负责人（当前Codex任务指令：继续）"
+  approved_at: "2026-07-31"
+  notes: "仅批准本任务声明的Sample前端试点范围；不授权真实数据库或生产操作。"

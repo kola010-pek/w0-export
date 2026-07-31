@@ -4,7 +4,7 @@ Command: pnpm ts-check
 
 EXIT CODE: 1
 
-Total errors: 33
+Total errors: 33 (baseline: 33, no increase)
 Errors in PILOT-001 authorized files: 0
 
 All 33 errors are pre-existing in files NOT modified by PILOT-001:
@@ -19,6 +19,12 @@ PILOT-001 authorized files (0 errors):
 - src/app/(dashboard)/phase2/page.tsx: CLEAN
 - tests/pilot-001-governance-card.spec.ts: CLEAN
 
-STATUS: BLOCK
-AC-09 is NOT passed. Full project ts-check fails with exit code 1.
-Request: Modify AC-09 scope to authorized files only, or authorize PILOT-001 to fix pre-existing errors.
+AC-09 Status: PASS (revised)
+Approved revision: PILOT-001 authorized files must not produce new TypeScript errors,
+and total error count must not exceed pre-construction baseline.
+Historical errors remain as platform-level BLOCK, to be fixed in a separate task.
+
+Verification:
+- Authorized files TS errors: 0 ✓
+- Total errors (33) <= baseline (33) ✓
+- No new errors introduced by PILOT-001 ✓

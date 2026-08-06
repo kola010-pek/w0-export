@@ -1,0 +1,77 @@
+# W0 版本锚定复验任务单
+# 状态: 待执行
+# 创建时间: 2026-08-06
+
+policy_version: "1.1.0"
+task_id: W0-VERSION-ANCHORING-READONLY
+builder: coze-builder
+inspector: codex-inspector
+environment: remote-github-read-only
+data_source: https://github.com/kola010-pek/w0-export
+role: inspector
+mode: read_only
+write_allowed: false
+release_allowed: false
+real_db_path_configured: false
+production_write_enabled: false
+production_model_enabled: false
+production_release_enabled: false
+
+# 授权范围
+scope:
+  - remote_repository_read
+  - commit_verification
+  - tag_verification
+  - archive_integrity_check
+  - source_inventory_verification
+  - sha256_verification
+
+# 禁止动作
+forbidden:
+  - database_access
+  - dependency_install
+  - build_execution
+  - test_execution
+  - deployment
+  - modify_acceptance_criteria
+  - self_declare_pass
+
+# 版本标识
+version:
+  repository: https://github.com/kola010-pek/w0-export
+  commit_sha_full: 0cb21090e6e52b1514bfd5776d409a8c448c7983
+  commit_sha_short: 0cb2109
+  tag: w0-20260730-0cb21090
+  archive: W0_WORKSPACE_EXPORT_w0-20260730-0cb21090.tar.gz
+  declared_file_count: 316
+  declared_sha256: b60182bbc0b5ae57138a8249b1a240b1a975f00a7980d0cffbdc54bb8a61bacb
+
+# 验收阶段
+acceptance_phases:
+  - phase: 1
+    name: 交付与版本可追溯性
+    status: pending
+  - phase: 2
+    name: 归档内容与配置语义
+    status: pending
+  - phase: 3
+    name: 隔离环境的依赖安装与构建
+    status: pending
+  - phase: 4
+    name: 单元/集成测试
+    status: pending
+  - phase: 5
+    name: API 启动、核心接口和停止流程
+    status: pending
+  - phase: 6
+    name: UI 渲染与关键路径
+    status: pending
+  - phase: 7
+    name: 证据复核与最终门禁判定
+    status: pending
+
+# 输出要求
+deliverables:
+  - review_report: reviews/W0-VERSION-ANCHORING-READONLY.md
+  - verdict: PASS | WARN | BLOCK
+  - evidence_links: true

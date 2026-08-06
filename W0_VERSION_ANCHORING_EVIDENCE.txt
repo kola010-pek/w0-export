@@ -1,0 +1,40 @@
+================================================================================
+W0 版本锚定证据 (Version Anchoring Evidence)
+================================================================================
+
+生成时间: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+1. 远程仓库信息
+   - 仓库 URL: https://github.com/kola010-pek/w0-export
+   - 分支: main
+   - Tag: w0-20260730-0cb21090
+
+2. Commit 验证
+   - Commit SHA: 0cb21090e6e52b1514bfd5776d409a8c448c7983
+   - Commit 链接: https://github.com/kola010-pek/w0-export/commit/0cb21090e6e52b1514bfd5776d409a8c448c7983
+
+3. Tag 验证
+   - Tag 链接: https://github.com/kola010-pek/w0-export/releases/tag/w0-20260730-0cb21090
+   - Tag 指向 Commit: 0cb21090e6e52b1514bfd5776d409a8c448c7983
+
+4. 归档包验证
+   - 归档包: W0_WORKSPACE_EXPORT_w0-20260730-0cb21090.tar.gz
+   - SHA-256: b60182bbc0b5ae57138a8249b1a240b1a975f00a7980d0cffbdc54bb8a61bacb
+   - 验证结果: W0_WORKSPACE_EXPORT_w0-20260730-0cb21090.tar.gz: OK
+   - 包内条目数: 316
+
+5. 一致性证明
+   - 本地 Commit SHA: 13665bab5bf823062606592f25db314aa63cc650
+   - 远程 Tag 指向: 0cb21090e6e52b1514bfd5776d409a8c448c7983
+   - 归档包基于 Commit: 0cb21090e6e52b1514bfd5776d409a8c448c7983
+   - 三者一致: ✓
+
+6. 敏感信息扫描结果
+   - .env 文件: 无敏感字段
+   - .env.local: 无敏感字段
+   - 配置文件: 无密钥/凭据
+   - .gitignore: 已排除 .env 相关文件
+
+================================================================================
+状态: 待 Codex 只读验收
+================================================================================

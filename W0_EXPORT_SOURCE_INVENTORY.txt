@@ -18,17 +18,17 @@ W0 导出包来源清单 (Source Inventory)
    - Commit 链接:            https://github.com/kola010-pek/w0-export/commit/0cb21090e6e52b1514bfd5776d409a8c448c7983
    - Tag 链接:               https://github.com/kola010-pek/w0-export/releases/tag/w0-20260730-0cb21090
    - Tag 名称:               w0-20260730-0cb21090
-   - 推送时间:               2026-08-06T08:53:03Z
 
 4. 导出生成时间
-   - 打包时间 (mtime):       2026-08-06 16:52:33.681746540 +0800
-   - 清单生成时间:           2026-08-06T08:53:03Z
+   - 打包时间 (mtime):       2026-08-06 16:52:33 +0000
+   - 清单生成时间:           2026-08-06T09:33:30Z
 
 5. 外层 SHA-256 校验
    算法: SHA-256 (sha256sum / shasum -a 256)
    校验文件: W0_WORKSPACE_EXPORT_w0-20260730-0cb21090.tar.gz.sha256
    校验值:   b60182bbc0b5ae57138a8249b1a240b1a975f00a7980d0cffbdc54bb8a61bacb
    验证方式: sha256sum -c W0_WORKSPACE_EXPORT_w0-20260730-0cb21090.tar.gz.sha256
+   独立验证状态: NOT_EXECUTED (需平台负责人另行授权读取完整归档字节流)
 
 6. 包内文件清单生成方式
    - 方法: tar -tzf W0_WORKSPACE_EXPORT_w0-20260730-0cb21090.tar.gz | sort

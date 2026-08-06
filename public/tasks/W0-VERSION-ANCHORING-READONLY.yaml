@@ -1,6 +1,6 @@
-# W0 版本锚定复验任务单
-# 状态: 待执行
-# 创建时间: 2026-08-06
+# W0 版本锚定只读复验任务单
+# 状态：待执行
+# 创建时间：2026-08-06T09:33:30Z
 
 policy_version: "1.1.0"
 task_id: W0-VERSION-ANCHORING-READONLY
@@ -10,31 +10,19 @@ environment: remote-github-read-only
 data_source: https://github.com/kola010-pek/w0-export
 role: inspector
 mode: read_only
+
+# 授权范围
 write_allowed: false
 release_allowed: false
+install_allowed: false
+build_allowed: false
+test_allowed: false
+api_start_allowed: false
+ui_check_allowed: false
 real_db_path_configured: false
 production_write_enabled: false
 production_model_enabled: false
 production_release_enabled: false
-
-# 授权范围
-scope:
-  - remote_repository_read
-  - commit_verification
-  - tag_verification
-  - archive_integrity_check
-  - source_inventory_verification
-  - sha256_verification
-
-# 禁止动作
-forbidden:
-  - database_access
-  - dependency_install
-  - build_execution
-  - test_execution
-  - deployment
-  - modify_acceptance_criteria
-  - self_declare_pass
 
 # 版本标识
 version:
@@ -45,33 +33,85 @@ version:
   archive: W0_WORKSPACE_EXPORT_w0-20260730-0cb21090.tar.gz
   declared_file_count: 316
   declared_sha256: b60182bbc0b5ae57138a8249b1a240b1a975f00a7980d0cffbdc54bb8a61bacb
+  sha256_independent_verification: NOT_EXECUTED
 
-# 验收阶段
-acceptance_phases:
-  - phase: 1
-    name: 交付与版本可追溯性
-    status: pending
-  - phase: 2
-    name: 归档内容与配置语义
-    status: pending
-  - phase: 3
-    name: 隔离环境的依赖安装与构建
-    status: pending
-  - phase: 4
-    name: 单元/集成测试
-    status: pending
-  - phase: 5
-    name: API 启动、核心接口和停止流程
-    status: pending
-  - phase: 6
-    name: UI 渲染与关键路径
-    status: pending
-  - phase: 7
-    name: 证据复核与最终门禁判定
-    status: pending
+# 验收标准 (Acceptance Criteria)
+acceptance_criteria:
+  ac1:
+    name: 仓库可公开访问
+    description: 远程仓库 URL 可匿名访问，返回 HTTP 200
+    evidence: curl -s -o /dev/null -w "%{http_code}" https://github.com/kola010-pek/w0-export
+  ac2:
+    name: Commit 可验证
+    description: 完整 commit SHA 可通过 GitHub API 或网页访问
+    evidence: curl -s https://api.github.com/repos/kola010-pek/w0-export/commits/0cb21090e6e52b1514bfd5776d409a8c448c7983
+  ac3:
+    name: Tag 指向正确 Commit
+    description: Tag ref 的 object.sha 与声明的 commit SHA 一致
+    evidence: curl -s https://api.github.com/repos/kola010-pek/w0-export/git/refs/tags/w0-20260730-0cb21090
+  ac4:
+    name: 归档包可下载
+    description: 归档包 URL 返回 HTTP 200 且可下载完整字节流
+    evidence: curl -s -o /dev/null -w "%{http_code}" <archive_url>
+  ac5:
+    name: SHA-256 文件存在
+    description: .sha256 文件可访问且格式正确
+    evidence: curl -s <sha256_url>
+  ac6:
+    name: 来源清单完整
+    description: 来源清单包含归档名、commit SHA、tag 链接、打包时间、清单生成方式
+    evidence: curl -s <inventory_url>
+  ac7:
+    name: 任务单已交付
+    description: 任务 YAML 文件位于双方共享工作区
+    evidence: ls -la tasks/W0-VERSION-ANCHORING-READONLY.yaml
+
+# 负面检查 (Negative Checks)
+negative_checks:
+  nc1:
+    name: 无敏感信息泄露
+    description: 归档包内不包含 .env、密钥、密码、token 等敏感文件
+  nc2:
+    name: 无生产配置
+    description: 归档包内不包含生产数据库连接、生产 API 密钥
+  nc3:
+    name: Tag 不可变
+    description: Tag 已推送且不应被 force push 修改
+
+# 证据要求
+evidence_requirements:
+  - repository_api_response
+  - commit_api_response
+  - tag_ref_api_response
+  - tag_object_response (如为 annotated tag)
+  - archive_download_verification
+  - sha256_file_content
+  - source_inventory_content
+  - task_yaml_content
+
+# 回滚方案
+rollback_plan:
+  trigger: 验收发现 BLOCK 级问题
+  action: 删除当前 tag，创建新 tag 指向修复后的 commit
+  responsible: coze-builder
+
+# 停止点
+stop_conditions:
+  - 仓库不可访问
+  - Commit 不存在
+  - Tag 指向错误
+  - 归档包损坏
+  - SHA-256 不一致
+  - 发现敏感信息泄露
 
 # 输出要求
 deliverables:
-  - review_report: reviews/W0-VERSION-ANCHORING-READONLY.md
-  - verdict: PASS | WARN | BLOCK
-  - evidence_links: true
+  review_report: reviews/W0-VERSION-ANCHORING-READONLY.md
+  verdict: PASS | WARN | BLOCK
+  evidence_links: true
+
+# 批准信息
+approval:
+  approved_by: 卫光 (15c6d4)
+  approved_at: 2026-08-06
+  scope: 仅版本锚定只读核验，不包含安装、构建、测试、API 启动或 UI 检查

@@ -5,7 +5,7 @@ W0 导出包来源清单 (Source Inventory)
 1. 导出包名称
    W0_WORKSPACE_EXPORT_w0-20260730-0cb21090.tar.gz
 
-2. 源码版本标识
+2. 源码版本标识 (source_commit)
    - Git Commit SHA (full):  0cb21090e6e52b1514bfd5776d409a8c448c7983
    - Git Commit SHA (short): 0cb2109
    - Commit Subject:         feat: W0 工程底座 - 补齐 API 端点和测试
@@ -13,21 +13,21 @@ W0 导出包来源清单 (Source Inventory)
    - Commit Date:            2026-07-30 12:52:24 +0800
    - Git Tree:               /workspace/projects
 
-3. 交付物版本标识
-   - 交付 Commit SHA (full):  0ba95a47a2e76ddd5d44d9fbfca706a2c19f7033
-   - 交付 Commit SHA (short): 0ba95a4
-   - 交付 Tag:                w0-20260806-delivery
-   - 交付 Commit 链接：https://github.com/kola010-pek/w0-export/commit/0ba95a47a2e76ddd5d44d9fbfca706a2c19f7033
-   - 交付 Tag 链接：https://github.com/kola010-pek/w0-export/releases/tag/w0-20260806-delivery
+3. 交付物版本标识 (delivery_commit)
+   - 交付 Commit SHA (full):  d4da5ebc09ca17346f2be6424442b9592869a39f
+   - 交付 Commit SHA (short): d4da5eb
+   - 交付 Tag:                w0-20260807-delivery-v2
+   - 交付 Commit 链接：https://github.com/kola010-pek/w0-export/commit/d4da5ebc09ca17346f2be6424442b9592869a39f
+   - 交付 Tag 链接：https://github.com/kola010-pek/w0-export/git/refs/tags/w0-20260807-delivery-v2
 
 4. 远程版本证明
    - 远程仓库：https://github.com/kola010-pek/w0-export
    - 源码 Commit 链接：https://github.com/kola010-pek/w0-export/commit/0cb21090e6e52b1514bfd5776d409a8c448c7983
-   - 源码 Tag 链接：https://github.com/kola010-pek/w0-export/releases/tag/w0-20260730-0cb21090
+   - 源码 Tag 链接：https://github.com/kola010-pek/w0-export/git/refs/tags/w0-20260730-0cb21090
 
 5. 导出生成时间
    - 打包时间 (mtime):       2026-08-06 16:52:33 +0000
-   - 清单生成时间：2026-08-06T09:37:25Z
+   - 清单生成时间：2026-08-07T01:09:22Z
 
 6. 外层 SHA-256 校验
    算法：SHA-256 (sha256sum / shasum -a 256)

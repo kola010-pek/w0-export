@@ -2,21 +2,21 @@
 W0 版本锚定证据 (Version Anchoring Evidence)
 ================================================================================
 
-生成时间：2026-08-06T09:33:30Z
+生成时间：2026-08-07T02:00:00Z
 
 1. 远程仓库信息
    - 仓库 URL: https://github.com/kola010-pek/w0-export
    - 分支：main
-   - 交付 Tag: w0-20260806-delivery
+   - 交付 Tag: w0-20260807-delivery-v2
    - 源码 Tag: w0-20260730-0cb21090
 
-2. 交付物 Commit 验证
-   - Commit SHA (full):  5bb34f3e05e868ea5b89c7301e9c842211f74cfd
-   - Commit SHA (short): 5bb34f3
-   - Commit 链接：https://github.com/kola010-pek/w0-export/commit/5bb34f3e05e868ea5b89c7301e9c842211f74cfd
-   - Commit 消息：feat(W0): 版本锚定交付物 - 任务单、来源清单、证据文件
+2. 交付物 Commit 验证 (delivery_commit)
+   - Commit SHA (full):  d4da5ebc09ca17346f2be6424442b9592869a39f
+   - Commit SHA (short): d4da5eb
+   - Commit 链接：https://github.com/kola010-pek/w0-export/commit/d4da5ebc09ca17346f2be6424442b9592869a39f
+   - Commit 消息：feat(W0): 最终交付 commit - 统一所有交付物到单一 commit
 
-3. 源码 Commit 验证
+3. 源码 Commit 验证 (source_commit)
    - Commit SHA (full):  0cb21090e6e52b1514bfd5776d409a8c448c7983
    - Commit SHA (short): 0cb2109
    - Commit 链接：https://github.com/kola010-pek/w0-export/commit/0cb21090e6e52b1514bfd5776d409a8c448c7983
@@ -25,10 +25,11 @@ W0 版本锚定证据 (Version Anchoring Evidence)
    - 日期：2026-07-30T04:52:24Z
 
 4. Tag 验证
-   - 交付 Tag: w0-20260806-delivery
-   - 交付 Tag 链接：https://github.com/kola010-pek/w0-export/releases/tag/w0-20260806-delivery
-   - 交付 Tag 指向 Commit: 5bb34f3e05e868ea5b89c7301e9c842211f74cfd
+   - 交付 Tag: w0-20260807-delivery-v2
+   - 交付 Tag 链接：https://github.com/kola010-pek/w0-export/git/refs/tags/w0-20260807-delivery-v2
+   - 交付 Tag 指向 Commit: d4da5ebc09ca17346f2be6424442b9592869a39f
    - 源码 Tag: w0-20260730-0cb21090
+   - 源码 Tag 链接：https://github.com/kola010-pek/w0-export/git/refs/tags/w0-20260730-0cb21090
    - 源码 Tag 指向 Commit: 0cb21090e6e52b1514bfd5776d409a8c448c7983
 
 5. 归档包验证
@@ -44,7 +45,6 @@ W0 版本锚定证据 (Version Anchoring Evidence)
    - W0_WORKSPACE_EXPORT_w0-20260730-0cb21090.tar.gz.sha256 (SHA-256 校验文件)
    - W0_EXPORT_SOURCE_INVENTORY.txt (来源清单)
    - W0_VERSION_ANCHORING_EVIDENCE.txt (本证据文件)
-   - W0_REMEDIATION_EVIDENCE.md (整改证据)
    - tasks/W0-VERSION-ANCHORING-READONLY.yaml (版本锚定只读任务单)
    - tasks/W0-FULL-ACCEPTANCE.yaml (完整 W0 验收任务单)
 
@@ -56,9 +56,9 @@ W0 版本锚定证据 (Version Anchoring Evidence)
 
 8. GitHub API 响应证据
    - 仓库 API: https://api.github.com/repos/kola010-pek/w0-export (公开)
-   - 交付 Commit API: https://api.github.com/repos/kola010-pek/w0-export/commits/5bb34f3e05e868ea5b89c7301e9c842211f74cfd
+   - 交付 Commit API: https://api.github.com/repos/kola010-pek/w0-export/commits/d4da5ebc09ca17346f2be6424442b9592869a39f
    - 源码 Commit API: https://api.github.com/repos/kola010-pek/w0-export/commits/0cb21090e6e52b1514bfd5776d409a8c448c7983
-   - 交付 Tag Ref API: https://api.github.com/repos/kola010-pek/w0-export/git/refs/tags/w0-20260806-delivery
+   - 交付 Tag Ref API: https://api.github.com/repos/kola010-pek/w0-export/git/refs/tags/w0-20260807-delivery-v2
    - 源码 Tag Ref API: https://api.github.com/repos/kola010-pek/w0-export/git/refs/tags/w0-20260730-0cb21090
 
 ================================================================================

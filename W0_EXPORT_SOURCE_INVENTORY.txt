@@ -11,52 +11,33 @@ W0 导出包来源清单 (Source Inventory)
    - Commit Subject:         feat: W0 工程底座 - 补齐 API 端点和测试
    - Commit Author:          user5914024953
    - Commit Date:            2026-07-30 12:52:24 +0800
-   - Git Tree:               /workspace/projects
 
-3. 交付物版本标识 (delivery_commit)
-   - 交付 Commit SHA (full):  d4da5ebc09ca17346f2be6424442b9592869a39f
-   - 交付 Commit SHA (short): d4da5eb
-   - 交付 Tag:                w0-20260807-delivery-v2
-   - 交付 Commit 链接：https://github.com/kola010-pek/w0-export/commit/d4da5ebc09ca17346f2be6424442b9592869a39f
-   - 交付 Tag 链接：https://github.com/kola010-pek/w0-export/git/refs/tags/w0-20260807-delivery-v2
-
-4. 远程版本证明
+3. 交付锚定方式
+   - delivery_anchor_method: github_tag_ref
+   - delivery_tag:           w0-20260807-delivery-v3
+   - delivery_commit_sha:    RESOLVED_EXTERNALLY_FROM_TAG_REF
    - 远程仓库：https://github.com/kola010-pek/w0-export
-   - 源码 Commit 链接：https://github.com/kola010-pek/w0-export/commit/0cb21090e6e52b1514bfd5776d409a8c448c7983
-   - 源码 Tag 链接：https://github.com/kola010-pek/w0-export/git/refs/tags/w0-20260730-0cb21090
+   - Tag Ref API:            https://api.github.com/repos/kola010-pek/w0-export/git/refs/tags/w0-20260807-delivery-v3
 
-5. 导出生成时间
+4. 导出生成时间
    - 打包时间 (mtime):       2026-08-06 16:52:33 +0000
-   - 清单生成时间：2026-08-07T01:09:22Z
+   - 清单生成时间：2026-08-07T01:19:19Z
 
-6. 外层 SHA-256 校验
+5. 外层 SHA-256 校验
    算法：SHA-256 (sha256sum / shasum -a 256)
    校验文件：W0_WORKSPACE_EXPORT_w0-20260730-0cb21090.tar.gz.sha256
    校验值：b60182bbc0b5ae57138a8249b1a240b1a975f00a7980d0cffbdc54bb8a61bacb
    验证方式：sha256sum -c W0_WORKSPACE_EXPORT_w0-20260730-0cb21090.tar.gz.sha256
    独立验证状态：NOT_EXECUTED (需平台负责人另行授权读取完整归档字节流)
 
-7. 包内文件清单生成方式
+6. 包内文件清单生成方式
    - 方法：tar -tzf W0_WORKSPACE_EXPORT_w0-20260730-0cb21090.tar.gz | sort
    - 总条目数：316 (含目录和文件)
    - 文件清单 SHA-256: f6eb44e7fc780c65c8120ec1c9bd5d81fd64a951c91693ae513d0d1ae9db0c53
 
-8. 包内证据文件签名清单 (evidence/w0-20260730-0cb21090/)
+7. 包内证据文件签名清单 (evidence/w0-20260730-0cb21090/)
    生成方式：在打包前对 evidence 目录下各 JSON/TXT 证据文件逐一执行 sha256sum
 
    包内无 sha256sums.txt
-
-9. 包内主要目录结构概览
-   src/app/api/          - API 路由端点
-   src/app/(dashboard)/  - 仪表盘页面
-   src/components/ui/    - shadcn/ui 组件
-   src/lib/              - 核心库代码
-   config/               - 配置文件
-   tests/                - 测试套件
-   scripts/              - 脚本
-   evidence/             - 证据文件
-   harness/              - 测试 harness
-   loops/                - 循环检测模块
-   adapters/             - 适配器层
 
 ================================================================================

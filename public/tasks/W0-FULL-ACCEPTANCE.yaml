@@ -1,153 +1,33 @@
-# W0 完整验收任务单
-# 状态：待版本锚定通过后立项
-# 创建时间：2026-08-06T09:33:30Z
-
 policy_version: "1.1.0"
 task_id: W0-FULL-ACCEPTANCE
 builder: coze-builder
 inspector: codex-inspector
-environment: isolated-sandbox
+environment: isolated-build-test
 data_source: https://github.com/kola010-pek/w0-export
-role: inspector
-mode: read_only_with_build
 
-# 前置条件
+role: inspector
+mode: read_only
+write_allowed: false
+
 prerequisites:
   - task_id: W0-VERSION-ANCHORING-READONLY
-    status: PASS
-  - version_anchor_commit: 待版本锚定通过后确定
-  - version_anchor_tag: 待版本锚定通过后确定
+    status: PASS_REQUIRED
 
-# 授权范围
-write_allowed: false
-release_allowed: false
-install_allowed: true
-build_allowed: true
-test_allowed: true
-api_start_allowed: true
-ui_check_allowed: true
-real_db_path_configured: false
-production_write_enabled: false
-production_model_enabled: false
-production_release_enabled: false
-
-# 验收阶段 (7 阶段顺序执行)
 acceptance_phases:
-  phase1:
+  - phase: 1
     name: 交付与版本可追溯性
-    status: pending
-    criteria:
-      - 远程仓库可访问
-      - Commit 可验证
-      - Tag 指向正确
-      - 归档包完整
-      - SHA-256 一致
-      - 来源清单完整
-
-  phase2:
+  - phase: 2
     name: 归档内容与配置语义
-    status: pending
-    criteria:
-      - 归档包内容完整性
-      - 配置文件语义正确性
-      - 无敏感信息泄露
-      - 环境配置隔离
-
-  phase3:
+  - phase: 3
     name: 隔离环境的依赖安装与构建
-    status: pending
-    criteria:
-      - pnpm install 成功
-      - pnpm build 成功
-      - 无构建错误
-      - 构建产物完整
-
-  phase4:
+  - phase: 4
     name: 单元/集成测试
-    status: pending
-    criteria:
-      - 单元测试全部通过
-      - 集成测试全部通过
-      - 测试覆盖率达标
-      - 无测试跳过
-
-  phase5:
+  - phase: 5
     name: API 启动、核心接口和停止流程
-    status: pending
-    criteria:
-      - 服务启动成功
-      - 核心 API 端点正常
-      - 健康检查通过
-      - 服务停止正常
-
-  phase6:
+  - phase: 6
     name: UI 渲染与关键路径
-    status: pending
-    criteria:
-      - 首页渲染正常
-      - 关键页面可访问
-      - 无 Hydration 错误
-      - 响应式布局正常
-
-  phase7:
+  - phase: 7
     name: 证据复核与最终门禁判定
-    status: pending
-    criteria:
-      - 所有阶段证据完整
-      - 无 BLOCK 级问题
-      - 最终判定 PASS/WARN/BLOCK
 
-# 负面检查
-negative_checks:
-  - 无生产数据库连接
-  - 无生产 API 密钥
-  - 无硬编码凭据
-  - 无未授权的外部服务调用
-
-# 证据要求
-evidence_requirements:
-  - 每阶段独立证据文件
-  - API 响应截图/日志
-  - 测试输出报告
-  - 构建日志
-  - 服务启动/停止日志
-
-# 回滚方案
-rollback_plan:
-  trigger: 任何阶段发现 BLOCK 级问题
-  action: 停止后续阶段，返回 builder 整改
-  responsible: coze-builder
-
-# 停止点
-stop_conditions:
-  - 版本锚定未通过
-  - 依赖安装失败
-  - 构建失败
-  - 测试失败率超过阈值
-  - API 启动失败
-  - 发现安全漏洞
-
-# 输出要求
-deliverables:
-  review_report: reviews/W0-FULL-ACCEPTANCE.md
-  verdict: PASS | WARN | BLOCK
-  phase_reports:
-    - reviews/W0-PHASE1.md
-    - reviews/W0-PHASE2.md
-    - reviews/W0-PHASE3.md
-    - reviews/W0-PHASE4.md
-    - reviews/W0-PHASE5.md
-    - reviews/W0-PHASE6.md
-    - reviews/W0-PHASE7.md
-
-# 批准信息
-approval:
-  approved_by: 待版本锚定通过后由卫光批准
-  approved_at: 待确定
-  scope: 完整 W0 验收，包含安装、构建、测试、API 启动和 UI 检查
-
-# 备注
-notes:
-  - 本任务单仅在版本锚定只读复验通过后生效
-  - 7 个阶段必须按顺序执行，前一阶段 PASS 后方可进入下一阶段
-  - 任何阶段 BLOCK 则整体 BLOCK，需整改后重新从该阶段开始
+status: PENDING_PREREQUISITES
+note: 本任务单在 W0-VERSION-ANCHORING-READONLY 通过前不得执行

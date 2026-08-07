@@ -2,21 +2,13 @@
 W0 版本锚定证据 (Version Anchoring Evidence)
 ================================================================================
 
-生成时间：2026-08-07T02:00:00Z
+生成时间：2026-08-07T02:30:00Z
 
 1. 远程仓库信息
    - 仓库 URL: https://github.com/kola010-pek/w0-export
    - 分支：main
-   - 交付 Tag: w0-20260807-delivery-v2
-   - 源码 Tag: w0-20260730-0cb21090
 
-2. 交付物 Commit 验证 (delivery_commit)
-   - Commit SHA (full):  d4da5ebc09ca17346f2be6424442b9592869a39f
-   - Commit SHA (short): d4da5eb
-   - Commit 链接：https://github.com/kola010-pek/w0-export/commit/d4da5ebc09ca17346f2be6424442b9592869a39f
-   - Commit 消息：feat(W0): 最终交付 commit - 统一所有交付物到单一 commit
-
-3. 源码 Commit 验证 (source_commit)
+2. 源码 Commit (source_commit)
    - Commit SHA (full):  0cb21090e6e52b1514bfd5776d409a8c448c7983
    - Commit SHA (short): 0cb2109
    - Commit 链接：https://github.com/kola010-pek/w0-export/commit/0cb21090e6e52b1514bfd5776d409a8c448c7983
@@ -24,15 +16,14 @@ W0 版本锚定证据 (Version Anchoring Evidence)
    - 作者：user5914024953
    - 日期：2026-07-30T04:52:24Z
 
-4. Tag 验证
-   - 交付 Tag: w0-20260807-delivery-v2
-   - 交付 Tag 链接：https://github.com/kola010-pek/w0-export/git/refs/tags/w0-20260807-delivery-v2
-   - 交付 Tag 指向 Commit: d4da5ebc09ca17346f2be6424442b9592869a39f
-   - 源码 Tag: w0-20260730-0cb21090
-   - 源码 Tag 链接：https://github.com/kola010-pek/w0-export/git/refs/tags/w0-20260730-0cb21090
-   - 源码 Tag 指向 Commit: 0cb21090e6e52b1514bfd5776d409a8c448c7983
+3. 交付锚定方式
+   - delivery_anchor_method: github_tag_ref
+   - delivery_tag:           w0-20260807-delivery-v3
+   - delivery_commit_sha:    RESOLVED_EXTERNALLY_FROM_TAG_REF
+   - Tag Ref API:            https://api.github.com/repos/kola010-pek/w0-export/git/refs/tags/w0-20260807-delivery-v3
+   - 说明：delivery_commit SHA 由 GitHub Tag Ref API 外部解析，不在本文件内声明
 
-5. 归档包验证
+4. 归档包验证
    - 归档包：W0_WORKSPACE_EXPORT_w0-20260730-0cb21090.tar.gz
    - 归档包基于源码 Commit: 0cb21090e6e52b1514bfd5776d409a8c448c7983
    - SHA-256: b60182bbc0b5ae57138a8249b1a240b1a975f00a7980d0cffbdc54bb8a61bacb
@@ -40,7 +31,7 @@ W0 版本锚定证据 (Version Anchoring Evidence)
    - 包内条目数：316
    - 独立 SHA-256 验证状态：NOT_EXECUTED (需平台负责人另行授权)
 
-6. 交付物清单
+5. 交付物清单
    - W0_WORKSPACE_EXPORT_w0-20260730-0cb21090.tar.gz (归档包)
    - W0_WORKSPACE_EXPORT_w0-20260730-0cb21090.tar.gz.sha256 (SHA-256 校验文件)
    - W0_EXPORT_SOURCE_INVENTORY.txt (来源清单)
@@ -48,18 +39,16 @@ W0 版本锚定证据 (Version Anchoring Evidence)
    - tasks/W0-VERSION-ANCHORING-READONLY.yaml (版本锚定只读任务单)
    - tasks/W0-FULL-ACCEPTANCE.yaml (完整 W0 验收任务单)
 
-7. 敏感信息扫描结果
+6. 敏感信息扫描结果
    - .env 文件：无敏感字段
    - .env.local: 无敏感字段
    - 配置文件：无密钥/凭据
    - .gitignore: 已排除 .env 相关文件
 
-8. GitHub API 响应证据
-   - 仓库 API: https://api.github.com/repos/kola010-pek/w0-export (公开)
-   - 交付 Commit API: https://api.github.com/repos/kola010-pek/w0-export/commits/d4da5ebc09ca17346f2be6424442b9592869a39f
-   - 源码 Commit API: https://api.github.com/repos/kola010-pek/w0-export/commits/0cb21090e6e52b1514bfd5776d409a8c448c7983
-   - 交付 Tag Ref API: https://api.github.com/repos/kola010-pek/w0-export/git/refs/tags/w0-20260807-delivery-v2
-   - 源码 Tag Ref API: https://api.github.com/repos/kola010-pek/w0-export/git/refs/tags/w0-20260730-0cb21090
+7. 历史整改记录（仅供参考，不作为当前有效锚点）
+   - w0-20260730-0cb21090 (源码 tag)
+   - w0-20260806-delivery (已废弃)
+   - w0-20260807-delivery-v2 (已废弃)
 
 ================================================================================
 状态：待 Codex 只读验收
